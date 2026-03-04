@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../config/supabase";
 import "../styles/auth.css";
 
 function StudentSignup() {
@@ -19,11 +20,34 @@ function StudentSignup() {
     });
   }
 
-  function handleSignup(e) {
+  async function handleSignup(e) {
     e.preventDefault();
 
-    // TEMPORARY FRONTEND ONLY
-    console.log("Student Registered:", formData);
+    // Create user in Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    // Insert student data in database
+    const { error: dbError } = await supabase.from("students").insert([
+      {
+        id: data.user.id,
+        name: formData.name,
+        roll: formData.roll,
+        email: formData.email,
+      },
+    ]);
+
+    if (dbError) {
+      alert(dbError.message);
+      return;
+    }
 
     alert("Student registered successfully!");
 

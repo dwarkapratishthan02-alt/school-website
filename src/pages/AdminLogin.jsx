@@ -1,21 +1,40 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { supabase } from "../config/supabase";
 import "../styles/auth.css";
 
 function AdminLogin() {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
-    // TEMPORARY HARDCODED CHECK
-    if (email === "admin@dwarka.com" && password === "admin123") {
-      navigate("/admin/dashboard");
-    } else {
-      alert("Invalid admin credentials");
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
     }
+
+    // check admin role
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
+      alert("Not authorized as admin");
+      return;
+    }
+
+    navigate("/admin/dashboard");
   }
 
   return (
@@ -28,6 +47,7 @@ function AdminLogin() {
           placeholder="Admin Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
@@ -35,6 +55,7 @@ function AdminLogin() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         <button type="submit">Login</button>

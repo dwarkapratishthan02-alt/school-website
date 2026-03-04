@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../config/supabase";
 import "../styles/auth.css";
 
 function StudentLogin() {
   const navigate = useNavigate();
-  const [roll, setRoll] = useState("");
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
-    // Temporary login
-    if (roll === "student1" && password === "1234") {
-      navigate("/student/dashboard");
-    } else {
-      alert("Invalid credentials");
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
     }
+
+    navigate("/student/dashboard");
   }
 
   return (
@@ -24,10 +31,10 @@ function StudentLogin() {
         <h2>Student Login</h2>
 
         <input
-          type="text"
-          placeholder="Roll Number"
-          value={roll}
-          onChange={(e) => setRoll(e.target.value)}
+          type="email"
+          placeholder="Student Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
 
@@ -41,7 +48,6 @@ function StudentLogin() {
 
         <button type="submit">Login</button>
 
-        {/* Signup Link */}
         <p style={{ textAlign: "center", marginTop: "15px" }}>
           Don’t have an account?{" "}
           <span
@@ -51,7 +57,6 @@ function StudentLogin() {
             Sign up
           </span>
         </p>
-
       </form>
     </div>
   );

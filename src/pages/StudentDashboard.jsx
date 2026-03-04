@@ -1,4 +1,24 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../config/supabase";
+
 function StudentDashboard() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkStudent();
+  }, []);
+
+  async function checkStudent() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      navigate("/student/login");
+    }
+  }
+
   return (
     <div style={{ padding: "80px 0" }}>
       <div className="container">
