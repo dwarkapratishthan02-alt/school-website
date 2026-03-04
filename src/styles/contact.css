@@ -1,0 +1,164 @@
+.contact-page {
+  padding: 100px 0;
+  background: #F9FAFB;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.page-header h1 {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #4B5563;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Grid Layout */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+/* Contact Info */
+.contact-info {
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+}
+
+.contact-info h3 {
+  margin-bottom: 20px;
+  color: #1E40AF;
+}
+
+.contact-info p {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Contact Form */
+.contact-form {
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+}
+
+.contact-form h3 {
+  margin-bottom: 20px;
+  color: #1E40AF;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #D1D5DB;
+  font-size: 14px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #1E40AF;
+}
+
+.contact-form button {
+  padding: 12px;
+  background: #1E40AF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.contact-form button:hover {
+  background: #1C3AA9;
+}
+
+/* Map Section */
+.map-section h3 {
+  margin-bottom: 15px;
+}
+
+.map-placeholder {
+  background: #E5E7EB;
+  height: 300px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+  .page-header h1 {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .contact-page {
+    padding: 60px 0;
+  }
+
+  .page-header {
+    margin-bottom: 40px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .page-header p {
+    font-size: 15px;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 25px;
+  }
+
+  .contact-info p {
+    font-size: 14px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 13px;
+  }
+
+  .map-placeholder {
+    height: 220px;
+  }
+}

@@ -1,0 +1,21 @@
+.news-page {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.news-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.news-grid {
+  display: grid;
+  gap: 25px;
+}
+
+.news-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}

@@ -1,0 +1,113 @@
+.institutions {
+  padding: 100px 0;
+  background: #ffffff;
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: #4B5563;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Grid Layout */
+.institution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+/* Card */
+.institution-card {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 35px;
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.institution-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.institution-level {
+  font-size: 14px;
+  color: #1E40AF;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.institution-card p {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.institution-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+}
+
+.outline-btn {
+  padding: 10px 18px;
+  border: 1px solid #1E40AF;
+  background: transparent;
+  color: #1E40AF;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.outline-btn:hover {
+  background: #1E40AF;
+  color: white;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+  .institution-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .institutions {
+    padding: 60px 0;
+  }
+
+  .section-header h2 {
+    font-size: 28px;
+  }
+
+  .section-header p {
+    font-size: 15px;
+  }
+
+  .institution-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .institution-card {
+    padding: 25px;
+  }
+
+}
