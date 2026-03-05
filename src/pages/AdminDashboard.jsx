@@ -6,29 +6,29 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const checkAdmin = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/admin/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+
+      if (!profile || profile.role !== "admin") {
+        navigate("/");
+      }
+    };
+
     checkAdmin();
-  }, []);
-
-  async function checkAdmin() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      navigate("/admin/login");
-      return;
-    }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", session.user.id)
-      .single();
-
-    if (!profile || profile.role !== "admin") {
-      navigate("/");
-    }
-  }
+  }, [navigate]);
 
   return (
     <div style={{ padding: "80px 0" }}>

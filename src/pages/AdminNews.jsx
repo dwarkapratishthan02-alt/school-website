@@ -1,68 +1,55 @@
 import { useState } from "react";
-import "../styles/adminNews.css";
+import { supabase } from "../config/supabase";
 
 function AdminNews() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [news, setNews] = useState([]);
 
-  function addNews() {
-    if (!title || !content) {
-      alert("Please fill all fields");
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const { error } = await supabase.from("news").insert([
+      {
+        title,
+        content
+      }
+    ]);
+
+    if (error) {
+      alert(error.message);
       return;
     }
 
-    const newItem = {
-      id: Date.now(),
-      title,
-      content
-    };
+    alert("News published!");
 
-    setNews([newItem, ...news]);
     setTitle("");
     setContent("");
   }
 
-  function deleteNews(id) {
-    setNews(news.filter((item) => item.id !== id));
-  }
-
   return (
-    <div className="admin-news-page">
+    <div style={{ padding: "80px 0" }}>
       <div className="container">
-        <h1>Admin - Manage News</h1>
+        <h1>Publish News / Notice</h1>
 
-        <div className="admin-form">
+        <form onSubmit={handleSubmit} style={{ maxWidth: "600px" }}>
           <input
             type="text"
-            placeholder="Enter News Title"
+            placeholder="News Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            required
           />
 
           <textarea
-            placeholder="Enter News Content"
+            placeholder="News Content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            rows="6"
+            required
           />
 
-          <button onClick={addNews}>
-            Add News
-          </button>
-        </div>
-
-        <div className="admin-news-list">
-          {news.map((item) => (
-            <div key={item.id} className="admin-news-card">
-              <h3>{item.title}</h3>
-              <p>{item.content}</p>
-              <button onClick={() => deleteNews(item.id)}>
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
-
+          <button type="submit">Publish</button>
+        </form>
       </div>
     </div>
   );

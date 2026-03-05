@@ -1,33 +1,36 @@
-import { useState } from "react";
-import "../styles/news.css";
+import { useEffect, useState } from "react";
+import { supabase } from "../config/supabase";
 
 function News() {
-  const [news] = useState([
-    {
-      id: 1,
-      title: "Admissions Starting Soon",
-      content: "Admissions for 2026-27 will begin shortly."
-    },
-    {
-      id: 2,
-      title: "Annual Day Celebration",
-      content: "Annual day will be held on 15th December."
-    }
-  ]);
+
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  async function fetchNews() {
+    const { data } = await supabase
+      .from("news")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    setNews(data || []);
+  }
 
   return (
-    <div className="news-page">
+    <div style={{ padding: "80px 0" }}>
       <div className="container">
-        <h1 className="news-title">News & Announcements</h1>
 
-        <div className="news-grid">
-          {news.map((item) => (
-            <div key={item.id} className="news-card">
-              <h3>{item.title}</h3>
-              <p>{item.content}</p>
-            </div>
-          ))}
-        </div>
+        <h1>School News & Notices</h1>
+
+        {news.map((item) => (
+          <div key={item.id} style={{ marginBottom: "30px" }}>
+            <h3>{item.title}</h3>
+            <p>{item.content}</p>
+          </div>
+        ))}
+
       </div>
     </div>
   );

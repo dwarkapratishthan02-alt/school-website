@@ -6,18 +6,18 @@ function StudentDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const checkStudent = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/student/login");
+      }
+    };
+
     checkStudent();
-  }, []);
-
-  async function checkStudent() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      navigate("/student/login");
-    }
-  }
+  }, [navigate]);
 
   return (
     <div style={{ padding: "80px 0" }}>
