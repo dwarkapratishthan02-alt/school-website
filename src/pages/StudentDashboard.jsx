@@ -9,72 +9,66 @@ function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const checkStudent = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/student/login");
+        return;
+      }
+    };
+
+    const fetchNotices = async () => {
+      const { data } = await supabase
+        .from("notices")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      setNotices(data || []);
+      setLoading(false);
+    };
+
     checkStudent();
     fetchNotices();
-  }, []);
-
-  async function checkStudent() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      navigate("/student/login");
-    }
-  }
-
-  async function fetchNotices() {
-    const { data } = await supabase
-      .from("notices")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    setNotices(data || []);
-    setLoading(false);
-  }
+  }, [navigate]);
 
   return (
     <div className="student-dashboard">
       <div className="dashboard-container">
-
         <h1 className="dashboard-title">Student Dashboard</h1>
         <p className="dashboard-sub">Welcome back 👋</p>
 
-        {/* Action Cards */}
         <div className="dashboard-cards">
-
           <Link to="/student/profile" className="dashboard-card">
             <h3>👤 Profile</h3>
-            <p>View and update your student profile</p>
+            <p>View and update your profile</p>
           </Link>
 
           <div className="dashboard-card">
             <h3>📚 Study Material</h3>
-            <p>Download study notes and documents</p>
+            <p>Download study resources</p>
           </div>
 
           <div className="dashboard-card">
             <h3>📊 Attendance</h3>
-            <p>Check your attendance record</p>
+            <p>Check your attendance</p>
           </div>
 
           <div className="dashboard-card">
             <h3>📝 Results</h3>
-            <p>View exam results and report cards</p>
+            <p>View your exam results</p>
           </div>
-
         </div>
 
-        {/* Notices */}
         <div className="notices-section">
           <h2>Latest Notices</h2>
 
           {loading && <p>Loading notices...</p>}
 
           {!loading && notices.length === 0 && (
-            <div className="notice-empty">
-              No notices available.
-            </div>
+            <div className="notice-empty">No notices available.</div>
           )}
 
           {notices.map((notice) => (
@@ -87,7 +81,6 @@ function StudentDashboard() {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );
