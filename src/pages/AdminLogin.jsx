@@ -58,7 +58,7 @@ function AdminLogin() {
     }
 
     setMessage("Login successful! Redirecting...");
-    navigate("/admin/dashboard");
+    window.location.href = "/admin/dashboard";
   }
 
   return (

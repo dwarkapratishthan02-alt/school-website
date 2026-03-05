@@ -1,58 +1,100 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../config/supabase";
+import "../styles/adminDashboard.css";
 
 function AdminDashboard() {
   const navigate = useNavigate();
 
+  const [stats, setStats] = useState({
+    students: 0,
+    notices: 0,
+  });
+
   useEffect(() => {
-    const checkAdmin = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session) {
-        navigate("/admin/login");
-        return;
-      }
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", session.user.id)
-        .single();
-
-      if (!profile || profile.role !== "admin") {
-        navigate("/");
-      }
-    };
-
     checkAdmin();
-  }, [navigate]);
+    loadStats();
+  }, []);
+
+  async function checkAdmin() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      navigate("/admin/login");
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", session.user.id)
+      .maybeSingle();
+
+    if (!profile || profile.role !== "admin") {
+      navigate("/");
+    }
+  }
+
+  async function loadStats() {
+    const { count: studentCount } = await supabase
+      .from("students")
+      .select("*", { count: "exact", head: true });
+
+    const { count: noticeCount } = await supabase
+      .from("notices")
+      .select("*", { count: "exact", head: true });
+
+    setStats({
+      students: studentCount || 0,
+      notices: noticeCount || 0,
+    });
+  }
 
   return (
-    <div style={{ padding: "80px 0" }}>
-      <div className="container">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome Admin 👋</p>
+    <div className="admin-dashboard">
+      <div className="admin-container">
 
-        <ul style={{ marginTop: "20px", lineHeight: "2" }}>
-          <li>
-            <Link to="/admin/news">Manage News</Link>
-          </li>
+        <h1 className="admin-title">Admin Dashboard</h1>
+        <p className="admin-sub">Manage your school portal</p>
 
-          <li>
-            <Link to="/admin/students">Manage Students</Link>
-          </li>
+        {/* Stats Cards */}
+        <div className="admin-stats">
 
-          <li>
-            <Link to="/admin/admissions">Control Admissions Status</Link>
-          </li>
+          <div className="stat-card">
+            <h3>Total Students</h3>
+            <p>{stats.students}</p>
+          </div>
 
-          <li>
-            <Link to="/">View Website</Link>
-          </li>
-        </ul>
+          <div className="stat-card">
+            <h3>Total Notices</h3>
+            <p>{stats.notices}</p>
+          </div>
+
+        </div>
+
+        {/* Actions */}
+        <div className="admin-actions">
+
+          <Link to="/admin/news" className="admin-action">
+            📰 Manage Notices
+          </Link>
+
+          <Link to="/admin/students" className="admin-action">
+            👨‍🎓 Manage Students
+          </Link>
+
+          <div className="admin-action">
+            📚 Upload Study Material
+          </div>
+
+          <div className="admin-action">
+            📝 Manage Results
+          </div>
+
+        </div>
+
       </div>
     </div>
   );
