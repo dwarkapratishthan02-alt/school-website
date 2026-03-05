@@ -9,32 +9,34 @@ function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const checkStudent = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/student/login");
+        return;
+      }
+
+      fetchNotices();
+    };
+
+    const fetchNotices = async () => {
+      const { data, error } = await supabase
+        .from("notices")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setNotices(data);
+      }
+
+      setLoading(false);
+    };
+
     checkStudent();
-    fetchNotices();
-  }, []);
-
-  async function checkStudent() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      navigate("/student/login");
-    }
-  }
-
-  async function fetchNotices() {
-    const { data, error } = await supabase
-      .from("notices")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!error && data) {
-      setNotices(data);
-    }
-
-    setLoading(false);
-  }
+  }, [navigate]);
 
   return (
     <div style={{ padding: "80px 0" }}>
@@ -42,7 +44,6 @@ function StudentDashboard() {
         <h1>Student Dashboard</h1>
         <p>Welcome Student 👋</p>
 
-        {/* Student actions */}
         <ul style={{ marginTop: "20px", lineHeight: "2" }}>
           <li>
             <Link to="/student/profile">View / Edit Profile</Link>
@@ -52,7 +53,6 @@ function StudentDashboard() {
           <li>View Results</li>
         </ul>
 
-        {/* Notices */}
         <div style={{ marginTop: "40px" }}>
           <h2>Latest Notices</h2>
 
