@@ -25,8 +25,9 @@ import AdminStudents from "./pages/AdminStudents";
 function App() {
   const location = useLocation();
 
-  const [isAdmin, setIsAdmin] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     checkSession();
@@ -41,6 +42,7 @@ function App() {
 
     if (!session) {
       setIsAdmin(false);
+      setLoading(false);
       return;
     }
 
@@ -48,20 +50,22 @@ function App() {
       .from("profiles")
       .select("role")
       .eq("id", session.user.id)
-      .single();
+      .maybeSingle(); // prevents 406 error
 
     if (profile?.role === "admin") {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
     }
+
+    setLoading(false);
   }
 
   const hideLayout =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/student");
 
-  if (isAdmin === null) return null;
+  if (loading) return null;
 
   return (
     <>
@@ -89,12 +93,16 @@ function App() {
 
         <Route
           path="/admin/news"
-          element={isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />}
+          element={
+            isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />
+          }
         />
 
         <Route
           path="/admin/students"
-          element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
+          element={
+            isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />
+          }
         />
 
         {/* Student Routes */}
