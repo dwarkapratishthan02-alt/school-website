@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../config/supabase";
 
 function AdminDashboard() {
@@ -36,11 +36,22 @@ function AdminDashboard() {
         <h1>Admin Dashboard</h1>
         <p>Welcome Admin 👋</p>
 
-        <ul>
-          <li>Manage Hero Slides</li>
-          <li>Manage News</li>
-          <li>Control Admissions Status</li>
-          <li>Manage Students</li>
+        <ul style={{ marginTop: "20px", lineHeight: "2" }}>
+          <li>
+            <Link to="/admin/news">Manage News</Link>
+          </li>
+
+          <li>
+            <Link to="/admin/students">Manage Students</Link>
+          </li>
+
+          <li>
+            <Link to="/admin/admissions">Control Admissions Status</Link>
+          </li>
+
+          <li>
+            <Link to="/">View Website</Link>
+          </li>
         </ul>
       </div>
     </div>

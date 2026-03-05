@@ -5,6 +5,7 @@ import "../styles/auth.css";
 
 function StudentSignup() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,35 +24,24 @@ function StudentSignup() {
   async function handleSignup(e) {
     e.preventDefault();
 
-    // Create user in Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
+    if (loading) return;
+    setLoading(true);
+
+    const { error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
     });
 
     if (error) {
       alert(error.message);
+      setLoading(false);
       return;
     }
 
-    // Insert student data in database
-    const { error: dbError } = await supabase.from("students").insert([
-      {
-        id: data.user.id,
-        name: formData.name,
-        roll: formData.roll,
-        email: formData.email,
-      },
-    ]);
-
-    if (dbError) {
-      alert(dbError.message);
-      return;
-    }
-
-    alert("Student registered successfully!");
+    alert("Signup successful! Please login.");
 
     navigate("/student/login");
+    setLoading(false);
   }
 
   return (
@@ -95,7 +85,9 @@ function StudentSignup() {
           required
         />
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
 
         <p style={{ textAlign: "center", marginTop: "10px" }}>
           Already have an account?{" "}

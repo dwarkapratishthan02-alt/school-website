@@ -19,20 +19,24 @@ import StudentLogin from "./pages/StudentLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentSignup from "./pages/StudentSignup";
-
+import StudentProfile from "./pages/StudentProfile";
+import AdminStudents from "./pages/AdminStudents";
 function App() {
   const location = useLocation();
 
   const [isAdmin, setIsAdmin] = useState(null);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    checkAdmin();
+    checkSession();
   }, []);
 
-  async function checkAdmin() {
+  async function checkSession() {
     const {
       data: { session },
     } = await supabase.auth.getSession();
+
+    setSession(session);
 
     if (!session) {
       setIsAdmin(false);
@@ -91,9 +95,25 @@ function App() {
         {/* Student Routes */}
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-      </Routes>
 
+        <Route
+          path="/student/dashboard"
+          element={
+            session ? <StudentDashboard /> : <Navigate to="/student/login" />
+          }
+        />
+
+        <Route
+          path="/student/profile"
+          element={
+            session ? <StudentProfile /> : <Navigate to="/student/login" />
+          }
+        />
+      </Routes>
+          <Route
+  path="/admin/students"
+  element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
+/>
       {!hideLayout && <Footer />}
     </>
   );
