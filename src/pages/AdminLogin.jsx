@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "../config/supabase";
 import "../styles/auth.css";
 
 function AdminLogin() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -33,7 +30,7 @@ function AdminLogin() {
       return;
     }
 
-    // Check role
+    // Check admin role
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
@@ -58,6 +55,8 @@ function AdminLogin() {
     }
 
     setMessage("Login successful! Redirecting...");
+
+    // Force reload so App.js detects admin session
     window.location.href = "/admin/dashboard";
   }
 
