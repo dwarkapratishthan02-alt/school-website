@@ -8,45 +8,56 @@ function AdminLogin() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [message, setMessage] = useState("");
 
   async function handleLogin(e) {
     e.preventDefault();
-    setErrorMsg("");
+    setMessage("");
 
-    // Login user
+    console.log("Logging in...");
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
+    console.log("Login result:", data, error);
+
     if (error) {
-      setErrorMsg(error.message);
+      setMessage(error.message);
       return;
     }
 
     if (!data?.user) {
-      setErrorMsg("Login failed. No user returned.");
+      setMessage("Login succeeded but no user returned.");
       return;
     }
 
-    // Check admin role
+    // Check role
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
-      .maybeSingle(); // safer than .single()
+      .maybeSingle();
+
+    console.log("Profile result:", profile, profileError);
 
     if (profileError) {
-      setErrorMsg("Error checking admin role: " + profileError.message);
+      setMessage(profileError.message);
       return;
     }
 
-    if (!profile || profile.role !== "admin") {
-      setErrorMsg("You are not authorized as admin.");
+    if (!profile) {
+      setMessage("No profile found for this user.");
       return;
     }
 
+    if (profile.role !== "admin") {
+      setMessage("User is not an admin.");
+      return;
+    }
+
+    setMessage("Login successful! Redirecting...");
     navigate("/admin/dashboard");
   }
 
@@ -55,10 +66,10 @@ function AdminLogin() {
       <form className="auth-card" onSubmit={handleLogin}>
         <h2>Admin Login</h2>
 
-        {errorMsg && (
-          <div style={{ color: "red", marginBottom: "10px" }}>
-            {errorMsg}
-          </div>
+        {message && (
+          <p style={{ color: "red", marginBottom: "10px" }}>
+            {message}
+          </p>
         )}
 
         <input
