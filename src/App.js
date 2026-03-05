@@ -21,6 +21,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import StudentSignup from "./pages/StudentSignup";
 import StudentProfile from "./pages/StudentProfile";
 import AdminStudents from "./pages/AdminStudents";
+
 function App() {
   const location = useLocation();
 
@@ -56,7 +57,6 @@ function App() {
     }
   }
 
-  // Hide Navbar & Footer on auth/dashboard pages
   const hideLayout =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/student");
@@ -92,6 +92,11 @@ function App() {
           element={isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />}
         />
 
+        <Route
+          path="/admin/students"
+          element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
+        />
+
         {/* Student Routes */}
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
@@ -110,10 +115,7 @@ function App() {
           }
         />
       </Routes>
-          <Route
-  path="/admin/students"
-  element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
-/>
+
       {!hideLayout && <Footer />}
     </>
   );
