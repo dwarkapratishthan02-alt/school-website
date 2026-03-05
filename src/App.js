@@ -25,37 +25,36 @@ import AdminStudents from "./pages/AdminStudents";
 function App() {
   const location = useLocation();
 
-  const [isAdmin, setIsAdmin] = useState(false);
   const [session, setSession] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkSession();
+    initAuth();
   }, []);
 
-  async function checkSession() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  async function initAuth() {
+    const { data } = await supabase.auth.getSession();
+    const currentSession = data?.session;
 
-    setSession(session);
+    setSession(currentSession);
 
-    if (!session) {
-      setIsAdmin(false);
+    if (!currentSession) {
       setLoading(false);
       return;
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", session.user.id)
-      .maybeSingle(); // prevents 406 error
+      .eq("id", currentSession.user.id)
+      .maybeSingle();
+
+    console.log("Profile:", profile);
+    console.log("Error:", error);
 
     if (profile?.role === "admin") {
       setIsAdmin(true);
-    } else {
-      setIsAdmin(false);
     }
 
     setLoading(false);
@@ -72,7 +71,7 @@ function App() {
       {!hideLayout && <Navbar />}
 
       <Routes>
-        {/* Public Pages */}
+        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
@@ -81,7 +80,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
 
-        {/* Admin Routes */}
+        {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
         <Route
@@ -105,7 +104,7 @@ function App() {
           }
         />
 
-        {/* Student Routes */}
+        {/* Student */}
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
 
