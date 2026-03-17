@@ -1,24 +1,171 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ============================= */
+/* RESET */
+/* ============================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #F9FAFB;
-  color: #111827;
+html{
+scroll-behavior:smooth;
 }
 
-h1, h2, h3 {
-  font-family: 'Poppins', sans-serif;
+
+/* ============================= */
+/* COLOR SYSTEM */
+/* ============================= */
+
+:root{
+
+--primary:#FFC107;
+--primary-dark:#E6AC00;
+--primary-light:#FFF3CD;
+
+--text-dark:#111827;
+--text-medium:#374151;
+--text-light:#6B7280;
+
+--bg:#F6F7FB;
+--card:#FFFFFF;
+
+--border:#E5E7EB;
+
+--danger:#EF4444;
+--success:#22C55E;
+
 }
 
-.container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
-  margin: 0 auto;
+
+/* ============================= */
+/* BODY */
+/* ============================= */
+
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text-dark);
+line-height:1.6;
+-webkit-font-smoothing:antialiased;
 }
+
+
+/* ============================= */
+/* HEADINGS */
+/* ============================= */
+
+h1,h2,h3{
+font-family:'Poppins',sans-serif;
+color:var(--text-dark);
+}
+
+h1{
+font-size:36px;
+font-weight:700;
+}
+
+h2{
+font-size:28px;
+font-weight:600;
+}
+
+h3{
+font-size:22px;
+font-weight:600;
+}
+
+
+/* ============================= */
+/* CONTAINER */
+/* ============================= */
+
+.container{
+width:100%;
+max-width:1200px;
+margin:auto;
+padding:0 20px;
+}
+
+
+/* ============================= */
+/* LINKS */
+/* ============================= */
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
+
+.btn-primary{
+background:var(--primary);
+border:none;
+padding:12px 20px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+}
+
+.btn-primary:hover{
+background:var(--primary-dark);
+}
+
+
+/* ============================= */
+/* CARD */
+/* ============================= */
+
+.card{
+background:var(--card);
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+
+
+/* ============================= */
+/* INPUTS */
+/* ============================= */
+
+input,
+textarea,
+select{
+font-family:'Inter',sans-serif;
+padding:10px 12px;
+border-radius:8px;
+border:1px solid var(--border);
+outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+border-color:var(--primary);
+box-shadow:0 0 0 2px rgba(255,193,7,0.15);
+}
+
+
+/* ============================= */
+/* UTILITIES */
+/* ============================= */
+
+.text-center{
+text-align:center;
+}
+
+.mt-1{margin-top:8px;}
+.mt-2{margin-top:16px;}
+.mt-3{margin-top:24px;}
+.mt-4{margin-top:32px;}
+
+.mb-1{margin-bottom:8px;}
+.mb-2{margin-bottom:16px;}
+.mb-3{margin-bottom:24px;}
+.mb-4{margin-bottom:32px;}

@@ -1,40 +1,171 @@
-.campus-life {
-  padding: 100px 0;
-  background: #ffffff;
+.campus-life{
+padding:120px 0;
+position:relative;
+overflow:hidden;
+
+/* premium gradient background */
+
+background:
+linear-gradient(
+180deg,
+#ffffff 0%,
+#f8fafc 60%,
+#f1f5f9 100%
+);
 }
 
-.section-header {
-  text-align: center;
-  margin-bottom: 60px;
+
+/* GOLD GLOW BACKGROUND */
+
+.campus-life::before{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+
+background:radial-gradient(
+circle,
+rgba(255,193,7,0.18) 0%,
+transparent 70%
+);
+
+top:-200px;
+right:-200px;
+pointer-events:none;
 }
 
-.section-header h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
-  color: #111827;
+
+/* SECOND LIGHT GLOW */
+
+.campus-life::after{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+
+background:radial-gradient(
+circle,
+rgba(255,193,7,0.10) 0%,
+transparent 70%
+);
+
+bottom:-200px;
+left:-200px;
+pointer-events:none;
 }
 
-.section-header p {
-  font-size: 16px;
-  color: #4B5563;
-  max-width: 700px;
-  margin: auto;
+
+/* HEADER */
+
+.section-header{
+text-align:center;
+margin-bottom:70px;
+position:relative;
+z-index:2;
 }
 
-.campus-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.section-header h2{
+font-size:40px;
+margin-bottom:12px;
+color:#111827;
 }
 
-.campus-grid img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: 0.3s ease;
+.section-header p{
+font-size:16px;
+color:#6b7280;
+max-width:700px;
+margin:auto;
+line-height:1.7;
 }
 
-.campus-grid img:hover {
-  transform: scale(1.03);
+
+/* GRID */
+
+.campus-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:30px;
+position:relative;
+z-index:2;
+}
+
+
+/* CARD */
+
+.campus-card{
+background:white;
+
+border-radius:16px;
+
+overflow:hidden;
+
+box-shadow:
+0 15px 40px rgba(0,0,0,0.08);
+
+border:1px solid #e5e7eb;
+
+transition:all .35s ease;
+}
+
+
+/* IMAGE */
+
+.campus-card img{
+width:100%;
+height:250px;
+object-fit:cover;
+display:block;
+}
+
+
+/* CARD HOVER */
+
+.campus-card:hover{
+transform:translateY(-10px);
+
+box-shadow:
+0 30px 60px rgba(0,0,0,0.18);
+}
+
+
+/* GOLD TOP ACCENT */
+
+.campus-card::before{
+content:"";
+position:absolute;
+height:4px;
+width:100%;
+background:#FFC107;
+top:0;
+left:0;
+}
+
+
+/* TABLET */
+
+@media(max-width:1024px){
+
+.campus-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.campus-life{
+padding:90px 20px;
+}
+
+.section-header h2{
+font-size:30px;
+}
+
+.campus-grid{
+grid-template-columns:1fr;
+}
+
 }

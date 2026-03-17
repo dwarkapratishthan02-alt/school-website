@@ -1,9 +1,39 @@
 .excellence {
   padding: 100px 0;
-  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+
+  /* yellow themed background */
+
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fff8db 100%
+  );
 }
 
+
+/* subtle glow decoration */
+
+.excellence::before {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255,193,7,0.15) 0%,
+    transparent 70%
+  );
+
+  top: -120px;
+  right: -120px;
+}
+
+
 /* Section Header */
+
 .section-header {
   text-align: center;
   margin-bottom: 60px;
@@ -17,53 +47,102 @@
 
 .section-header p {
   font-size: 16px;
-  color: #4B5563;
+  color: #475569;
   max-width: 700px;
   margin: 0 auto;
 }
 
+
 /* Grid */
+
 .excellence-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
 }
 
+
 /* Card */
+
 .excellence-card {
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-  border-radius: 12px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
   padding: 35px 25px;
   text-align: center;
-  transition: 0.3s ease;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+
+  transition: all 0.3s ease;
+  position: relative;
 }
+
+
+/* accent top line */
+
+.excellence-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 4px;
+  width: 100%;
+
+  background: #FFC107;
+
+  border-radius: 14px 14px 0 0;
+}
+
 
 .excellence-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 
-.icon {
-  font-size: 30px;
-  color: #1E40AF;
+
+/* icon wrapper */
+
+.excellence-icon {
+  font-size: 32px;
+  color: #FFC107;
   margin-bottom: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60px;
+  height: 60px;
+
+  background: #fff8db;
+  border-radius: 50%;
 }
+
+
+/* title */
 
 .excellence-card h3 {
   font-size: 18px;
   margin-bottom: 12px;
+  color: #111827;
 }
+
+
+/* text */
 
 .excellence-card p {
   font-size: 14px;
-  color: #374151;
+  color: #475569;
   line-height: 1.6;
 }
+
 
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 1024px) {
+
   .excellence-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -71,7 +150,9 @@
   .section-header h2 {
     font-size: 30px;
   }
+
 }
+
 
 @media (max-width: 768px) {
 
@@ -99,8 +180,10 @@
     padding: 25px;
   }
 
-  .icon {
+  .excellence-icon {
     font-size: 26px;
+    width: 50px;
+    height: 50px;
   }
 
   .excellence-card h3 {
@@ -110,4 +193,5 @@
   .excellence-card p {
     font-size: 13px;
   }
+
 }

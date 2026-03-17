@@ -16,39 +16,65 @@ function Institutions() {
         <div className="institution-grid">
 
           <div className="institution-card">
+
+            <div className="institution-image">
+              <img src="/images/littlebirds.jpg" alt="Little Birds School" />
+            </div>
+
             <h3>Little Birds School</h3>
+
             <p className="institution-level">
               Pre-Primary | Primary | Secondary
             </p>
+
             <p>
               A nurturing environment focused on academic excellence,
               character building and holistic development.
             </p>
-            <button className="outline-btn">Learn More</button>
+
+
           </div>
 
+
           <div className="institution-card">
+
+            <div className="institution-image">
+              <img src="/images/juniorcollege.jpg" alt="Junior College" />
+            </div>
+
             <h3>Shri Chhatrapati Shivaji Maharaj Junior College</h3>
+
             <p className="institution-level">
               Higher Secondary Education
             </p>
+
             <p>
               Providing strong academic foundation and career-oriented
               education for future professionals.
             </p>
-            <button className="outline-btn">Learn More</button>
+
+
           </div>
 
+
           <div className="institution-card">
+
+            <div className="institution-image">
+              <img src="/images/defenceacademy.jpg" alt="Defence Academy" />
+            </div>
+
             <h3>Academy of Defence & Non-Defence Studies</h3>
+
             <p className="institution-level">
               Competitive & Career Training
             </p>
+
             <p>
               Dedicated preparation for defence services and other
               competitive career paths with discipline and excellence.
             </p>
-            <button className="outline-btn">Learn More</button>
+
+
           </div>
 
         </div>

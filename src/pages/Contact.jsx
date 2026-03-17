@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase";
 import "../styles/contact.css";
 
 function Contact() {
+
+  const [settings, setSettings] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -10,6 +12,24 @@ function Contact() {
     phone: "",
     message: ""
   });
+
+  useEffect(() => {
+    loadContactSettings();
+  }, []);
+
+  async function loadContactSettings() {
+
+    const { data } = await supabase
+      .from("contact_settings")
+      .select("*")
+      .limit(1)
+      .single();
+
+    if (data) {
+      setSettings(data);
+    }
+
+  }
 
   function handleChange(e) {
     setFormData({
@@ -21,14 +41,16 @@ function Contact() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const { error } = await supabase.from("contact_messages").insert([
-      {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message
-      }
-    ]);
+    const { error } = await supabase
+      .from("contact_messages")
+      .insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        }
+      ]);
 
     if (error) {
       alert(error.message);
@@ -49,6 +71,8 @@ function Contact() {
     <section className="contact-page">
       <div className="container">
 
+        {/* HEADER */}
+
         <div className="page-header">
           <h1>Contact Us</h1>
           <p>
@@ -57,20 +81,44 @@ function Contact() {
           </p>
         </div>
 
+
+        {/* GRID */}
+
         <div className="contact-grid">
 
-          {/* Left Side */}
+          {/* CONTACT INFO */}
+
           <div className="contact-info">
+
             <h3>Contact Information</h3>
 
-            <p><strong>Address:</strong> Your City, Maharashtra</p>
-            <p><strong>Phone:</strong> +91 98765 43210</p>
-            <p><strong>Email:</strong> info@dwarkapratishthan.edu</p>
-            <p><strong>Office Hours:</strong> 9:00 AM – 5:00 PM (Mon-Sat)</p>
+            <p>
+              <strong>Address:</strong>{" "}
+              {settings?.address || "Address not available"}
+            </p>
+
+            <p>
+              <strong>Phone:</strong>{" "}
+              {settings?.phone || "Phone not available"}
+            </p>
+
+            <p>
+              <strong>Email:</strong>{" "}
+              {settings?.email || "Email not available"}
+            </p>
+
+            <p>
+              <strong>Office Hours:</strong>{" "}
+              {settings?.office_hours || "Not available"}
+            </p>
+
           </div>
 
-          {/* Right Side Form */}
+
+          {/* CONTACT FORM */}
+
           <div className="contact-form">
+
             <h3>Send an Inquiry</h3>
 
             <form onSubmit={handleSubmit}>
@@ -111,19 +159,42 @@ function Contact() {
                 required
               />
 
-              <button type="submit">Submit Inquiry</button>
+              <button type="submit">
+                Submit Inquiry
+              </button>
 
             </form>
+
           </div>
 
         </div>
 
-        {/* Map */}
+
+        {/* MAP SECTION */}
+
         <div className="map-section">
+
           <h3>Campus Location</h3>
-          <div className="map-placeholder">
-            Google Map will be embedded here.
-          </div>
+
+          {settings?.map_embed ? (
+
+            <iframe
+              src={settings.map_embed}
+              width="100%"
+              height="350"
+              style={{ border: 0, borderRadius: "12px" }}
+              allowFullScreen=""
+              loading="lazy"
+            />
+
+          ) : (
+
+            <div className="map-placeholder">
+              Map location not added yet.
+            </div>
+
+          )}
+
         </div>
 
       </div>

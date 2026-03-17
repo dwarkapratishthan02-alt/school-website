@@ -1,14 +1,27 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../config/supabase";
 import "../styles/adminDashboard.css";
 
+import AdminSidebar from "../components/AdminSidebar";
+
+import { FaNewspaper, FaUserGraduate } from "react-icons/fa";
+
 function AdminDashboard() {
+
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ students: 0, notices: 0 });
+
+  const [stats, setStats] = useState({
+    students: 0,
+    notices: 0,
+  });
+
+  const [recentNotices, setRecentNotices] = useState([]);
 
   useEffect(() => {
+
     const checkAdmin = async () => {
+
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
@@ -25,9 +38,11 @@ function AdminDashboard() {
       if (!profile || profile.role !== "admin") {
         navigate("/");
       }
+
     };
 
-    const loadStats = async () => {
+    const loadData = async () => {
+
       const { count: studentCount } = await supabase
         .from("students")
         .select("*", { count: "exact", head: true });
@@ -36,46 +51,101 @@ function AdminDashboard() {
         .from("notices")
         .select("*", { count: "exact", head: true });
 
+      const { data: notices } = await supabase
+        .from("notices")
+        .select("id, title")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
       setStats({
         students: studentCount || 0,
         notices: noticeCount || 0,
       });
+
+      setRecentNotices(notices || []);
     };
 
     checkAdmin();
-    loadStats();
+    loadData();
+
   }, [navigate]);
 
   return (
-    <div className="admin-dashboard">
-      <div className="admin-container">
-        <h1 className="admin-title">Admin Dashboard</h1>
-        <p className="admin-sub">Manage your school portal</p>
 
-        <div className="admin-stats">
-          <div className="stat-card">
-            <h3>Total Students</h3>
-            <p>{stats.students}</p>
-          </div>
+    <div className="admin-layout">
 
-          <div className="stat-card">
-            <h3>Total Notices</h3>
-            <p>{stats.notices}</p>
-          </div>
+      {/* Sidebar */}
+      <AdminSidebar />
+
+      {/* Main Dashboard */}
+      <div className="admin-dashboard">
+
+        {/* Header */}
+        <div className="dashboard-header">
+          <h1>Dashboard</h1>
+          <p>School Management</p>
         </div>
 
-        <div className="admin-actions">
-          <Link to="/admin/news" className="admin-action">
-            📰 Manage Notices
-          </Link>
 
-          <Link to="/admin/students" className="admin-action">
-            👨‍🎓 Manage Students
-          </Link>
+        {/* Stats Cards */}
+        <div className="dashboard-cards">
+
+          <div className="dashboard-card students">
+            <div className="card-info">
+              <h3>{stats.students}</h3>
+              <p>Students</p>
+            </div>
+            <FaUserGraduate className="card-icon" />
+          </div>
+
+          <div className="dashboard-card notices">
+            <div className="card-info">
+              <h3>{stats.notices}</h3>
+              <p>Notices</p>
+            </div>
+            <FaNewspaper className="card-icon" />
+          </div>
+
         </div>
+
+
+        {/* Dashboard Grid */}
+        <div className="dashboard-grid">
+
+          {/* Student Analytics Placeholder */}
+          <div className="dashboard-box">
+            <h3>Student Activity</h3>
+            <p>Student analytics and activity charts will appear here.</p>
+          </div>
+
+
+          {/* Recent Notices */}
+          <div className="dashboard-box">
+
+            <h3>Recent Notices</h3>
+
+            {recentNotices.length === 0 ? (
+              <p>No notices available.</p>
+            ) : (
+              <ul className="recent-list">
+                {recentNotices.map((notice) => (
+                  <li key={notice.id}>
+                    {notice.title}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+          </div>
+
+        </div>
+
       </div>
+
     </div>
+
   );
+
 }
 
 export default AdminDashboard;

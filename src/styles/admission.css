@@ -1,54 +1,58 @@
-.admission-cta {
-  padding: 90px 0;
-  background: #1E40AF;
-  color: white;
-  text-align: center;
+.admission-cta{
+padding:80px 20px;
+
+background:linear-gradient(
+135deg,
+#111827,
+#1f2937
+);
+
+color:white;
 }
 
-.admission-content h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
+.admission-cta .container{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:40px;
 }
 
-.admission-content p {
-  font-size: 16px;
-  max-width: 650px;
-  margin: 0 auto 35px;
-  line-height: 1.6;
+.admission-text{
+max-width:650px;
 }
 
-.cta-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+.admission-cta h2{
+font-size:36px;
+margin-bottom:16px;
+color:white;
 }
 
-.cta-primary {
-  padding: 12px 26px;
-  background: white;
-  color: #1E40AF;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  font-weight: 500;
+.admission-cta p{
+color:#e5e7eb;
+line-height:1.7;
 }
 
-.cta-primary:hover {
-  background: #F3F4F6;
+.admission-btn{
+background:#FFC107;
+border:none;
+color:#111827;
+padding:14px 28px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+transition:.3s;
 }
 
-.cta-secondary {
-  padding: 12px 26px;
-  background: transparent;
-  border: 1px solid white;
-  color: white;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
+.admission-btn:hover{
+background:#e6ac00;
+transform:translateY(-2px);
 }
 
-.cta-secondary:hover {
-  background: white;
-  color: #1E40AF;
+@media(max-width:900px){
+
+.admission-cta .container{
+flex-direction:column;
+align-items:flex-start;
+}
+
 }

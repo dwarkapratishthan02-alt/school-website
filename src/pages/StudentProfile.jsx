@@ -1,122 +1,221 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase";
+import "../styles/studentProfile.css";
 
 function StudentProfile() {
+
   const [profile, setProfile] = useState({
-    name: "",
-    roll: "",
+    full_name: "",
+    roll_number: "",
     class: "",
-    email: "",
+    email: ""
   });
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchProfile();
+    loadProfile();
   }, []);
 
-  async function fetchProfile() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+  async function loadProfile() {
 
-    if (!session) return;
+    try {
 
-    const { data, error } = await supabase
-      .from("students")
-      .select("*")
-      .eq("id", session.user.id)
-      .single();
+      const { data: { session }, error } =
+        await supabase.auth.getSession();
 
-    if (!error && data) {
-      setProfile(data);
+      if (error || !session) {
+        console.error("No session found");
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (profileError) {
+        console.error("Profile load error:", profileError.message);
+        return;
+      }
+
+      if (data) {
+        setProfile({
+          full_name: data.full_name || "",
+          roll_number: data.roll_number || "",
+          class: data.class || "",
+          email: data.email || session.user.email
+        });
+      }
+
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    } finally {
+      setLoading(false);
     }
 
-    setLoading(false);
   }
 
   function handleChange(e) {
     setProfile({
       ...profile,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   }
 
   async function updateProfile(e) {
+
     e.preventDefault();
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    const { error } = await supabase
-      .from("students")
-      .update({
-        name: profile.name,
-        roll: profile.roll,
-        class: profile.class,
-      })
-      .eq("id", session.user.id);
-
-    if (error) {
-      alert(error.message);
+    if (!profile.full_name || !profile.class) {
+      alert("Name and class are required");
       return;
     }
 
-    alert("Profile updated successfully");
+    setSaving(true);
+
+    try {
+
+      const { data: { session } } =
+        await supabase.auth.getSession();
+
+      if (!session) return;
+
+      const userId = session.user.id;
+
+      // 🔥 Update profile table
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          full_name: profile.full_name,
+          roll_number: profile.roll_number,
+          class: profile.class,
+          updated_at: new Date()
+        })
+        .eq("id", userId);
+
+      if (profileError) {
+        alert("Failed to update profile");
+        return;
+      }
+
+      // 🔥 SYNC WITH STUDENTS TABLE (IMPORTANT)
+      const { data: existingStudent } = await supabase
+        .from("students")
+        .select("id")
+        .eq("email", profile.email)
+        .single();
+
+      if (existingStudent) {
+
+        await supabase
+          .from("students")
+          .update({
+            name: profile.full_name,
+            roll: profile.roll_number,
+            class: profile.class
+          })
+          .eq("email", profile.email);
+
+      } else {
+
+        // 🔥 Create student if not exists
+        await supabase
+          .from("students")
+          .insert([
+            {
+              name: profile.full_name,
+              roll: profile.roll_number,
+              class: profile.class,
+              email: profile.email
+            }
+          ]);
+
+      }
+
+      alert("Profile updated successfully!");
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    } finally {
+      setSaving(false);
+    }
+
   }
 
-  if (loading) return <p style={{ padding: "80px" }}>Loading...</p>;
+  if (loading) {
+    return (
+      <section className="student-profile">
+        <div className="container">
+          <p>Loading profile...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <div style={{ padding: "80px 0" }}>
+    <section className="student-profile">
+
       <div className="container">
+
         <h1>Student Profile</h1>
 
-        <form
-          onSubmit={updateProfile}
-          style={{
-            maxWidth: "500px",
-            marginTop: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-          }}
-        >
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={profile.name || ""}
-            onChange={handleChange}
-          />
+        <div className="profile-card">
 
-          <input
-            type="text"
-            name="roll"
-            placeholder="Roll Number"
-            value={profile.roll || ""}
-            onChange={handleChange}
-          />
+          <div className="profile-avatar">
+            👨‍🎓
+          </div>
 
-          <input
-            type="text"
-            name="class"
-            placeholder="Class"
-            value={profile.class || ""}
-            onChange={handleChange}
-          />
+          <form onSubmit={updateProfile}>
 
-          <input
-            type="email"
-            value={profile.email || ""}
-            disabled
-          />
+            <input
+              type="text"
+              name="full_name"
+              placeholder="Full Name"
+              value={profile.full_name}
+              onChange={handleChange}
+              required
+            />
 
-          <button type="submit">Update Profile</button>
-        </form>
+            <input
+              type="text"
+              name="roll_number"
+              placeholder="Roll Number"
+              value={profile.roll_number}
+              onChange={handleChange}
+            />
+
+            <input
+              type="text"
+              name="class"
+              placeholder="Class"
+              value={profile.class}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="email"
+              value={profile.email}
+              disabled
+            />
+
+            <button type="submit" disabled={saving}>
+              {saving ? "Updating..." : "Update Profile"}
+            </button>
+
+          </form>
+
+        </div>
+
       </div>
-    </div>
+
+    </section>
   );
 }
 

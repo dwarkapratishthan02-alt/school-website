@@ -1,43 +1,92 @@
-.admin-news-page {
-  padding: 80px 0;
+.admin-page{
+margin-left:240px;
+padding:50px;
+background:#f6f7fb;
+min-height:100vh;
 }
 
-.admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 40px;
+.page-title{
+font-size:30px;
+font-weight:700;
+margin-bottom:35px;
+color:#111827;
 }
 
-.admin-form input,
-.admin-form textarea {
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+/* Card */
+
+.news-card{
+background:white;
+padding:40px;
+border-radius:16px;
+box-shadow:0 12px 30px rgba(0,0,0,0.08);
+max-width:750px;
 }
 
-.admin-form button {
-  padding: 12px;
-  background: #0f172a;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
+/* Form */
+
+.news-form{
+display:flex;
+flex-direction:column;
+gap:18px;
 }
 
-.admin-news-card {
-  background: #f1f5f9;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+/* Labels */
+
+.news-form label{
+font-size:14px;
+font-weight:600;
+color:#374151;
 }
 
-.admin-news-card button {
-  margin-top: 10px;
-  background: crimson;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+/* Inputs */
+
+.news-form input,
+.news-form textarea{
+padding:12px 14px;
+border-radius:10px;
+border:1px solid #e5e7eb;
+font-size:14px;
+background:#fafafa;
+transition:0.2s;
+}
+
+.news-form input:focus,
+.news-form textarea:focus{
+outline:none;
+border-color:#FFC107;
+background:white;
+box-shadow:0 0 0 2px rgba(255,193,7,0.15);
+}
+
+/* Textarea */
+
+.news-form textarea{
+min-height:130px;
+resize:vertical;
+}
+
+/* File Upload */
+
+.news-form input[type="file"]{
+padding:10px;
+background:#fafafa;
+}
+
+/* Publish Button */
+
+.publish-btn{
+margin-top:10px;
+background:linear-gradient(135deg,#FFC107,#ffb300);
+border:none;
+padding:14px;
+border-radius:10px;
+font-weight:600;
+font-size:15px;
+cursor:pointer;
+transition:0.25s;
+}
+
+.publish-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 14px rgba(0,0,0,0.15);
 }

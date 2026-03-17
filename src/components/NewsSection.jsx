@@ -1,63 +1,90 @@
-import "../styles/news.css";
+import { useEffect, useState } from "react";
+import { supabase } from "../config/supabase";
+import "../styles/newsSection.css";
 
 function NewsSection() {
+
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  async function loadNews() {
+
+    const { data, error } = await supabase
+      .from("news")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(4);
+
+    if (error) {
+      console.log("Error loading news:", error);
+      return;
+    }
+
+    console.log("News data:", data); // debugging
+
+    setNews(data || []);
+  }
+
   return (
+
     <section className="news-section">
-      <div className="container">
 
-        <div className="section-header">
-          <h2>News & Announcements</h2>
-          <p>
-            Stay updated with the latest events, announcements and academic activities.
-          </p>
-        </div>
+      <div className="news-header">
+        <h2>News & Announcements</h2>
+        <p>Stay updated with the latest events and announcements.</p>
+      </div>
 
-        <div className="news-grid">
+      <div className="news-container">
 
-          {/* LEFT - Latest News */}
-          <div className="latest-news">
-            <h3>Latest News</h3>
+        {news.length === 0 ? (
 
-            <div className="news-item">
-              <span className="date">15 Jan 2026</span>
-              <p>Annual Sports Day successfully conducted.</p>
+          <p className="no-news">No announcements available.</p>
+
+        ) : (
+
+          news.map((item) => (
+
+            <div className="news-item" key={item.id}>
+
+              {/* PDF PREVIEW */}
+
+              <div className="pdf-preview">
+                {item.pdf_url ? (
+                  <a href={item.pdf_url} target="_blank" rel="noreferrer">
+                    📄 View PDF
+                  </a>
+                ) : (
+                  <span>No PDF</span>
+                )}
+              </div>
+
+              {/* TEXT */}
+
+              <div className="news-text">
+
+                <h3>{item.title}</h3>
+
+                <p>{item.content}</p>
+
+                <span className="news-date">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </span>
+
+              </div>
+
             </div>
 
-            <div className="news-item">
-              <span className="date">05 Jan 2026</span>
-              <p>Admissions open for Academic Year 2026-27.</p>
-            </div>
+          ))
 
-            <div className="news-item">
-              <span className="date">22 Dec 2025</span>
-              <p>Defence Academy orientation program held.</p>
-            </div>
-          </div>
-
-          {/* RIGHT - Upcoming Events */}
-          <div className="upcoming-events">
-            <h3>Upcoming Events</h3>
-
-            <div className="event-item">
-              <p><strong>Republic Day Celebration</strong></p>
-              <span>26 Jan 2026</span>
-            </div>
-
-            <div className="event-item">
-              <p><strong>Parent-Teacher Meeting</strong></p>
-              <span>10 Feb 2026</span>
-            </div>
-
-            <div className="event-item">
-              <p><strong>Board Exam Preparation Seminar</strong></p>
-              <span>20 Feb 2026</span>
-            </div>
-          </div>
-
-        </div>
+        )}
 
       </div>
+
     </section>
+
   );
 }
 

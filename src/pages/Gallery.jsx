@@ -1,34 +1,110 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../config/supabase";
 import "../styles/gallery.css";
 
 function Gallery() {
+
+  const [images, setImages] = useState([]);
+  const [category, setCategory] = useState("all");
+
+  useEffect(() => {
+    loadImages();
+  }, []);
+
+  const loadImages = async () => {
+
+    const { data, error } = await supabase
+      .from("gallery")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) {
+      setImages(data);
+    }
+
+  };
+
+  /* Filter images */
+
+  const filteredImages =
+    category === "all"
+      ? images
+      : images.filter((img) => img.category === category);
+
   return (
     <section className="gallery-page">
       <div className="container">
 
+        {/* HEADER */}
+
         <div className="page-header">
+
+          <span className="page-tag">Campus Moments</span>
+
           <h1>Gallery</h1>
+
           <p>
             Glimpses of campus life, academic excellence and co-curricular
             activities at Dwarka Pratishthan.
           </p>
+
+          <div className="header-divider"></div>
+
         </div>
 
-        {/* Category Buttons */}
+
+        {/* FILTER BUTTONS */}
+
         <div className="gallery-filters">
-          <button className="active">All</button>
-          <button>Academics</button>
-          <button>Sports</button>
-          <button>Events</button>
+
+          <button
+            className={category === "all" ? "active" : ""}
+            onClick={() => setCategory("all")}
+          >
+            All
+          </button>
+
+          <button
+            className={category === "academics" ? "active" : ""}
+            onClick={() => setCategory("academics")}
+          >
+            Academics
+          </button>
+
+          <button
+            className={category === "sports" ? "active" : ""}
+            onClick={() => setCategory("sports")}
+          >
+            Sports
+          </button>
+
+          <button
+            className={category === "events" ? "active" : ""}
+            onClick={() => setCategory("events")}
+          >
+            Events
+          </button>
+
         </div>
 
-        {/* Image Grid */}
+
+        {/* IMAGE GRID */}
+
         <div className="gallery-grid">
-          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" alt="Classroom" />
-          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754" alt="Campus" />
-          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7" alt="Library" />
-          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644" alt="Sports" />
-          <img src="https://images.unsplash.com/photo-1596495578065-6e0763fa1178" alt="Event" />
-          <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b" alt="Students" />
+
+          {filteredImages.length === 0 ? (
+            <p className="no-images">No images available</p>
+          ) : (
+            filteredImages.map((img) => (
+              <div className="gallery-card" key={img.id}>
+                <img
+                  src={img.image_url}
+                  alt={img.category || "Gallery image"}
+                />
+              </div>
+            ))
+          )}
+
         </div>
 
       </div>

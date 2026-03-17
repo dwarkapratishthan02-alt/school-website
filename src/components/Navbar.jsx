@@ -28,7 +28,7 @@ function Navbar() {
 
         {/* Logo */}
         <div className="logo">
-          <div className="logo-box">LOGO</div>
+          <img src="/logo.jpg" alt="Dwarka Pratishthan Logo" className="logo-img" />
           <span>Dwarka Pratishthan</span>
         </div>
 

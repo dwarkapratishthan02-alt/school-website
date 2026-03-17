@@ -1,0 +1,126 @@
+.admin-sidebar{
+width:240px;
+height:100vh;
+
+background:white;
+
+position:fixed;
+left:0;
+top:0;
+
+border-right:1px solid #eee;
+
+padding:25px 20px;
+}
+
+/* logo */
+
+.sidebar-logo{
+font-size:20px;
+font-weight:700;
+margin-bottom:30px;
+color:#333;
+}
+
+/* menu */
+
+.sidebar-menu{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.sidebar-menu a{
+display:flex;
+align-items:center;
+gap:12px;
+
+padding:12px 14px;
+
+border-radius:8px;
+
+text-decoration:none;
+
+color:#444;
+
+font-weight:500;
+
+transition:0.2s;
+}
+
+.sidebar-menu a:hover{
+background:#fff7cc;
+}
+
+.sidebar-menu a.active{
+background:#ffd54f;
+color:#000;
+}
+
+.sidebar-menu svg{
+font-size:18px;
+}
+.dashboard-cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:30px;
+margin-top:30px;
+}
+
+.dashboard-card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:30px;
+
+border-radius:16px;
+
+color:white;
+
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+
+transition:all .3s ease;
+}
+
+.dashboard-card:hover{
+transform:translateY(-6px);
+}
+
+/* student card */
+
+.dashboard-card.students{
+background:linear-gradient(135deg,#FFD54F,#FFC107);
+}
+
+/* notice card */
+
+.dashboard-card.notices{
+background:linear-gradient(135deg,#FFE082,#FFD54F);
+color:#333;
+}
+
+.card-info h3{
+font-size:38px;
+font-weight:700;
+}
+
+.card-info p{
+font-size:15px;
+margin-top:5px;
+}
+
+.card-icon{
+font-size:32px;
+
+width:60px;
+height:60px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:rgba(255,255,255,0.25);
+
+border-radius:50%;
+}

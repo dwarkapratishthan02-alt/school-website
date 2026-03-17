@@ -1,34 +1,40 @@
+import { useNavigate } from "react-router-dom";
 import "../styles/admission.css";
 
 function AdmissionCTA() {
+
+  const navigate = useNavigate();
+
+  const goToContact = () => {
+    navigate("/contact");
+  };
+
   return (
     <section className="admission-cta">
+
       <div className="container admission-content">
 
-        <h2>Admissions Starting Soon for 2026-27</h2>
+        <div className="admission-text">
 
-        <p>
-          Admissions for the academic year 2026-27 will commence shortly.
-          Stay connected with Dwarka Pratishthan and take the first step
-          toward academic excellence, discipline, and holistic development.
-        </p>
+          <h2>Admissions Starting Soon for 2026-27</h2>
 
-        <div className="cta-buttons">
-
-          {/* Download Prospectus Button */}
-          <a 
-            href="/prospectus.pdf" 
-            download 
-            className="prospectus-link"
-          >
-            <button className="cta-primary">
-              Download Prospectus
-            </button>
-          </a>
+          <p>
+            Admissions for the academic year 2026-27 will commence shortly.
+            Stay connected with Dwarka Pratishthan and take the first step
+            toward academic excellence, discipline, and holistic development.
+          </p>
 
         </div>
 
+        <button
+          className="admission-btn"
+          onClick={goToContact}
+        >
+          Contact for Admission
+        </button>
+
       </div>
+
     </section>
   );
 }

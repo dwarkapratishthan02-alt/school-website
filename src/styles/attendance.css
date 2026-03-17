@@ -1,0 +1,134 @@
+.attendance-page{
+padding:110px 0;
+
+background:linear-gradient(
+180deg,
+#ffffff 0%,
+#fff8e1 60%,
+#fef3c7 100%
+);
+}
+
+/* HEADER */
+
+.page-header{
+margin-bottom:40px;
+}
+
+/* SUMMARY */
+
+.attendance-summary{
+margin-bottom:40px;
+}
+
+.attendance-card{
+
+background:white;
+
+padding:30px;
+
+border-radius:14px;
+
+text-align:center;
+
+max-width:250px;
+
+border:1px solid #f1f5f9;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,0.06);
+
+position:relative;
+}
+
+.attendance-card::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:4px;
+background:#FFC107;
+}
+
+.attendance-card h2{
+font-size:36px;
+color:#92400e;
+}
+
+/* TABLE */
+
+.attendance-table table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,0.06);
+}
+
+.attendance-table th{
+
+background:#FFF8E1;
+
+padding:12px;
+
+text-align:left;
+}
+
+.attendance-table td{
+
+padding:12px;
+
+border-top:1px solid #f1f5f9;
+}
+
+/* STATUS */
+
+.present{
+color:#16a34a;
+font-weight:600;
+}
+
+.absent{
+color:#dc2626;
+font-weight:600;
+}
+
+/* EMPTY */
+
+.empty-box{
+
+background:white;
+
+padding:20px;
+
+border-radius:10px;
+
+border:1px solid #f1f5f9;
+
+text-align:center;
+
+color:#6b7280;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+.attendance-page{
+padding:80px 20px;
+}
+
+.attendance-table table{
+font-size:14px;
+}
+
+}

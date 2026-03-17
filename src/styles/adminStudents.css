@@ -1,0 +1,239 @@
+/* ============================= */
+/* ADMIN LAYOUT */
+/* ============================= */
+
+.admin-layout{
+display:flex;
+}
+
+/* main content area */
+
+.admin-page{
+margin-left:240px;      /* same as sidebar width */
+padding:50px;
+width:100%;
+background:#f6f7fb;
+min-height:100vh;
+}
+
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.page-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.page-header h1{
+font-size:30px;
+font-weight:700;
+color:#1f2937;
+}
+
+
+/* ============================= */
+/* ADD STUDENT BUTTON */
+/* ============================= */
+
+.add-btn{
+background:linear-gradient(135deg,#FFC107,#ffb300);
+border:none;
+padding:12px 22px;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+transition:0.25s;
+}
+
+.add-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 14px rgba(0,0,0,0.15);
+}
+
+
+/* ============================= */
+/* SEARCH BAR */
+/* ============================= */
+
+.search-container{
+margin-bottom:25px;
+}
+
+.search-container input{
+width:350px;
+padding:12px 14px;
+border-radius:10px;
+border:1px solid #e5e7eb;
+font-size:14px;
+outline:none;
+background:#fafafa;
+transition:0.2s;
+}
+
+.search-container input:focus{
+border-color:#FFC107;
+background:white;
+box-shadow:0 0 0 2px rgba(255,193,7,0.15);
+}
+
+
+/* ============================= */
+/* TABLE CARD */
+/* ============================= */
+
+.table-card{
+background:white;
+border-radius:14px;
+box-shadow:0 12px 30px rgba(0,0,0,0.08);
+overflow:hidden;
+}
+
+
+/* ============================= */
+/* TABLE */
+/* ============================= */
+
+.students-table{
+width:100%;
+border-collapse:collapse;
+}
+
+.students-table th{
+background:#f3f4f6;
+text-align:left;
+padding:16px;
+font-size:14px;
+font-weight:600;
+color:#374151;
+}
+
+.students-table td{
+padding:16px;
+border-top:1px solid #eee;
+font-size:14px;
+}
+
+.students-table tr:hover{
+background:#fafafa;
+}
+
+
+/* ============================= */
+/* STUDENT CELL (AVATAR + NAME) */
+/* ============================= */
+
+.student-cell{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.avatar{
+width:34px;
+height:34px;
+border-radius:50%;
+background:#FFC107;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+color:#111;
+}
+
+
+/* ============================= */
+/* DELETE BUTTON */
+/* ============================= */
+
+.delete-btn{
+background:#ef4444;
+border:none;
+color:white;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
+transition:0.2s;
+}
+
+.delete-btn:hover{
+background:#dc2626;
+}
+
+
+/* ============================= */
+/* EMPTY STATE */
+/* ============================= */
+
+.empty{
+text-align:center;
+padding:35px;
+color:#888;
+font-size:14px;
+}
+
+
+/* ============================= */
+/* MODAL */
+/* ============================= */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.4);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:1000;
+}
+
+.modal-content{
+background:white;
+padding:30px;
+border-radius:14px;
+width:360px;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+.modal-content h2{
+margin-bottom:15px;
+}
+
+.modal-content form{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.modal-content input{
+padding:10px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+
+/* modal buttons */
+
+.save-btn{
+background:#22c55e;
+border:none;
+padding:10px;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.cancel-btn{
+background:#e5e7eb;
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+}

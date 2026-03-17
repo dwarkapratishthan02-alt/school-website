@@ -1,0 +1,116 @@
+.admin-content {
+  padding: 40px;
+}
+
+.page-title {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* Card */
+
+.attendance-card {
+  background: white;
+  padding: 35px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  max-width: 900px;
+}
+
+/* Header */
+
+.attendance-header {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.attendance-header input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* TABLE */
+
+.attendance-table {
+  width: 100%;
+}
+
+/* Header row */
+
+.attendance-head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background: #efe2c2;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.attendance-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Center buttons */
+
+.attendance-row div:nth-child(2),
+.attendance-row div:nth-child(3),
+.attendance-head div:nth-child(2),
+.attendance-head div:nth-child(3) {
+  text-align: center;
+}
+
+/* Buttons */
+
+.present-btn,
+.absent-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Present */
+
+.present-btn {
+  background: #e7f5ec;
+  color: #2e7d32;
+}
+
+.present-btn.active {
+  background: #2e7d32;
+  color: white;
+}
+
+/* Absent */
+
+.absent-btn {
+  background: #fdeaea;
+  color: #c62828;
+}
+
+.absent-btn.active {
+  background: #c62828;
+  color: white;
+}
+
+/* Save button */
+
+.save-attendance-btn {
+  margin-top: 25px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  background: #f4b400;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}

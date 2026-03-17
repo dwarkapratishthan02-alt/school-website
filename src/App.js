@@ -5,6 +5,8 @@ import { supabase } from "./config/supabase";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+/* Public Pages */
+
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Academics from "./pages/Academics";
@@ -12,17 +14,36 @@ import Admissions from "./pages/Admissions";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import News from "./pages/News";
-import AdminNews from "./pages/AdminNews";
+
+/* Admin Pages */
 
 import AdminLogin from "./pages/AdminLogin";
-import StudentLogin from "./pages/StudentLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import StudentDashboard from "./pages/StudentDashboard";
-import StudentSignup from "./pages/StudentSignup";
-import StudentProfile from "./pages/StudentProfile";
+import AdminNews from "./pages/AdminNews";
 import AdminStudents from "./pages/AdminStudents";
+import AdminSlider from "./pages/AdminSlides";
+import AdminGallery from "./pages/AdminGallery";
+
+import AdminMaterials from "./pages/AdminMaterials";
+import AdminAttendance from "./pages/AdminAttendance";
+import AdminResults from "./pages/AdminResults";
+
+/* Student Pages */
+
+import StudentLogin from "./pages/StudentLogin";
+import StudentSignup from "./pages/StudentSignup";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentProfile from "./pages/StudentProfile";
+
+/* Student Modules */
+
+import StudyMaterial from "./pages/student/StudyMaterial";
+import Attendance from "./pages/student/Attendance";
+import Results from "./pages/student/Results";
+import Notices from "./pages/student/Notices";
 
 function App() {
+
   const location = useLocation();
 
   const [session, setSession] = useState(null);
@@ -34,6 +55,7 @@ function App() {
   }, []);
 
   async function initAuth() {
+
     const { data } = await supabase.auth.getSession();
     const currentSession = data?.session;
 
@@ -44,14 +66,11 @@ function App() {
       return;
     }
 
-    const { data: profile, error } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", currentSession.user.id)
       .maybeSingle();
-
-    console.log("Profile:", profile);
-    console.log("Error:", error);
 
     if (profile?.role === "admin") {
       setIsAdmin(true);
@@ -71,7 +90,9 @@ function App() {
       {!hideLayout && <Navbar />}
 
       <Routes>
-        {/* Public */}
+
+        {/* PUBLIC ROUTES */}
+
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
@@ -80,47 +101,89 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
 
-        {/* Admin */}
+        {/* ADMIN AUTH */}
+
         <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* ADMIN PANEL */}
 
         <Route
           path="/admin/dashboard"
-          element={
-            isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />
-          }
+          element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />}
         />
 
         <Route
           path="/admin/news"
-          element={
-            isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />
-          }
+          element={isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />}
         />
 
         <Route
           path="/admin/students"
-          element={
-            isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />
-          }
+          element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
         />
 
-        {/* Student */}
+        <Route
+          path="/admin/materials"
+          element={isAdmin ? <AdminMaterials /> : <Navigate to="/admin/login" />}
+        />
+
+        <Route
+          path="/admin/attendance"
+          element={isAdmin ? <AdminAttendance /> : <Navigate to="/admin/login" />}
+        />
+
+        <Route
+          path="/admin/results"
+          element={isAdmin ? <AdminResults /> : <Navigate to="/admin/login" />}
+        />
+
+        <Route
+          path="/admin/sliders"
+          element={isAdmin ? <AdminSlider /> : <Navigate to="/admin/login" />}
+        />
+
+        <Route
+          path="/admin/gallery"
+          element={isAdmin ? <AdminGallery /> : <Navigate to="/admin/login" />}
+        />
+
+        {/* STUDENT AUTH */}
+
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
 
+        {/* STUDENT PANEL */}
+
         <Route
           path="/student/dashboard"
-          element={
-            session ? <StudentDashboard /> : <Navigate to="/student/login" />
-          }
+          element={session ? <StudentDashboard /> : <Navigate to="/student/login" />}
         />
 
         <Route
           path="/student/profile"
-          element={
-            session ? <StudentProfile /> : <Navigate to="/student/login" />
-          }
+          element={session ? <StudentProfile /> : <Navigate to="/student/login" />}
         />
+
+        <Route
+          path="/student/study-material"
+          element={session ? <StudyMaterial /> : <Navigate to="/student/login" />}
+        />
+
+        <Route
+          path="/student/attendance"
+          element={session ? <Attendance /> : <Navigate to="/student/login" />}
+        />
+
+        <Route
+          path="/student/results"
+          element={session ? <Results /> : <Navigate to="/student/login" />}
+        />
+
+        <Route
+          path="/student/notices"
+          element={session ? <Notices /> : <Navigate to="/student/login" />}
+        />
+
       </Routes>
 
       {!hideLayout && <Footer />}
