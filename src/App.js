@@ -4,9 +4,9 @@ import { supabase } from "./config/supabase";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import StudentLayout from "./components/StudentLayout";
 
 /* Public Pages */
-
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Academics from "./pages/Academics";
@@ -16,27 +16,23 @@ import Contact from "./pages/Contact";
 import News from "./pages/News";
 
 /* Admin Pages */
-
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminNews from "./pages/AdminNews";
 import AdminStudents from "./pages/AdminStudents";
 import AdminSlider from "./pages/AdminSlides";
 import AdminGallery from "./pages/AdminGallery";
-
 import AdminMaterials from "./pages/AdminMaterials";
 import AdminAttendance from "./pages/AdminAttendance";
 import AdminResults from "./pages/AdminResults";
 
 /* Student Pages */
-
 import StudentLogin from "./pages/StudentLogin";
 import StudentSignup from "./pages/StudentSignup";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentProfile from "./pages/StudentProfile";
 
 /* Student Modules */
-
 import StudyMaterial from "./pages/student/StudyMaterial";
 import Attendance from "./pages/student/Attendance";
 import Results from "./pages/student/Results";
@@ -91,8 +87,7 @@ function App() {
 
       <Routes>
 
-        {/* PUBLIC ROUTES */}
-
+        {/* PUBLIC */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
@@ -101,87 +96,100 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
 
-        {/* ADMIN AUTH */}
-
+        {/* ADMIN */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        {/* ADMIN PANEL */}
-
-        <Route
-          path="/admin/dashboard"
-          element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/news"
-          element={isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/students"
-          element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/materials"
-          element={isAdmin ? <AdminMaterials /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/attendance"
-          element={isAdmin ? <AdminAttendance /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/results"
-          element={isAdmin ? <AdminResults /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/sliders"
-          element={isAdmin ? <AdminSlider /> : <Navigate to="/admin/login" />}
-        />
-
-        <Route
-          path="/admin/gallery"
-          element={isAdmin ? <AdminGallery /> : <Navigate to="/admin/login" />}
-        />
+        <Route path="/admin/dashboard" element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/news" element={isAdmin ? <AdminNews /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/students" element={isAdmin ? <AdminStudents /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/materials" element={isAdmin ? <AdminMaterials /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/attendance" element={isAdmin ? <AdminAttendance /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/results" element={isAdmin ? <AdminResults /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/sliders" element={isAdmin ? <AdminSlider /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/gallery" element={isAdmin ? <AdminGallery /> : <Navigate to="/admin/login" />} />
 
         {/* STUDENT AUTH */}
-
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
 
-        {/* STUDENT PANEL */}
+        {/* STUDENT PANEL (🔥 SIDEBAR INCLUDED) */}
 
         <Route
           path="/student/dashboard"
-          element={session ? <StudentDashboard /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <StudentDashboard />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
         <Route
           path="/student/profile"
-          element={session ? <StudentProfile /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <StudentProfile />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
         <Route
           path="/student/study-material"
-          element={session ? <StudyMaterial /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <StudyMaterial />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
         <Route
           path="/student/attendance"
-          element={session ? <Attendance /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <Attendance />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
         <Route
           path="/student/results"
-          element={session ? <Results /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <Results />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
         <Route
           path="/student/notices"
-          element={session ? <Notices /> : <Navigate to="/student/login" />}
+          element={
+            session ? (
+              <StudentLayout>
+                <Notices />
+              </StudentLayout>
+            ) : (
+              <Navigate to="/student/login" />
+            )
+          }
         />
 
       </Routes>

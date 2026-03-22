@@ -8,6 +8,7 @@ function Attendance() {
   const [percentage, setPercentage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [studentFound, setStudentFound] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadAttendance();
@@ -16,51 +17,63 @@ function Attendance() {
   async function loadAttendance() {
 
     try {
-
       setLoading(true);
+      setError(null);
 
-      // 🔥 Get session
-      const { data: { session }, error: sessionError } =
-        await supabase.auth.getSession();
+      // 🔥 Get logged-in user
+      const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
 
-      if (sessionError || !session) {
-        console.error("No session found");
-        setLoading(false);
+      if (userError || !user) {
+        setError("User not logged in");
         return;
       }
 
-      const userEmail = session.user.email;
+      let studentId = null;
 
-      // 🔥 Find student using email (IMPORTANT FIX)
-      const { data: student, error: studentError } = await supabase
-        .from("students")
+      // 🔥 Try profiles table
+      const { data: profile } = await supabase
+        .from("profiles")
         .select("id")
-        .eq("email", userEmail)
+        .eq("id", user.id)
         .single();
 
-      if (studentError || !student) {
-        console.warn("Student not found");
+      if (profile) {
+        studentId = profile.id;
+      } else {
+
+        // 🔥 Fallback: students table (your case)
+        const { data: student } = await supabase
+          .from("students")
+          .select("id")
+          .eq("email", user.email)
+          .single();
+
+        if (student) {
+          studentId = student.id;
+        }
+      }
+
+      if (!studentId) {
         setStudentFound(false);
-        setRecords([]);
         return;
       }
 
       setStudentFound(true);
 
-      // 🔥 Fetch attendance using correct student_id
-      const { data, error } = await supabase
+      // 🔥 Fetch attendance
+      const { data, error: attendanceError } = await supabase
         .from("attendance")
         .select("*")
-        .eq("student_id", student.id)
+        .eq("student_id", studentId)
         .order("date", { ascending: false });
 
-      if (error) {
-        console.error("Attendance fetch error:", error.message);
-        setRecords([]);
+      if (attendanceError) {
+        setError("Failed to load attendance");
         return;
       }
 
-      if (data) {
+      if (data && data.length > 0) {
 
         setRecords(data);
 
@@ -70,16 +83,17 @@ function Attendance() {
 
         const total = data.length;
 
-        if (total > 0) {
-          setPercentage(Math.round((present / total) * 100));
-        } else {
-          setPercentage(0);
-        }
+        const percent = Math.round((present / total) * 100);
+        setPercentage(percent);
 
+      } else {
+        setRecords([]);
+        setPercentage(0);
       }
 
     } catch (err) {
-      console.error("Unexpected error:", err);
+      console.error(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -87,6 +101,7 @@ function Attendance() {
   }
 
   function formatDate(date) {
+    if (!date) return "";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
@@ -105,7 +120,6 @@ function Attendance() {
         </div>
 
         {/* 🔥 SUMMARY CARD */}
-
         <div className="attendance-summary">
 
           <div className="attendance-card">
@@ -116,28 +130,38 @@ function Attendance() {
         </div>
 
         {/* 🔥 TABLE */}
-
         <div className="attendance-table">
 
-          {loading ? (
-
+          {/* Loading */}
+          {loading && (
             <div className="empty-box">
               Loading attendance...
             </div>
+          )}
 
-          ) : !studentFound ? (
+          {/* Error */}
+          {!loading && error && (
+            <div className="empty-box">
+              {error}
+            </div>
+          )}
 
+          {/* Student not found */}
+          {!loading && !error && !studentFound && (
             <div className="empty-box">
               Your student record was not found. Please contact admin.
             </div>
+          )}
 
-          ) : records.length === 0 ? (
-
+          {/* No records */}
+          {!loading && !error && studentFound && records.length === 0 && (
             <div className="empty-box">
               No attendance records found.
             </div>
+          )}
 
-          ) : (
+          {/* Table */}
+          {!loading && !error && studentFound && records.length > 0 && (
 
             <table>
 

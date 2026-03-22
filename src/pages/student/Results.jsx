@@ -7,69 +7,81 @@ function Results() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [studentFound, setStudentFound] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadResults();
   }, []);
 
   async function loadResults() {
-
     try {
-
       setLoading(true);
+      setError(null);
 
-      // 🔥 Get session
-      const { data: { session }, error: sessionError } =
-        await supabase.auth.getSession();
+      // 🔥 Get logged in user
+      const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
 
-      if (sessionError || !session) {
-        console.error("No session");
-        setLoading(false);
+      if (userError || !user) {
+        setError("User not logged in");
         return;
       }
 
-      const userEmail = session.user.email;
+      let studentId = null;
 
-      // 🔥 Find student using email
-      const { data: student, error: studentError } = await supabase
-        .from("students")
+      // 🔥 Try profiles table first
+      const { data: profile } = await supabase
+        .from("profiles")
         .select("id")
-        .eq("email", userEmail)
+        .eq("id", user.id)
         .single();
 
-      if (studentError || !student) {
-        console.warn("Student not found for this user");
+      if (profile) {
+        studentId = profile.id;
+      } else {
+        // 🔥 Fallback: students table (your case)
+        const { data: student } = await supabase
+          .from("students")
+          .select("id")
+          .eq("email", user.email)
+          .single();
+
+        if (student) {
+          studentId = student.id;
+        }
+      }
+
+      if (!studentId) {
         setStudentFound(false);
-        setResults([]);
         return;
       }
 
       setStudentFound(true);
 
       // 🔥 Fetch results
-      const { data, error } = await supabase
+      const { data, error: resultError } = await supabase
         .from("results")
         .select("*")
-        .eq("student_id", student.id)
+        .eq("student_id", studentId)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Results fetch error:", error.message);
-        setResults([]);
+      if (resultError) {
+        setError("Failed to load results");
         return;
       }
 
       setResults(data || []);
 
     } catch (err) {
-      console.error("Unexpected error:", err);
+      console.error(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
-
   }
 
   function formatDate(date) {
+    if (!date) return "";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
@@ -89,25 +101,36 @@ function Results() {
 
         <div className="results-table">
 
-          {loading ? (
-
+          {/* 🔥 Loading */}
+          {loading && (
             <div className="empty-box">
               Loading results...
             </div>
+          )}
 
-          ) : !studentFound ? (
+          {/* 🔥 Error */}
+          {!loading && error && (
+            <div className="empty-box">
+              {error}
+            </div>
+          )}
 
+          {/* 🔥 Student not found */}
+          {!loading && !error && !studentFound && (
             <div className="empty-box">
               Your student record was not found. Please contact admin.
             </div>
+          )}
 
-          ) : results.length === 0 ? (
-
+          {/* 🔥 No results */}
+          {!loading && !error && studentFound && results.length === 0 && (
             <div className="empty-box">
               No results available yet.
             </div>
+          )}
 
-          ) : (
+          {/* 🔥 Results Table */}
+          {!loading && !error && studentFound && results.length > 0 && (
 
             <table>
 

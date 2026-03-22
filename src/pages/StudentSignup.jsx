@@ -10,6 +10,7 @@ function StudentSignup() {
   const [formData, setFormData] = useState({
     name: "",
     roll: "",
+    class: "",
     email: "",
     password: "",
   });
@@ -27,21 +28,38 @@ function StudentSignup() {
     if (loading) return;
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
+    try {
+      // 🔥 1. Create auth user
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
 
-    if (error) {
-      alert(error.message);
+      if (error) throw error;
+
+      // 🔥 2. Insert into students table
+      const { error: insertError } = await supabase
+        .from("students")
+        .insert([
+          {
+            name: formData.name,
+            roll_no: formData.roll,
+            class: formData.class,
+            email: formData.email,
+          },
+        ]);
+
+      if (insertError) throw insertError;
+
+      alert("Signup successful! Please login.");
+
+      navigate("/student/login");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Signup failed");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    alert("Signup successful! Please login.");
-
-    navigate("/student/login");
-    setLoading(false);
   }
 
   return (
@@ -66,6 +84,26 @@ function StudentSignup() {
           onChange={handleChange}
           required
         />
+
+        {/* 🔥 NEW: CLASS FIELD */}
+        <select
+          name="class"
+          value={formData.class}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Class</option>
+          <option value="01">Class 01</option>
+          <option value="02">Class 02</option>
+          <option value="03">Class 03</option>
+          <option value="04">Class 04</option>
+          <option value="05">Class 05</option>
+          <option value="06">Class 06</option>
+          <option value="07">Class 07</option>
+          <option value="08">Class 08</option>
+          <option value="09">Class 09</option>
+          <option value="10">Class 10</option>
+        </select>
 
         <input
           type="email"

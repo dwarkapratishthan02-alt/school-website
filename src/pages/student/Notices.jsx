@@ -6,22 +6,70 @@ function Notices() {
 
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [studentClass, setStudentClass] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadNotices();
   }, []);
 
   async function loadNotices() {
-
     try {
+      setLoading(true);
+      setError(null);
 
-      const { data, error } = await supabase
+      // 🔥 Get logged in user
+      const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
+
+      if (userError || !user) {
+        setError("User not logged in");
+        return;
+      }
+
+      let studentClassValue = null;
+
+      // 🔥 Try profiles table
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("class")
+        .eq("id", user.id)
+        .single();
+
+      if (profile && profile.class) {
+        studentClassValue = profile.class;
+      } else {
+
+        // 🔥 Fallback: students table
+        const { data: student } = await supabase
+          .from("students")
+          .select("class")
+          .eq("email", user.email)
+          .single();
+
+        if (student && student.class) {
+          studentClassValue = student.class;
+        }
+      }
+
+      setStudentClass(studentClassValue);
+
+      // 🔥 Fetch notices (class + general)
+      let query = supabase
         .from("notices")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Notice fetch error:", error);
+      if (studentClassValue) {
+        query = query.or(
+          `class.eq.${studentClassValue},class.is.null`
+        );
+      }
+
+      const { data, error: noticeError } = await query;
+
+      if (noticeError) {
+        setError("Failed to load notices");
         return;
       }
 
@@ -29,13 +77,14 @@ function Notices() {
 
     } catch (err) {
       console.error(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
-
   }
 
   function formatDate(date) {
+    if (!date) return "";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
@@ -50,23 +99,36 @@ function Notices() {
 
         <div className="page-header">
           <h1>School Notices</h1>
-          <p>Stay updated with the latest announcements.</p>
+          <p>
+            {studentClass
+              ? `Showing notices for Class ${studentClass}`
+              : "Stay updated with the latest announcements."}
+          </p>
         </div>
 
-
-        {loading ? (
-
+        {/* 🔥 Loading */}
+        {loading && (
           <div className="empty-box">
             Loading notices...
           </div>
+        )}
 
-        ) : notices.length === 0 ? (
+        {/* 🔥 Error */}
+        {!loading && error && (
+          <div className="empty-box">
+            {error}
+          </div>
+        )}
 
+        {/* 🔥 No Data */}
+        {!loading && !error && notices.length === 0 && (
           <div className="empty-box">
             No notices available.
           </div>
+        )}
 
-        ) : (
+        {/* 🔥 Notices */}
+        {!loading && !error && notices.length > 0 && (
 
           <div className="notice-list">
 
@@ -81,8 +143,15 @@ function Notices() {
                 <h3>{notice.title}</h3>
 
                 <p>
-                  {notice.description}
+                  {notice.description || "No details available"}
                 </p>
+
+                {/* 🔥 Show class badge */}
+                {notice.class && (
+                  <span className="notice-class">
+                    Class {notice.class}
+                  </span>
+                )}
 
               </div>
 

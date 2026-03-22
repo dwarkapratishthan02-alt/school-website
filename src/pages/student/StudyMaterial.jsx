@@ -7,74 +7,82 @@ function StudyMaterial() {
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [studentClass, setStudentClass] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadMaterials();
   }, []);
 
   async function loadMaterials() {
-
     try {
-
       setLoading(true);
+      setError(null);
 
-      // 🔥 Get session
-      const { data: { session }, error: sessionError } =
-        await supabase.auth.getSession();
+      // 🔥 Get logged in user
+      const { data: { user }, error: userError } =
+        await supabase.auth.getUser();
 
-      if (sessionError || !session) {
-        console.error("No session found");
-        setLoading(false);
+      if (userError || !user) {
+        setError("User not logged in");
         return;
       }
 
-      const userId = session.user.id;
+      let studentClassValue = null;
 
-      // 🔥 Get student profile
-      const { data: profile, error: profileError } = await supabase
+      // 🔥 Try profiles table
+      const { data: profile } = await supabase
         .from("profiles")
         .select("class")
-        .eq("id", userId)
+        .eq("id", user.id)
         .single();
 
-      if (profileError || !profile) {
-        console.error("Profile not found");
-        setLoading(false);
+      if (profile && profile.class) {
+        studentClassValue = profile.class;
+      } else {
+
+        // 🔥 Fallback: students table (IMPORTANT for your setup)
+        const { data: student } = await supabase
+          .from("students")
+          .select("class")
+          .eq("email", user.email)
+          .single();
+
+        if (student && student.class) {
+          studentClassValue = student.class;
+        }
+      }
+
+      if (!studentClassValue) {
+        setError("Your class is not assigned yet.");
         return;
       }
 
-      if (!profile.class) {
-        console.warn("Student class not assigned");
-        setLoading(false);
-        return;
-      }
+      setStudentClass(studentClassValue);
 
-      setStudentClass(profile.class);
-
-      // 🔥 Fetch materials for student's class
-      const { data, error } = await supabase
+      // 🔥 Fetch materials for class
+      const { data, error: materialError } = await supabase
         .from("study_materials")
         .select("*")
-        .eq("class", profile.class)
+        .eq("class", studentClassValue)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Materials fetch error:", error.message);
-        setMaterials([]);
+      if (materialError) {
+        setError("Failed to load materials");
         return;
       }
 
       setMaterials(data || []);
 
     } catch (err) {
-      console.error("Unexpected error:", err);
+      console.error(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
-
   }
 
   function formatDate(date) {
+    if (!date) return "";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
@@ -92,66 +100,66 @@ function StudyMaterial() {
           <p>
             {studentClass
               ? `Resources for Class ${studentClass}`
-              : "Download notes and learning resources uploaded by teachers."}
+              : "Loading your class data..."}
           </p>
         </div>
 
         <div className="materials-grid">
 
-          {loading ? (
-
+          {/* 🔥 Loading */}
+          {loading && (
             <div className="empty-box">
               Loading study materials...
             </div>
+          )}
 
-          ) : !studentClass ? (
-
+          {/* 🔥 Error */}
+          {!loading && error && (
             <div className="empty-box">
-              Your class is not assigned yet. Please contact admin.
+              {error}
             </div>
+          )}
 
-          ) : materials.length === 0 ? (
-
+          {/* 🔥 No Data */}
+          {!loading && !error && materials.length === 0 && (
             <div className="empty-box">
               No study materials available for your class.
             </div>
-
-          ) : (
-
-            materials.map((item) => (
-
-              <div key={item.id} className="material-card">
-
-                <h3>{item.title}</h3>
-
-                <p>
-                  {item.description || "No description available"}
-                </p>
-
-                <span className="material-class">
-                  Class: {item.class}
-                </span>
-
-                <span className="material-date">
-                  Uploaded: {formatDate(item.created_at)}
-                </span>
-
-                {item.file_url && (
-                  <a
-                    href={item.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="download-btn"
-                  >
-                    Download
-                  </a>
-                )}
-
-              </div>
-
-            ))
-
           )}
+
+          {/* 🔥 Data */}
+          {!loading && !error && materials.map((item) => (
+
+            <div key={item.id} className="material-card">
+
+              <h3>{item.title}</h3>
+
+              <p>
+                {item.description || "No description available"}
+              </p>
+
+              <span className="material-class">
+                Class: {item.class}
+              </span>
+
+              <span className="material-date">
+                Uploaded: {formatDate(item.created_at)}
+              </span>
+
+              {item.file_url && (
+                <a
+                  href={item.file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="download-btn"
+                >
+                  Download
+                </a>
+              )}
+
+            </div>
+
+          ))}
 
         </div>
 
