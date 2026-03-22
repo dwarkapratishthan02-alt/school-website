@@ -18,6 +18,11 @@ function AdminMaterials() {
 
   const [loading, setLoading] = useState(false);
 
+  // 🔥 PREDEFINED CLASSES (IMPORTANT)
+  const classOptions = [
+    "1","2","3","4","5","6","7","8","9","10","11","12"
+  ];
+
   useEffect(() => {
     loadMaterials();
   }, []);
@@ -69,17 +74,25 @@ function AdminMaterials() {
       return;
     }
 
+    if (!formData.class) {
+      alert("Please select a class");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const fileName = `${Date.now()}-${formData.file.name}`;
 
-      // Upload file
+      // 🔥 Upload file
       const { error: uploadError } = await supabase.storage
         .from("materials")
         .upload(fileName, formData.file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error(uploadError);
+        throw new Error("File upload failed");
+      }
 
       const { data } = supabase.storage
         .from("materials")
@@ -87,23 +100,25 @@ function AdminMaterials() {
 
       const fileUrl = data.publicUrl;
 
-      // Insert into DB
+      // 🔥 Insert into DB
       const { error } = await supabase
         .from("study_materials")
         .insert([
           {
             title: formData.title,
             description: formData.description,
-            class: formData.class,
+            class: formData.class, // ✅ IMPORTANT
             file_url: fileUrl
           }
         ]);
 
-      if (error) throw error;
+      if (error) {
+        console.error(error);
+        throw new Error("Database error");
+      }
 
       alert("Material uploaded successfully");
 
-      // Reset form
       setFormData({
         title: "",
         description: "",
@@ -111,25 +126,23 @@ function AdminMaterials() {
         file: null
       });
 
-      // Reset file input manually
       document.querySelector('input[name="file"]').value = "";
 
       loadMaterials();
 
     } catch (err) {
       console.error(err);
-      alert("Upload failed");
+      alert(err.message || "Upload failed");
     } finally {
       setLoading(false);
     }
   }
 
   async function deleteMaterial(item) {
-    const confirmDelete = window.confirm("Delete this material?");
-    if (!confirmDelete) return;
+
+    if (!window.confirm("Delete this material?")) return;
 
     try {
-      // Delete DB record
       const { error } = await supabase
         .from("study_materials")
         .delete()
@@ -137,7 +150,7 @@ function AdminMaterials() {
 
       if (error) throw error;
 
-      // Delete file from storage
+      // delete from storage
       try {
         const fileName = item.file_url.split("/materials/")[1];
         if (fileName) {
@@ -157,6 +170,7 @@ function AdminMaterials() {
     }
   }
 
+  // 🔥 FILTER
   const filteredMaterials = materials.filter((m) =>
     selectedClass === "" || m.class === selectedClass
   );
@@ -167,7 +181,7 @@ function AdminMaterials() {
 
       <AdminSidebar />
 
-      <div className="admin-page"> {/* 🔥 FIXED */}
+      <div className="admin-page">
 
         <h1 className="page-title">Study Materials Manager</h1>
 
@@ -212,14 +226,20 @@ function AdminMaterials() {
                 onChange={handleChange}
               />
 
-              <input
-                type="text"
+              {/* 🔥 FIXED CLASS INPUT */}
+              <select
                 name="class"
-                placeholder="Class (Example: 10)"
                 value={formData.class}
                 onChange={handleChange}
                 required
-              />
+              >
+                <option value="">Select Class</option>
+                {classOptions.map((cls) => (
+                  <option key={cls} value={cls}>
+                    Class {cls}
+                  </option>
+                ))}
+              </select>
 
               <input
                 type="file"
@@ -256,20 +276,16 @@ function AdminMaterials() {
               <tbody>
 
                 {filteredMaterials.length === 0 ? (
-
                   <tr>
                     <td colSpan="4">No materials found</td>
                   </tr>
-
                 ) : (
-
                   filteredMaterials.map((item) => (
-
                     <tr key={item.id}>
 
                       <td>{item.title}</td>
 
-                      <td>{item.class}</td>
+                      <td>Class {item.class}</td>
 
                       <td>
                         <a
@@ -291,9 +307,7 @@ function AdminMaterials() {
                       </td>
 
                     </tr>
-
                   ))
-
                 )}
 
               </tbody>

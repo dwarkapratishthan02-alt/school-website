@@ -5,23 +5,20 @@ import "../styles/adminAttendance.css";
 
 function AdminAttendance() {
 
+  const today = new Date().toISOString().split("T")[0];
+
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({});
-
   const [selectedClass, setSelectedClass] = useState("");
   const [classes, setClasses] = useState([]);
+  const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc"); // roll sort
 
-  const [date, setDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-
-  // ✅ LOAD STUDENTS (FIXED)
+  // LOAD STUDENTS
   const loadStudents = useCallback(async () => {
-
     const { data, error } = await supabase
       .from("students")
-      .select("*")
-      .order("name", { ascending: true });
+      .select("*");
 
     if (error) {
       console.error(error);
@@ -34,16 +31,14 @@ function AdminAttendance() {
       ...new Set(data.map((s) => s.class).filter(Boolean))
     ];
     setClasses(uniqueClasses);
-
   }, []);
 
-  // ✅ LOAD EXISTING ATTENDANCE (FIXED)
+  // LOAD ATTENDANCE
   const loadExistingAttendance = useCallback(async () => {
-
     const { data, error } = await supabase
       .from("attendance")
       .select("student_id, status")
-      .eq("date", date);
+      .eq("date", today);
 
     if (error) {
       console.error(error);
@@ -56,19 +51,12 @@ function AdminAttendance() {
     });
 
     setAttendance(map);
+  }, [today]);
 
-  }, [date]);
-
-  // ✅ EFFECTS (FIXED DEPENDENCIES)
   useEffect(() => {
     loadStudents();
-  }, [loadStudents]);
-
-  useEffect(() => {
-    if (selectedClass && date) {
-      loadExistingAttendance();
-    }
-  }, [selectedClass, date, loadExistingAttendance]);
+    loadExistingAttendance();
+  }, [loadStudents, loadExistingAttendance]);
 
   function markAttendance(studentId, status) {
     setAttendance((prev) => ({
@@ -77,6 +65,7 @@ function AdminAttendance() {
     }));
   }
 
+  // SAVE ATTENDANCE
   async function saveAttendance() {
 
     if (!selectedClass) {
@@ -87,7 +76,7 @@ function AdminAttendance() {
     const records = Object.keys(attendance).map((studentId) => ({
       student_id: studentId,
       status: attendance[studentId],
-      date: date
+      date: today
     }));
 
     if (records.length === 0) {
@@ -95,18 +84,14 @@ function AdminAttendance() {
       return;
     }
 
-    // 🔥 Delete old attendance
-    await supabase
-      .from("attendance")
-      .delete()
-      .eq("date", date);
-
-    // 🔥 Insert new attendance
     const { error } = await supabase
       .from("attendance")
-      .insert(records);
+      .upsert(records, {
+        onConflict: ["student_id", "date"]
+      });
 
     if (error) {
+      console.error(error);
       alert("Error saving attendance");
       return;
     }
@@ -114,24 +99,36 @@ function AdminAttendance() {
     alert("Attendance saved successfully!");
   }
 
-  const filteredStudents = students.filter((s) =>
-    selectedClass === "" || s.class === selectedClass
-  );
+  // 🔥 FILTER + SEARCH + SORT
+  const filteredStudents = students
+    .filter((s) => selectedClass === "" || s.class === selectedClass)
+    .filter((s) =>
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      (s.roll_no || "").toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return (a.roll_no || "").localeCompare(b.roll_no || "");
+      } else {
+        return (b.roll_no || "").localeCompare(a.roll_no || "");
+      }
+    });
 
   return (
-
     <div className="admin-layout">
 
       <AdminSidebar />
 
-      <div className="admin-content">
+      <div className="admin-page">
 
         <h1 className="page-title">Attendance Manager</h1>
 
+        {/* FILTER */}
         <div className="attendance-header">
 
-          <div>
-            <label>Select Class</label>
+          {/* CLASS */}
+          <div className="filter-group">
+            <label>Class</label>
             <select
               value={selectedClass}
               onChange={(e) => {
@@ -148,49 +145,70 @@ function AdminAttendance() {
             </select>
           </div>
 
-          <div>
-            <label>Select Date</label>
+          {/* DATE */}
+          <div className="filter-group">
+            <label>Date</label>
+            <input type="date" value={today} disabled />
+          </div>
+
+          {/* 🔥 SEARCH */}
+          <div className="filter-group">
+            <label>Search</label>
             <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              type="text"
+              placeholder="Search name or roll no"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
+          </div>
+
+          {/* 🔥 SORT */}
+          <div className="filter-group">
+            <label>Sort Roll No</label>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
           </div>
 
         </div>
 
+        {/* TABLE */}
         <div className="attendance-card">
 
           <div className="attendance-table">
 
             <div className="attendance-head">
-              <span>Student</span>
-              <span>Present</span>
-              <span>Absent</span>
+              <span>Roll No</span>
+              <span>Student Name</span>
+              <span>Status</span>
             </div>
 
             {filteredStudents.length === 0 ? (
-
               <div className="empty">
-                No students found for this class
+                No students found
               </div>
-
             ) : (
-
               filteredStudents.map((student) => (
-
                 <div key={student.id} className="attendance-row">
 
+                  {/* 🔥 ROLL NO */}
+                  <div>{student.roll_no}</div>
+
+                  {/* NAME */}
                   <div className="student-name">
                     {student.name}
                   </div>
 
-                  <div>
+                  {/* STATUS */}
+                  <div className="attendance-actions">
+
                     <button
                       className={`present-btn ${
-                        attendance[student.id] === "present"
-                          ? "active"
-                          : ""
+                        attendance[student.id] === "present" ? "active" : ""
                       }`}
                       onClick={() =>
                         markAttendance(student.id, "present")
@@ -198,14 +216,10 @@ function AdminAttendance() {
                     >
                       Present
                     </button>
-                  </div>
 
-                  <div>
                     <button
                       className={`absent-btn ${
-                        attendance[student.id] === "absent"
-                          ? "active"
-                          : ""
+                        attendance[student.id] === "absent" ? "active" : ""
                       }`}
                       onClick={() =>
                         markAttendance(student.id, "absent")
@@ -213,12 +227,11 @@ function AdminAttendance() {
                     >
                       Absent
                     </button>
+
                   </div>
 
                 </div>
-
               ))
-
             )}
 
           </div>
@@ -235,9 +248,7 @@ function AdminAttendance() {
       </div>
 
     </div>
-
   );
-
 }
 
 export default AdminAttendance;

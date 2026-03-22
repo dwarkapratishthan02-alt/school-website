@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { supabase } from "../config/supabase";
 import "../styles/adminSidebar.css";
 
 import {
@@ -9,7 +10,8 @@ import {
   FaImages,
   FaBook,
   FaClipboardCheck,
-  FaBars
+  FaBars,
+  FaSignOutAlt
 } from "react-icons/fa";
 
 import { MdSlideshow } from "react-icons/md";
@@ -18,9 +20,16 @@ import { HiDocumentReport } from "react-icons/hi";
 function AdminSidebar() {
 
   const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
+
+  // 🔥 LOGOUT FUNCTION
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate("/login"); // change if your route is different
+  }
 
   return (
     <>
@@ -87,6 +96,15 @@ function AdminSidebar() {
           </Link>
 
         </nav>
+
+        {/* 🔥 LOGOUT BUTTON */}
+        <div className="sidebar-logout">
+          <button onClick={handleLogout}>
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+
       </div>
     </>
   );

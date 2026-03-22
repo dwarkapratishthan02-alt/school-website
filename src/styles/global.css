@@ -83,6 +83,7 @@ h3{
 /* CONTAINER */
 /* ============================= */
 
+/* 🔥 NORMAL PAGES */
 .container{
   width:100%;
   max-width:1200px;
@@ -90,13 +91,14 @@ h3{
   padding:0 20px;
 }
 
-/* 🔥 CRITICAL FIX FOR ADMIN */
+/* 🔥 ADMIN OVERRIDE (VERY IMPORTANT) */
+.admin-layout .container,
 .admin-page .container,
-.admin-content .container,
 .admin-dashboard .container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* ============================= */

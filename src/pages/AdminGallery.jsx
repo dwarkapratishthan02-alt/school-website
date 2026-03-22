@@ -8,63 +8,106 @@ function AdminGallery() {
   const [file, setFile] = useState(null);
   const [category, setCategory] = useState("Academics");
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadImages();
   }, []);
 
+  // 🔥 LOAD IMAGES
   async function loadImages() {
-
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("gallery")
       .select("*")
       .order("created_at", { ascending: false });
 
-    setImages(data || []);
+    if (error) {
+      console.error("Load error:", error);
+    } else {
+      setImages(data || []);
+    }
   }
 
+  // 🔥 UPLOAD IMAGE
   async function uploadImage(e) {
-
     e.preventDefault();
 
-    if (!file) return;
+    if (!file) return alert("Please select a file");
+
+    setLoading(true);
 
     const fileName = Date.now() + "-" + file.name;
 
-    const { error } = await supabase.storage
+    // 👉 1. Upload to storage
+    const { error: uploadError } = await supabase.storage
       .from("gallery")
       .upload(fileName, file);
 
-    if (!error) {
-
-      const imageUrl =
-        supabase.storage.from("gallery").getPublicUrl(fileName).data.publicUrl;
-
-      await supabase.from("gallery").insert({
-        image: imageUrl,
-        category: category
-      });
-
-      setFile(null);
-      loadImages();
+    if (uploadError) {
+      console.error(uploadError);
+      alert("Upload failed");
+      setLoading(false);
+      return;
     }
 
+    // 👉 2. Get public URL
+    const { data } = supabase.storage
+      .from("gallery")
+      .getPublicUrl(fileName);
+
+    const imageUrl = data.publicUrl;
+
+    // 👉 3. Save in DB (FIXED HERE ✅)
+    const { error: dbError } = await supabase
+      .from("gallery")
+      .insert([
+        {
+          image_url: imageUrl, // ✅ FIXED
+          category: category,
+        },
+      ]);
+
+    if (dbError) {
+      console.error(dbError);
+      alert("Database error");
+      setLoading(false);
+      return;
+    }
+
+    // 👉 4. Reset + reload
+    setFile(null);
+    setLoading(false);
+    loadImages();
   }
 
-  async function deleteImage(id) {
+  // 🔥 DELETE IMAGE
+  async function deleteImage(id, imageUrl) {
 
     if (!window.confirm("Delete this image?")) return;
 
-    await supabase
+    // 👉 delete from DB
+    const { error } = await supabase
       .from("gallery")
       .delete()
       .eq("id", id);
+
+    if (error) {
+      console.error(error);
+      alert("Delete failed");
+      return;
+    }
+
+    // 👉 OPTIONAL: delete from storage
+    const fileName = imageUrl.split("/").pop();
+
+    await supabase.storage
+      .from("gallery")
+      .remove([fileName]);
 
     loadImages();
   }
 
   return (
-
     <div className="admin-layout">
 
       <AdminSidebar />
@@ -74,7 +117,6 @@ function AdminGallery() {
         <h1 className="page-title">Manage Gallery</h1>
 
         {/* Upload Card */}
-
         <div className="upload-card">
 
           <form onSubmit={uploadImage} className="upload-form">
@@ -101,43 +143,36 @@ function AdminGallery() {
             />
 
             <button type="submit" className="upload-btn">
-              Upload Image
+              {loading ? "Uploading..." : "Upload Image"}
             </button>
 
           </form>
 
         </div>
 
-
         {/* Images Grid */}
-
         <h2 className="section-title">Gallery Images</h2>
 
         <div className="gallery-grid">
 
           {images.length === 0 ? (
-
             <p>No images uploaded yet.</p>
-
           ) : (
-
             images.map((img) => (
-
               <div key={img.id} className="gallery-card">
 
-                <img src={img.image} alt="gallery" />
+                {/* 🔥 FIXED FIELD */}
+                <img src={img.image_url} alt="gallery" />
 
                 <button
                   className="delete-btn"
-                  onClick={() => deleteImage(img.id)}
+                  onClick={() => deleteImage(img.id, img.image_url)}
                 >
                   Delete
                 </button>
 
               </div>
-
             ))
-
           )}
 
         </div>
@@ -145,7 +180,6 @@ function AdminGallery() {
       </div>
 
     </div>
-
   );
 }
 

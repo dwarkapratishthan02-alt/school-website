@@ -15,13 +15,19 @@ function AdminNews() {
 
     if (loading) return;
 
+    if (!title || !content) {
+      alert("Title and content are required");
+      return;
+    }
+
     setLoading(true);
 
     let pdfUrl = null;
 
     try {
-
-      // 🔥 Upload PDF if selected
+      // =============================
+      // 1. UPLOAD PDF (if exists)
+      // =============================
       if (file) {
 
         const fileName = `${Date.now()}-${file.name}`;
@@ -31,9 +37,11 @@ function AdminNews() {
           .upload(fileName, file);
 
         if (uploadError) {
-          throw uploadError;
+          console.error("Upload error:", uploadError);
+          throw new Error("PDF upload failed");
         }
 
+        // Get public URL
         const { data } = supabase.storage
           .from("news-pdfs")
           .getPublicUrl(fileName);
@@ -41,22 +49,27 @@ function AdminNews() {
         pdfUrl = data.publicUrl;
       }
 
-      // 🔥 Insert into DB
-      const { error } = await supabase
+      // =============================
+      // 2. INSERT INTO DATABASE
+      // =============================
+      const { error: dbError } = await supabase
         .from("news")
         .insert([
           {
-            title,
-            content,
-            pdf_url: pdfUrl
-          }
+            title: title,
+            content: content,
+            pdf_url: pdfUrl, // ✅ MUST MATCH DB COLUMN
+          },
         ]);
 
-      if (error) {
-        throw error;
+      if (dbError) {
+        console.error("DB error:", dbError);
+        throw new Error("Database insert failed");
       }
 
-      // 🔥 Reset form
+      // =============================
+      // 3. RESET FORM
+      // =============================
       setTitle("");
       setContent("");
       setFile(null);
@@ -64,15 +77,14 @@ function AdminNews() {
       alert("News published successfully!");
 
     } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
+      console.error("Full error:", err);
+      alert(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-
     <div className="admin-layout">
 
       <AdminSidebar />
@@ -81,7 +93,6 @@ function AdminNews() {
 
         <h1 className="page-title">News & Announcements</h1>
 
-        {/* 🔥 FIX: use notice-card (matches CSS) */}
         <div className="notice-card">
 
           <form onSubmit={publishNews} className="notice-form">
@@ -128,7 +139,6 @@ function AdminNews() {
       </div>
 
     </div>
-
   );
 }
 

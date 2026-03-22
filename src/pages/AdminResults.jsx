@@ -11,7 +11,10 @@ function AdminResults() {
   const [selectedClass, setSelectedClass] = useState("");
   const [classes, setClasses] = useState([]);
 
-  const [selectedStudent, setSelectedStudent] = useState("");
+  const [search, setSearch] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,11 +33,9 @@ function AdminResults() {
     if (!error && data) {
       setStudents(data);
 
-      // 🔥 Extract unique classes
       const uniqueClasses = [...new Set(data.map((s) => s.class).filter(Boolean))];
       setClasses(uniqueClasses);
     }
-
   }
 
   async function loadResults() {
@@ -50,7 +51,32 @@ function AdminResults() {
       .order("created_at", { ascending: false });
 
     if (!error && data) setResults(data);
+  }
 
+  // 🔥 SEARCH LOGIC
+  useEffect(() => {
+
+    if (search === "") {
+      setFilteredStudents([]);
+      return;
+    }
+
+    const result = students.filter((s) =>
+      (selectedClass === "" || s.class === selectedClass) &&
+      (
+        s.name.toLowerCase().includes(search.toLowerCase()) ||
+        (s.class || "").toLowerCase().includes(search.toLowerCase())
+      )
+    );
+
+    setFilteredStudents(result);
+
+  }, [search, students, selectedClass]);
+
+  function handleSelectStudent(student) {
+    setSelectedStudent(student);
+    setSearch(student.name);
+    setFilteredStudents([]);
   }
 
   async function handleUpload(e) {
@@ -68,7 +94,6 @@ function AdminResults() {
 
       const fileName = `${Date.now()}-${file.name}`;
 
-      // Upload file
       const { error: uploadError } = await supabase.storage
         .from("results")
         .upload(fileName, file);
@@ -79,26 +104,25 @@ function AdminResults() {
         return;
       }
 
-      // Get public URL
       const { data } = supabase.storage
         .from("results")
         .getPublicUrl(fileName);
 
       const fileUrl = data.publicUrl;
 
-      // Insert into DB
       const { error } = await supabase
         .from("results")
         .insert([
           {
-            student_id: selectedStudent,
+            student_id: selectedStudent.id,
             result_pdf: fileUrl
           }
         ]);
 
       if (!error) {
         alert("Result uploaded successfully!");
-        setSelectedStudent("");
+        setSelectedStudent(null);
+        setSearch("");
         setFile(null);
         loadResults();
       }
@@ -108,7 +132,6 @@ function AdminResults() {
     } finally {
       setLoading(false);
     }
-
   }
 
   async function deleteResult(id) {
@@ -121,15 +144,8 @@ function AdminResults() {
       .eq("id", id);
 
     if (!error) loadResults();
-
   }
 
-  // 🔥 FILTER STUDENTS BY CLASS
-  const filteredStudents = students.filter((s) =>
-    selectedClass === "" || s.class === selectedClass
-  );
-
-  // 🔥 FILTER RESULTS BY CLASS
   const filteredResults = results.filter((r) =>
     selectedClass === "" || r.students?.class === selectedClass
   );
@@ -144,14 +160,15 @@ function AdminResults() {
 
         <h1 className="page-title">Results Manager</h1>
 
-        {/* 🔥 CLASS FILTER */}
+        {/* CLASS FILTER */}
         <div className="filter-bar">
 
           <select
             value={selectedClass}
             onChange={(e) => {
               setSelectedClass(e.target.value);
-              setSelectedStudent(""); // reset student when class changes
+              setSelectedStudent(null);
+              setSearch("");
             }}
           >
             <option value="">All Classes</option>
@@ -165,30 +182,51 @@ function AdminResults() {
         </div>
 
         {/* FORM */}
-
         <div className="results-form-card">
 
           <h3>Publish Result</h3>
 
           <form onSubmit={handleUpload}>
 
-            {/* Student Select */}
-            <select
-              value={selectedStudent}
-              onChange={(e) => setSelectedStudent(e.target.value)}
-              required
-            >
-              <option value="">Select Student</option>
+            {/* 🔥 SEARCH INPUT */}
+            <div className="search-box">
 
-              {filteredStudents.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} (Class {s.class})
-                </option>
-              ))}
+              <input
+                type="text"
+                placeholder="Search student..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setSelectedStudent(null);
+                }}
+              />
 
-            </select>
+              {filteredStudents.length > 0 && (
+                <div className="search-dropdown">
 
-            {/* File Upload */}
+                  {filteredStudents.map((s) => (
+                    <div
+                      key={s.id}
+                      className="search-item"
+                      onClick={() => handleSelectStudent(s)}
+                    >
+                      {s.name} (Class {s.class})
+                    </div>
+                  ))}
+
+                </div>
+              )}
+
+            </div>
+
+            {/* SELECTED */}
+            {selectedStudent && (
+              <p>
+                Selected: {selectedStudent.name} (Class {selectedStudent.class})
+              </p>
+            )}
+
+            {/* FILE */}
             <input
               type="file"
               accept="application/pdf"
@@ -204,8 +242,7 @@ function AdminResults() {
 
         </div>
 
-        {/* RESULTS TABLE */}
-
+        {/* TABLE */}
         <div className="results-table-card">
 
           <h3>Published Results</h3>
@@ -241,11 +278,7 @@ function AdminResults() {
                     <td>{r.students?.class}</td>
 
                     <td>
-                      <a
-                        href={r.result_pdf}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
+                      <a href={r.result_pdf} target="_blank" rel="noreferrer">
                         View PDF
                       </a>
                     </td>
@@ -255,13 +288,9 @@ function AdminResults() {
                     </td>
 
                     <td>
-
-                      <button
-                        onClick={() => deleteResult(r.id)}
-                      >
+                      <button onClick={() => deleteResult(r.id)}>
                         Delete
                       </button>
-
                     </td>
 
                   </tr>
@@ -279,9 +308,7 @@ function AdminResults() {
       </div>
 
     </div>
-
   );
-
 }
 
 export default AdminResults;

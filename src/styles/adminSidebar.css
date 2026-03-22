@@ -112,3 +112,27 @@
   }
 
 }
+/* 🔥 LOGOUT SECTION */
+
+.sidebar-logout {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.sidebar-logout button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: #f87171;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sidebar-logout button:hover {
+  background: #1f2937;
+  color: white;
+}

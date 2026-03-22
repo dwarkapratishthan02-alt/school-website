@@ -17,7 +17,7 @@ function AdminStudents() {
   const [studentClass, setStudentClass] = useState("");
   const [email, setEmail] = useState("");
 
-  // ✅ LOAD STUDENTS (FIXED WITH useCallback)
+  // ✅ LOAD STUDENTS
   const loadStudents = useCallback(async () => {
     const { data, error } = await supabase
       .from("students")
@@ -42,14 +42,14 @@ function AdminStudents() {
     loadStudents();
   }, [loadStudents]);
 
-  // ✅ ADD STUDENT
+  // ✅ ADD STUDENT (FIXED)
   async function addStudent(e) {
     e.preventDefault();
 
     const { error } = await supabase.from("students").insert([
       {
         name,
-        roll,
+        roll_no: roll,   // 🔥 FIXED
         class: studentClass,
         email,
       },
@@ -88,11 +88,11 @@ function AdminStudents() {
     loadStudents();
   }
 
-  // ✅ FILTER
+  // ✅ FILTER (FIXED)
   const filteredStudents = students.filter((s) => {
     const matchesSearch =
       s.name?.toLowerCase().includes(search.toLowerCase()) ||
-      s.roll?.toLowerCase().includes(search.toLowerCase()) ||
+      s.roll_no?.toLowerCase().includes(search.toLowerCase()) || // 🔥 FIXED
       s.email?.toLowerCase().includes(search.toLowerCase());
 
     const matchesClass =
@@ -173,20 +173,20 @@ function AdminStudents() {
 
                   <tr key={student.id}>
 
-                    <td className="student-cell" data-label="Student">
+                    <td className="student-cell">
                       <div className="avatar">
                         {student.name?.charAt(0)}
                       </div>
                       {student.name}
                     </td>
 
-                    <td data-label="Roll">{student.roll}</td>
+                    <td>{student.roll_no}</td> {/* 🔥 FIXED */}
 
-                    <td data-label="Class">{student.class}</td>
+                    <td>{student.class}</td>
 
-                    <td data-label="Email">{student.email}</td>
+                    <td>{student.email}</td>
 
-                    <td data-label="Action">
+                    <td>
                       <button
                         className="delete-btn"
                         onClick={() => deleteStudent(student.id)}
