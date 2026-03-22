@@ -29,8 +29,8 @@ function StudentSignup() {
     setLoading(true);
 
     try {
-      // 🔥 1. Create auth user
-      const { data, error } = await supabase.auth.signUp({
+      // 🔥 1. Create auth user (FIXED: removed unused 'data')
+      const { error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
       });
@@ -42,20 +42,20 @@ function StudentSignup() {
         .from("students")
         .insert([
           {
-            name: formData.name,
-            roll_no: formData.roll,
+            name: formData.name.trim(),
+            roll_no: formData.roll.trim(),
             class: formData.class,
-            email: formData.email,
+            email: formData.email.trim(),
           },
         ]);
 
       if (insertError) throw insertError;
 
       alert("Signup successful! Please login.");
-
       navigate("/student/login");
+
     } catch (err) {
-      console.error(err);
+      console.error("Signup Error:", err);
       alert(err.message || "Signup failed");
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ function StudentSignup() {
           required
         />
 
-        {/* 🔥 NEW: CLASS FIELD */}
+        {/* 🔥 CLASS FIELD */}
         <select
           name="class"
           value={formData.class}
@@ -93,16 +93,14 @@ function StudentSignup() {
           required
         >
           <option value="">Select Class</option>
-          <option value="01">Class 01</option>
-          <option value="02">Class 02</option>
-          <option value="03">Class 03</option>
-          <option value="04">Class 04</option>
-          <option value="05">Class 05</option>
-          <option value="06">Class 06</option>
-          <option value="07">Class 07</option>
-          <option value="08">Class 08</option>
-          <option value="09">Class 09</option>
-          <option value="10">Class 10</option>
+          {[...Array(10)].map((_, i) => {
+            const val = String(i + 1).padStart(2, "0");
+            return (
+              <option key={val} value={val}>
+                Class {val}
+              </option>
+            );
+          })}
         </select>
 
         <input
