@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import "../styles/navbar.css";
 
 function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);        // login dropdown
+  const [menuOpen, setMenuOpen] = useState(false); // mobile menu
   const dropdownRef = useRef();
 
   // Close dropdown when clicking outside
@@ -32,14 +33,23 @@ function Navbar() {
           <span>Dwarka Pratishthan</span>
         </div>
 
+        {/* MOBILE MENU BUTTON */}
+        <div
+          className="menu-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </div>
+
         {/* Navigation Links */}
-        <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/academics">Academics</Link></li>
-          <li><Link to="/admissions">Admissions</Link></li>
-          <li><Link to="/gallery">Gallery</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
+        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+
+          <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
+          <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
+          <li><Link to="/academics" onClick={() => setMenuOpen(false)}>Academics</Link></li>
+          <li><Link to="/admissions" onClick={() => setMenuOpen(false)}>Admissions</Link></li>
+          <li><Link to="/gallery" onClick={() => setMenuOpen(false)}>Gallery</Link></li>
+          <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
 
           {/* Login Dropdown */}
           <li className="login-dropdown" ref={dropdownRef}>
@@ -52,11 +62,17 @@ function Navbar() {
 
             {open && (
               <div className="dropdown-menu">
-                <Link to="/admin/login" onClick={() => setOpen(false)}>
+                <Link to="/admin/login" onClick={() => {
+                  setOpen(false);
+                  setMenuOpen(false);
+                }}>
                   Admin Login
                 </Link>
 
-                <Link to="/student/login" onClick={() => setOpen(false)}>
+                <Link to="/student/login" onClick={() => {
+                  setOpen(false);
+                  setMenuOpen(false);
+                }}>
                   Student Login
                 </Link>
               </div>

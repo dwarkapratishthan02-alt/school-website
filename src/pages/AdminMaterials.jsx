@@ -6,7 +6,6 @@ import "../styles/adminMaterials.css";
 function AdminMaterials() {
 
   const [materials, setMaterials] = useState([]);
-
   const [selectedClass, setSelectedClass] = useState("");
   const [classes, setClasses] = useState([]);
 
@@ -24,48 +23,46 @@ function AdminMaterials() {
   }, []);
 
   async function loadMaterials() {
+    try {
+      const { data, error } = await supabase
+        .from("study_materials")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    const { data, error } = await supabase
-      .from("study_materials")
-      .select("*")
-      .order("created_at", { ascending: false });
+      if (error) throw error;
 
-    if (error) {
-      console.error(error);
-      return;
+      setMaterials(data || []);
+
+      const uniqueClasses = [
+        ...new Set(data.map((m) => m.class).filter(Boolean))
+      ];
+      setClasses(uniqueClasses);
+
+    } catch (err) {
+      console.error(err);
     }
-
-    setMaterials(data || []);
-
-    // 🔥 Extract unique classes
-    const uniqueClasses = [...new Set(data.map((m) => m.class).filter(Boolean))];
-    setClasses(uniqueClasses);
-
   }
 
   function handleChange(e) {
+    const { name, value, files } = e.target;
 
-    if (e.target.name === "file") {
-
-      setFormData({
-        ...formData,
-        file: e.target.files[0]
-      });
-
+    if (name === "file") {
+      setFormData((prev) => ({
+        ...prev,
+        file: files[0]
+      }));
     } else {
-
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      });
-
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
     }
-
   }
 
   async function handleSubmit(e) {
-
     e.preventDefault();
+
+    if (loading) return;
 
     if (!formData.file) {
       alert("Please select a file");
@@ -74,92 +71,92 @@ function AdminMaterials() {
 
     setLoading(true);
 
-    const fileName = `${Date.now()}-${formData.file.name}`;
+    try {
+      const fileName = `${Date.now()}-${formData.file.name}`;
 
-    // 🔥 Upload to Supabase Storage
-    const { error: uploadError } = await supabase.storage
-      .from("materials")
-      .upload(fileName, formData.file);
+      // Upload file
+      const { error: uploadError } = await supabase.storage
+        .from("materials")
+        .upload(fileName, formData.file);
 
-    if (uploadError) {
-      alert(uploadError.message);
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from("materials")
+        .getPublicUrl(fileName);
+
+      const fileUrl = data.publicUrl;
+
+      // Insert into DB
+      const { error } = await supabase
+        .from("study_materials")
+        .insert([
+          {
+            title: formData.title,
+            description: formData.description,
+            class: formData.class,
+            file_url: fileUrl
+          }
+        ]);
+
+      if (error) throw error;
+
+      alert("Material uploaded successfully");
+
+      // Reset form
+      setFormData({
+        title: "",
+        description: "",
+        class: "",
+        file: null
+      });
+
+      // Reset file input manually
+      document.querySelector('input[name="file"]').value = "";
+
+      loadMaterials();
+
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // 🔥 Get public URL
-    const { data } = supabase.storage
-      .from("materials")
-      .getPublicUrl(fileName);
-
-    const fileUrl = data.publicUrl;
-
-    // 🔥 Insert into DB
-    const { error } = await supabase
-      .from("study_materials")
-      .insert([
-        {
-          title: formData.title,
-          description: formData.description,
-          class: formData.class,
-          file_url: fileUrl
-        }
-      ]);
-
-    if (error) {
-      alert(error.message);
-      setLoading(false);
-      return;
-    }
-
-    alert("Material uploaded successfully");
-
-    setFormData({
-      title: "",
-      description: "",
-      class: "",
-      file: null
-    });
-
-    loadMaterials();
-    setLoading(false);
-
   }
 
   async function deleteMaterial(item) {
-
     const confirmDelete = window.confirm("Delete this material?");
     if (!confirmDelete) return;
 
-    // 🔥 Delete from DB
-    const { error } = await supabase
-      .from("study_materials")
-      .delete()
-      .eq("id", item.id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    // 🔥 Delete from Storage (safe)
     try {
-      const fileName = item.file_url.split("/materials/")[1];
+      // Delete DB record
+      const { error } = await supabase
+        .from("study_materials")
+        .delete()
+        .eq("id", item.id);
 
-      if (fileName) {
-        await supabase.storage
-          .from("materials")
-          .remove([fileName]);
+      if (error) throw error;
+
+      // Delete file from storage
+      try {
+        const fileName = item.file_url.split("/materials/")[1];
+        if (fileName) {
+          await supabase.storage
+            .from("materials")
+            .remove([fileName]);
+        }
+      } catch (err) {
+        console.warn("Storage delete failed:", err);
       }
+
+      loadMaterials();
+
     } catch (err) {
-      console.warn("Storage delete failed:", err);
+      console.error(err);
+      alert("Delete failed");
     }
-
-    loadMaterials();
-
   }
 
-  // 🔥 FILTER MATERIALS BY CLASS
   const filteredMaterials = materials.filter((m) =>
     selectedClass === "" || m.class === selectedClass
   );
@@ -170,13 +167,12 @@ function AdminMaterials() {
 
       <AdminSidebar />
 
-      <div className="admin-content">
+      <div className="admin-page"> {/* 🔥 FIXED */}
 
         <h1 className="page-title">Study Materials Manager</h1>
 
-        {/* 🔥 CLASS FILTER */}
+        {/* FILTER */}
         <div className="filter-bar">
-
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
@@ -188,13 +184,11 @@ function AdminMaterials() {
               </option>
             ))}
           </select>
-
         </div>
 
         <div className="materials-container">
 
-          {/* Upload Form */}
-
+          {/* UPLOAD CARD */}
           <div className="upload-card">
 
             <h3>Upload Study Material</h3>
@@ -243,9 +237,7 @@ function AdminMaterials() {
 
           </div>
 
-
-          {/* Materials Table */}
-
+          {/* TABLE */}
           <div className="materials-table">
 
             <h3>Uploaded Materials</h3>
@@ -317,7 +309,6 @@ function AdminMaterials() {
     </div>
 
   );
-
 }
 
 export default AdminMaterials;

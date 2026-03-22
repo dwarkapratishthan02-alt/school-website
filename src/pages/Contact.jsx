@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../config/supabase";
 import "../styles/contact.css";
 
 function Contact() {
-
   const [settings, setSettings] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
   });
 
-  useEffect(() => {
-    loadContactSettings();
-  }, []);
-
-  async function loadContactSettings() {
-
+  // ✅ LOAD SETTINGS (wrapped for ESLint safety)
+  const loadContactSettings = useCallback(async () => {
     const { data } = await supabase
       .from("contact_settings")
       .select("*")
@@ -28,13 +23,16 @@ function Contact() {
     if (data) {
       setSettings(data);
     }
+  }, []);
 
-  }
+  useEffect(() => {
+    loadContactSettings();
+  }, [loadContactSettings]);
 
   function handleChange(e) {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
@@ -48,8 +46,8 @@ function Contact() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          message: formData.message
-        }
+          message: formData.message,
+        },
       ]);
 
     if (error) {
@@ -63,7 +61,7 @@ function Contact() {
       name: "",
       email: "",
       phone: "",
-      message: ""
+      message: "",
     });
   }
 
@@ -72,7 +70,6 @@ function Contact() {
       <div className="container">
 
         {/* HEADER */}
-
         <div className="page-header">
           <h1>Contact Us</h1>
           <p>
@@ -81,15 +78,11 @@ function Contact() {
           </p>
         </div>
 
-
         {/* GRID */}
-
         <div className="contact-grid">
 
           {/* CONTACT INFO */}
-
           <div className="contact-info">
-
             <h3>Contact Information</h3>
 
             <p>
@@ -111,18 +104,13 @@ function Contact() {
               <strong>Office Hours:</strong>{" "}
               {settings?.office_hours || "Not available"}
             </p>
-
           </div>
 
-
           {/* CONTACT FORM */}
-
           <div className="contact-form">
-
             <h3>Send an Inquiry</h3>
 
             <form onSubmit={handleSubmit}>
-
               <input
                 type="text"
                 name="name"
@@ -162,39 +150,30 @@ function Contact() {
               <button type="submit">
                 Submit Inquiry
               </button>
-
             </form>
-
           </div>
 
         </div>
 
-
-        {/* MAP SECTION */}
-
+        {/* MAP */}
         <div className="map-section">
-
           <h3>Campus Location</h3>
 
           {settings?.map_embed ? (
-
             <iframe
               src={settings.map_embed}
+              title="Campus Location Map"  // ✅ FIXED ESLINT ERROR
               width="100%"
               height="350"
               style={{ border: 0, borderRadius: "12px" }}
               allowFullScreen=""
               loading="lazy"
             />
-
           ) : (
-
             <div className="map-placeholder">
               Map location not added yet.
             </div>
-
           )}
-
         </div>
 
       </div>

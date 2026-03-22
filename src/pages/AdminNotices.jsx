@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../config/supabase";
+import AdminSidebar from "../components/AdminSidebar";
+import "../styles/adminNews.css";
 
 function AdminNotices() {
   const [title, setTitle] = useState("");
@@ -27,36 +29,45 @@ function AdminNotices() {
   }
 
   return (
-    <div style={{ padding: "80px 0" }}>
-      <div className="container">
-        <h1>Post Notice</h1>
+    <div className="admin-layout">
 
-        <form
-          onSubmit={createNotice}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            maxWidth: "500px",
-          }}
-        >
-          <input
-            placeholder="Notice Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+      <AdminSidebar />
 
-          <textarea
-            placeholder="Notice Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-          />
+      <div className="admin-page">
 
-          <button type="submit">Post Notice</button>
-        </form>
+        <h1 className="page-title">News & Announcements</h1>
+
+        <div className="notice-card">
+
+          <form className="notice-form" onSubmit={createNotice}>
+
+            <label>News Title</label>
+            <input
+              type="text"
+              placeholder="Enter news title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+
+            <label>News Content</label>
+            <textarea
+              placeholder="Write announcement..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+            />
+
+            <button type="submit" className="publish-btn">
+              Publish Notice
+            </button>
+
+          </form>
+
+        </div>
+
       </div>
+
     </div>
   );
 }

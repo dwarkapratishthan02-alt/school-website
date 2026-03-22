@@ -5,15 +5,14 @@
 /* ============================= */
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 html{
-scroll-behavior:smooth;
+  scroll-behavior:smooth;
 }
-
 
 /* ============================= */
 /* COLOR SYSTEM */
@@ -21,114 +20,121 @@ scroll-behavior:smooth;
 
 :root{
 
---primary:#FFC107;
---primary-dark:#E6AC00;
---primary-light:#FFF3CD;
+  --primary:#FFC107;
+  --primary-dark:#E6AC00;
+  --primary-light:#FFF3CD;
 
---text-dark:#111827;
---text-medium:#374151;
---text-light:#6B7280;
+  --text-dark:#111827;
+  --text-medium:#374151;
+  --text-light:#6B7280;
 
---bg:#F6F7FB;
---card:#FFFFFF;
+  --bg:#F6F7FB;
+  --card:#FFFFFF;
 
---border:#E5E7EB;
+  --border:#E5E7EB;
 
---danger:#EF4444;
---success:#22C55E;
-
+  --danger:#EF4444;
+  --success:#22C55E;
 }
-
 
 /* ============================= */
 /* BODY */
 /* ============================= */
 
 body{
-font-family:'Inter',sans-serif;
-background:var(--bg);
-color:var(--text-dark);
-line-height:1.6;
--webkit-font-smoothing:antialiased;
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text-dark);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
 }
 
+/* 🔥 IMPORTANT FIX */
+html, body, #root {
+  width: 100%;
+  overflow-x: hidden;
+}
 
 /* ============================= */
 /* HEADINGS */
 /* ============================= */
 
 h1,h2,h3{
-font-family:'Poppins',sans-serif;
-color:var(--text-dark);
+  font-family:'Poppins',sans-serif;
+  color:var(--text-dark);
 }
 
 h1{
-font-size:36px;
-font-weight:700;
+  font-size:36px;
+  font-weight:700;
 }
 
 h2{
-font-size:28px;
-font-weight:600;
+  font-size:28px;
+  font-weight:600;
 }
 
 h3{
-font-size:22px;
-font-weight:600;
+  font-size:22px;
+  font-weight:600;
 }
-
 
 /* ============================= */
 /* CONTAINER */
 /* ============================= */
 
 .container{
-width:100%;
-max-width:1200px;
-margin:auto;
-padding:0 20px;
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:0 20px;
 }
 
+/* 🔥 CRITICAL FIX FOR ADMIN */
+.admin-page .container,
+.admin-content .container,
+.admin-dashboard .container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 /* ============================= */
 /* LINKS */
 /* ============================= */
 
 a{
-text-decoration:none;
-color:inherit;
+  text-decoration:none;
+  color:inherit;
 }
-
 
 /* ============================= */
 /* BUTTONS */
 /* ============================= */
 
 .btn-primary{
-background:var(--primary);
-border:none;
-padding:12px 20px;
-border-radius:8px;
-font-weight:600;
-cursor:pointer;
-transition:0.2s;
+  background:var(--primary);
+  border:none;
+  padding:12px 20px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
 }
 
 .btn-primary:hover{
-background:var(--primary-dark);
+  background:var(--primary-dark);
 }
-
 
 /* ============================= */
 /* CARD */
 /* ============================= */
 
 .card{
-background:var(--card);
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+  background:var(--card);
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.06);
 }
-
 
 /* ============================= */
 /* INPUTS */
@@ -137,27 +143,26 @@ box-shadow:0 10px 25px rgba(0,0,0,0.06);
 input,
 textarea,
 select{
-font-family:'Inter',sans-serif;
-padding:10px 12px;
-border-radius:8px;
-border:1px solid var(--border);
-outline:none;
+  font-family:'Inter',sans-serif;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  outline:none;
 }
 
 input:focus,
 textarea:focus,
 select:focus{
-border-color:var(--primary);
-box-shadow:0 0 0 2px rgba(255,193,7,0.15);
+  border-color:var(--primary);
+  box-shadow:0 0 0 2px rgba(255,193,7,0.15);
 }
-
 
 /* ============================= */
 /* UTILITIES */
 /* ============================= */
 
 .text-center{
-text-align:center;
+  text-align:center;
 }
 
 .mt-1{margin-top:8px;}

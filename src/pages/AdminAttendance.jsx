@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../config/supabase";
 import AdminSidebar from "../components/AdminSidebar";
 import "../styles/adminAttendance.css";
@@ -15,17 +15,8 @@ function AdminAttendance() {
     new Date().toISOString().split("T")[0]
   );
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
-
-  useEffect(() => {
-    if (selectedClass && date) {
-      loadExistingAttendance();
-    }
-  }, [selectedClass, date]);
-
-  async function loadStudents() {
+  // ✅ LOAD STUDENTS (FIXED)
+  const loadStudents = useCallback(async () => {
 
     const { data, error } = await supabase
       .from("students")
@@ -39,13 +30,15 @@ function AdminAttendance() {
 
     setStudents(data || []);
 
-    // 🔥 Extract unique classes
-    const uniqueClasses = [...new Set(data.map((s) => s.class).filter(Boolean))];
+    const uniqueClasses = [
+      ...new Set(data.map((s) => s.class).filter(Boolean))
+    ];
     setClasses(uniqueClasses);
-  }
 
-  // 🔥 Load already saved attendance
-  async function loadExistingAttendance() {
+  }, []);
+
+  // ✅ LOAD EXISTING ATTENDANCE (FIXED)
+  const loadExistingAttendance = useCallback(async () => {
 
     const { data, error } = await supabase
       .from("attendance")
@@ -63,7 +56,19 @@ function AdminAttendance() {
     });
 
     setAttendance(map);
-  }
+
+  }, [date]);
+
+  // ✅ EFFECTS (FIXED DEPENDENCIES)
+  useEffect(() => {
+    loadStudents();
+  }, [loadStudents]);
+
+  useEffect(() => {
+    if (selectedClass && date) {
+      loadExistingAttendance();
+    }
+  }, [selectedClass, date, loadExistingAttendance]);
 
   function markAttendance(studentId, status) {
     setAttendance((prev) => ({
@@ -90,7 +95,7 @@ function AdminAttendance() {
       return;
     }
 
-    // 🔥 Delete old attendance (avoid duplicates)
+    // 🔥 Delete old attendance
     await supabase
       .from("attendance")
       .delete()
@@ -109,7 +114,6 @@ function AdminAttendance() {
     alert("Attendance saved successfully!");
   }
 
-  // 🔥 FILTER STUDENTS BY CLASS
   const filteredStudents = students.filter((s) =>
     selectedClass === "" || s.class === selectedClass
   );
@@ -124,7 +128,6 @@ function AdminAttendance() {
 
         <h1 className="page-title">Attendance Manager</h1>
 
-        {/* 🔥 FILTER BAR */}
         <div className="attendance-header">
 
           <div>

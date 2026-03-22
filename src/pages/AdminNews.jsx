@@ -8,60 +8,67 @@ function AdminNews() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function publishNews(e) {
-
     e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
 
     let pdfUrl = null;
 
-    // Upload PDF if selected
-    if (file) {
+    try {
 
-      const fileName = Date.now() + "-" + file.name;
+      // 🔥 Upload PDF if selected
+      if (file) {
 
-      const { error: uploadError } = await supabase.storage
-        .from("news-pdfs")
-        .upload(fileName, file);
+        const fileName = `${Date.now()}-${file.name}`;
 
-      if (uploadError) {
-        console.log(uploadError);
-        alert("PDF upload failed");
-        return;
+        const { error: uploadError } = await supabase.storage
+          .from("news-pdfs")
+          .upload(fileName, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data } = supabase.storage
+          .from("news-pdfs")
+          .getPublicUrl(fileName);
+
+        pdfUrl = data.publicUrl;
       }
 
-      // Get public URL of uploaded file
-      const { data } = supabase.storage
-        .from("news-pdfs")
-        .getPublicUrl(fileName);
+      // 🔥 Insert into DB
+      const { error } = await supabase
+        .from("news")
+        .insert([
+          {
+            title,
+            content,
+            pdf_url: pdfUrl
+          }
+        ]);
 
-      pdfUrl = data.publicUrl;
+      if (error) {
+        throw error;
+      }
 
+      // 🔥 Reset form
+      setTitle("");
+      setContent("");
+      setFile(null);
+
+      alert("News published successfully!");
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    // Insert news into database
-    const { error } = await supabase
-      .from("news")
-      .insert([
-        {
-          title: title,
-          content: content,
-          pdf_url: pdfUrl
-        }
-      ]);
-
-    if (error) {
-      console.log(error);
-      alert("Error publishing news");
-      return;
-    }
-
-    setTitle("");
-    setContent("");
-    setFile(null);
-
-    alert("News published successfully!");
-
   }
 
   return (
@@ -74,9 +81,10 @@ function AdminNews() {
 
         <h1 className="page-title">News & Announcements</h1>
 
-        <div className="news-card">
+        {/* 🔥 FIX: use notice-card (matches CSS) */}
+        <div className="notice-card">
 
-          <form onSubmit={publishNews} className="news-form">
+          <form onSubmit={publishNews} className="notice-form">
 
             <label>News Title</label>
 
@@ -105,8 +113,12 @@ function AdminNews() {
               onChange={(e) => setFile(e.target.files[0])}
             />
 
-            <button type="submit" className="publish-btn">
-              Publish News
+            <button
+              type="submit"
+              className="publish-btn"
+              disabled={loading}
+            >
+              {loading ? "Publishing..." : "Publish News"}
             </button>
 
           </form>
@@ -118,7 +130,6 @@ function AdminNews() {
     </div>
 
   );
-
 }
 
 export default AdminNews;

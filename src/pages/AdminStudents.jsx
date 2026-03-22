@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../config/supabase";
 import AdminSidebar from "../components/AdminSidebar";
 import "../styles/adminStudents.css";
@@ -8,7 +8,6 @@ function AdminStudents() {
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-
   const [classes, setClasses] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -18,11 +17,8 @@ function AdminStudents() {
   const [studentClass, setStudentClass] = useState("");
   const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
-
-  async function loadStudents() {
+  // ✅ LOAD STUDENTS (FIXED WITH useCallback)
+  const loadStudents = useCallback(async () => {
     const { data, error } = await supabase
       .from("students")
       .select("*")
@@ -35,24 +31,29 @@ function AdminStudents() {
 
     setStudents(data || []);
 
-    // 🔥 Extract unique classes
-    const uniqueClasses = [...new Set(data.map((s) => s.class).filter(Boolean))];
+    const uniqueClasses = [
+      ...new Set(data.map((s) => s.class).filter(Boolean)),
+    ];
     setClasses(uniqueClasses);
-  }
 
+  }, []);
+
+  useEffect(() => {
+    loadStudents();
+  }, [loadStudents]);
+
+  // ✅ ADD STUDENT
   async function addStudent(e) {
     e.preventDefault();
 
-    const { error } = await supabase
-      .from("students")
-      .insert([
-        {
-          name,
-          roll,
-          class: studentClass,
-          email,
-        },
-      ]);
+    const { error } = await supabase.from("students").insert([
+      {
+        name,
+        roll,
+        class: studentClass,
+        email,
+      },
+    ]);
 
     if (error) {
       alert("Error adding student: " + error.message);
@@ -70,6 +71,7 @@ function AdminStudents() {
     loadStudents();
   }
 
+  // ✅ DELETE
   async function deleteStudent(id) {
     if (!window.confirm("Delete this student?")) return;
 
@@ -86,7 +88,7 @@ function AdminStudents() {
     loadStudents();
   }
 
-  // 🔥 FILTER LOGIC (SEARCH + CLASS)
+  // ✅ FILTER
   const filteredStudents = students.filter((s) => {
     const matchesSearch =
       s.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -106,6 +108,7 @@ function AdminStudents() {
 
       <div className="admin-page">
 
+        {/* HEADER */}
         <div className="page-header">
           <h1>Manage Students</h1>
 
@@ -117,7 +120,7 @@ function AdminStudents() {
           </button>
         </div>
 
-        {/* 🔥 SEARCH + CLASS FILTER */}
+        {/* SEARCH + FILTER */}
         <div className="search-container">
 
           <input
@@ -141,6 +144,7 @@ function AdminStudents() {
 
         </div>
 
+        {/* TABLE */}
         <div className="table-card">
 
           <table className="students-table">
@@ -169,20 +173,20 @@ function AdminStudents() {
 
                   <tr key={student.id}>
 
-                    <td className="student-cell">
+                    <td className="student-cell" data-label="Student">
                       <div className="avatar">
                         {student.name?.charAt(0)}
                       </div>
                       {student.name}
                     </td>
 
-                    <td>{student.roll}</td>
+                    <td data-label="Roll">{student.roll}</td>
 
-                    <td>{student.class}</td>
+                    <td data-label="Class">{student.class}</td>
 
-                    <td>{student.email}</td>
+                    <td data-label="Email">{student.email}</td>
 
-                    <td>
+                    <td data-label="Action">
                       <button
                         className="delete-btn"
                         onClick={() => deleteStudent(student.id)}
@@ -205,6 +209,7 @@ function AdminStudents() {
 
       </div>
 
+      {/* MODAL */}
       {showModal && (
 
         <div className="modal">
