@@ -20,14 +20,20 @@ function Footer() {
           <h3 className="footer-logo">Dwarka Pratishthan</h3>
           <p className="footer-desc">
             A distinguished group of institutions committed to academic
-            excellence, discipline and holistic development.
+            excellence and holistic development.
           </p>
 
-          {/* 🔥 Social Icons */}
+          {/* ✅ FIXED SOCIAL LINKS */}
           <div className="footer-socials">
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaFacebookF /></a>
-            <a href="#"><FaYoutube /></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <FaInstagram />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <FaFacebookF />
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+              <FaYoutube />
+            </a>
           </div>
         </div>
 
@@ -36,8 +42,8 @@ function Footer() {
           <h4>Our Institutions</h4>
           <ul>
             <li><Link to="/little-birds-school">Little Birds School</Link></li>
-            <li><Link to="/shivaji-junior-college">Shri Chatrapati Shivaji Maharaj Junior College</Link></li>
-            <li><Link to="/defence-academy">Defence and non-defence Academy</Link></li>
+            <li><Link to="/shivaji-junior-college">Shivaji Junior College</Link></li>
+            <li><Link to="/defence-academy">Defence Academy</Link></li>
           </ul>
         </div>
 
@@ -58,7 +64,7 @@ function Footer() {
           <h4>Contact</h4>
 
           <p>
-            <FaMapMarkerAlt />{" "}
+            <FaMapMarkerAlt />
             <a
               href="https://www.google.com/maps/place/Dwarka+Pratishtan,Kada/@18.8975115,75.0822684,21z"
               target="_blank"
@@ -73,7 +79,7 @@ function Footer() {
           </p>
 
           <p>
-            <FaEnvelope />{" "}
+            <FaEnvelope />
             <a href="mailto:dwarkapratishthan02@gmail.com">
               dwarkapratishthan02@gmail.com
             </a>
@@ -87,7 +93,6 @@ function Footer() {
 
       </div>
 
-      {/* Bottom */}
       <div className="footer-bottom">
         <p>© 2026 Dwarka Pratishthan • All Rights Reserved</p>
       </div>
