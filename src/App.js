@@ -26,6 +26,9 @@ import AdminMaterials from "./pages/AdminMaterials";
 import AdminAttendance from "./pages/AdminAttendance";
 import AdminResults from "./pages/AdminResults";
 
+/* 🔥 NEW: CONTACT MESSAGES PAGE */
+import ContactMessages from "./pages/ContactMessages";
+
 /* Student Pages */
 import StudentLogin from "./pages/StudentLogin";
 import StudentSignup from "./pages/StudentSignup";
@@ -87,7 +90,7 @@ function App() {
 
       <Routes>
 
-        {/* PUBLIC */}
+        {/* ================= PUBLIC ================= */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/academics" element={<Academics />} />
@@ -96,7 +99,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
 
-        {/* ADMIN */}
+        {/* ================= ADMIN ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
         <Route path="/admin/dashboard" element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" />} />
@@ -108,11 +111,17 @@ function App() {
         <Route path="/admin/sliders" element={isAdmin ? <AdminSlider /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/gallery" element={isAdmin ? <AdminGallery /> : <Navigate to="/admin/login" />} />
 
-        {/* STUDENT AUTH */}
+        {/* 🔥 NEW ROUTE: CONTACT INQUIRIES */}
+        <Route
+          path="/admin/messages"
+          element={isAdmin ? <ContactMessages /> : <Navigate to="/admin/login" />}
+        />
+
+        {/* ================= STUDENT AUTH ================= */}
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
 
-        {/* STUDENT PANEL (🔥 SIDEBAR INCLUDED) */}
+        {/* ================= STUDENT PANEL ================= */}
 
         <Route
           path="/student/dashboard"

@@ -1,14 +1,12 @@
 import "../styles/aboutPage.css";
-
+import campusImg from "../assets/school-campus.jpg";
 function About() {
   return (
     <section className="about-page">
       <div className="container">
 
         {/* HEADER */}
-
         <div className="about-header">
-
           <span className="about-tag">About Us</span>
 
           <h1>About Dwarka Pratishthan</h1>
@@ -19,16 +17,13 @@ function About() {
           </p>
 
           <div className="header-divider"></div>
-
         </div>
 
 
         {/* INTRO + IMAGE */}
-
         <div className="about-intro">
 
           <div className="about-text">
-
             <h2>Our Introduction</h2>
 
             <p>
@@ -49,13 +44,13 @@ function About() {
             <div className="about-highlight">
               Excellence • Discipline • Leadership
             </div>
-
           </div>
 
           <div className="about-image">
             <img
-              src="/images/school-campus.jpg"
+              src={campusImg}   // ✅ USING IMPORTED IMAGE
               alt="Dwarka Pratishthan Campus"
+              className="about-img"
             />
           </div>
 
@@ -63,11 +58,8 @@ function About() {
 
 
         {/* JOURNEY */}
-
         <div className="about-journey">
-
           <div className="journey-card">
-
             <h2>Our Journey</h2>
 
             <p>
@@ -75,18 +67,14 @@ function About() {
               into a multi-institution educational group known for academic
               excellence, disciplined environment and holistic development.
             </p>
-
           </div>
-
         </div>
 
 
         {/* VISION MISSION */}
-
         <div className="vision-mission">
 
           <div className="vm-card">
-
             <div className="vm-icon">🎯</div>
 
             <h3>Our Vision</h3>
@@ -95,12 +83,10 @@ function About() {
               To create knowledgeable, ethical and responsible citizens
               who contribute positively to society and the nation.
             </p>
-
           </div>
 
 
           <div className="vm-card">
-
             <div className="vm-icon">🚀</div>
 
             <h3>Our Mission</h3>
@@ -109,26 +95,22 @@ function About() {
               To deliver quality education by integrating academics,
               moral values, leadership skills and character development.
             </p>
-
           </div>
 
         </div>
 
 
         {/* CORE VALUES */}
-
         <div className="core-values">
 
           <h2>Core Values</h2>
 
           <div className="values-grid">
-
             <div className="value">Academic Integrity</div>
             <div className="value">Discipline & Responsibility</div>
             <div className="value">Holistic Development</div>
             <div className="value">Leadership & Service</div>
             <div className="value">Continuous Improvement</div>
-
           </div>
 
         </div>

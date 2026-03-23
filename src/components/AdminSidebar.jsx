@@ -11,7 +11,8 @@ import {
   FaBook,
   FaClipboardCheck,
   FaBars,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaEnvelope // 🔥 NEW ICON
 } from "react-icons/fa";
 
 import { MdSlideshow } from "react-icons/md";
@@ -28,7 +29,7 @@ function AdminSidebar() {
   // 🔥 LOGOUT FUNCTION
   async function handleLogout() {
     await supabase.auth.signOut();
-    navigate("/login"); // change if your route is different
+    navigate("/login");
   }
 
   return (
@@ -55,49 +56,91 @@ function AdminSidebar() {
 
         <nav className="sidebar-menu">
 
-          <Link to="/admin/dashboard" className={isActive("/admin/dashboard") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/dashboard"
+            className={isActive("/admin/dashboard") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaTachometerAlt />
             <span>Dashboard</span>
           </Link>
 
-          <Link to="/admin/students" className={isActive("/admin/students") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/students"
+            className={isActive("/admin/students") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaUserGraduate />
             <span>Students</span>
           </Link>
 
-          <Link to="/admin/news" className={isActive("/admin/news") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/news"
+            className={isActive("/admin/news") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaNewspaper />
             <span>Notices</span>
           </Link>
 
-          <Link to="/admin/materials" className={isActive("/admin/materials") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/materials"
+            className={isActive("/admin/materials") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaBook />
             <span>Study Materials</span>
           </Link>
 
-          <Link to="/admin/attendance" className={isActive("/admin/attendance") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/attendance"
+            className={isActive("/admin/attendance") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaClipboardCheck />
             <span>Attendance</span>
           </Link>
 
-          <Link to="/admin/results" className={isActive("/admin/results") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/results"
+            className={isActive("/admin/results") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <HiDocumentReport />
             <span>Results</span>
           </Link>
 
-          <Link to="/admin/sliders" className={isActive("/admin/sliders") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/sliders"
+            className={isActive("/admin/sliders") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <MdSlideshow />
             <span>Slides</span>
           </Link>
 
-          <Link to="/admin/gallery" className={isActive("/admin/gallery") ? "active" : ""} onClick={() => setOpen(false)}>
+          <Link
+            to="/admin/gallery"
+            className={isActive("/admin/gallery") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
             <FaImages />
             <span>Gallery</span>
           </Link>
 
+          {/* 🔥 NEW: INQUIRIES PAGE */}
+          <Link
+            to="/admin/messages"
+            className={isActive("/admin/messages") ? "active" : ""}
+            onClick={() => setOpen(false)}
+          >
+            <FaEnvelope />
+            <span>Inquiries</span>
+          </Link>
+
         </nav>
 
-        {/* 🔥 LOGOUT BUTTON */}
+        {/* 🔥 LOGOUT */}
         <div className="sidebar-logout">
           <button onClick={handleLogout}>
             <FaSignOutAlt />

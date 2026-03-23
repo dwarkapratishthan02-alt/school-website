@@ -1,92 +1,222 @@
-.admin-page{
-margin-left:240px;
-padding:50px;
-background:#f6f7fb;
-min-height:100vh;
+/* ============================= */
+/* ADMIN PAGE */
+/* ============================= */
+
+.admin-page {
+  margin-left: 240px;
+  padding: 50px;
+  background: #f6f7fb;
+  min-height: 100vh;
 }
 
-.page-title{
-font-size:30px;
-font-weight:700;
-margin-bottom:35px;
-color:#111827;
+/* MOBILE */
+@media (max-width: 768px) {
+  .admin-page {
+    margin-left: 0;
+    margin-top: 60px;
+    padding: 20px;
+  }
 }
 
-/* Card */
+/* ============================= */
+/* TITLE */
+/* ============================= */
 
-.news-card{
-background:white;
-padding:40px;
-border-radius:16px;
-box-shadow:0 12px 30px rgba(0,0,0,0.08);
-max-width:750px;
+.page-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  color: #111827;
 }
 
-/* Form */
+/* ============================= */
+/* CARD */
+/* ============================= */
 
-.news-form{
-display:flex;
-flex-direction:column;
-gap:18px;
+.news-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  max-width: 750px;
+  margin-bottom: 30px;
 }
 
-/* Labels */
+/* ============================= */
+/* FORM */
+/* ============================= */
 
-.news-form label{
-font-size:14px;
-font-weight:600;
-color:#374151;
+.news-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-/* Inputs */
+.news-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
 
 .news-form input,
-.news-form textarea{
-padding:12px 14px;
-border-radius:10px;
-border:1px solid #e5e7eb;
-font-size:14px;
-background:#fafafa;
-transition:0.2s;
+.news-form textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .news-form input:focus,
-.news-form textarea:focus{
-outline:none;
-border-color:#FFC107;
-background:white;
-box-shadow:0 0 0 2px rgba(255,193,7,0.15);
+.news-form textarea:focus {
+  outline: none;
+  border-color: #FFC107;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(255,193,7,0.15);
 }
 
-/* Textarea */
-
-.news-form textarea{
-min-height:130px;
-resize:vertical;
+.news-form textarea {
+  min-height: 130px;
+  resize: vertical;
 }
 
-/* File Upload */
-
-.news-form input[type="file"]{
-padding:10px;
-background:#fafafa;
+.news-form input[type="file"] {
+  padding: 10px;
 }
 
-/* Publish Button */
+/* ============================= */
+/* BUTTON */
+/* ============================= */
 
-.publish-btn{
-margin-top:10px;
-background:linear-gradient(135deg,#FFC107,#ffb300);
-border:none;
-padding:14px;
-border-radius:10px;
-font-weight:600;
-font-size:15px;
-cursor:pointer;
-transition:0.25s;
+.publish-btn {
+  margin-top: 10px;
+  background: linear-gradient(135deg,#FFC107,#ffb300);
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  transition: 0.25s;
 }
 
-.publish-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 6px 14px rgba(0,0,0,0.15);
+.publish-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .publish-btn {
+    width: 100%;
+  }
+}
+
+/* ============================= */
+/* NOTICE LIST */
+/* ============================= */
+
+.notice-list {
+  margin-top: 25px;
+}
+
+.notice-list h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+/* ============================= */
+/* NOTICE ITEM */
+/* ============================= */
+
+.notice-item {
+  background: white;
+  padding: 18px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  transition: 0.2s ease;
+}
+
+.notice-item:hover {
+  transform: translateY(-2px);
+}
+
+/* LEFT CONTENT */
+.notice-content {
+  flex: 1;
+}
+
+.notice-content h3 {
+  margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.notice-content p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* PDF LINK */
+.pdf-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.pdf-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================= */
+/* ACTION AREA */
+/* ============================= */
+
+.notice-actions {
+  display: flex;
+  align-items: center;
+}
+
+/* DELETE BUTTON FIXED */
+.delete-btn {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+/* ============================= */
+/* MOBILE FIX */
+/* ============================= */
+
+@media (max-width: 768px) {
+  .notice-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .notice-actions {
+    width: 100%;
+  }
+
+  .delete-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
 }

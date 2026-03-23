@@ -1,4 +1,12 @@
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaClock,
+  FaInstagram,
+  FaFacebookF,
+  FaYoutube
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../styles/footer.css";
 
@@ -9,30 +17,27 @@ function Footer() {
 
         {/* Column 1 */}
         <div className="footer-col">
-          <h3>Dwarka Pratishthan</h3>
-          <p>
+          <h3 className="footer-logo">Dwarka Pratishthan</h3>
+          <p className="footer-desc">
             A distinguished group of institutions committed to academic
             excellence, discipline and holistic development.
           </p>
+
+          {/* 🔥 Social Icons */}
+          <div className="footer-socials">
+            <a href="#"><FaInstagram /></a>
+            <a href="#"><FaFacebookF /></a>
+            <a href="#"><FaYoutube /></a>
+          </div>
         </div>
 
         {/* Column 2 */}
         <div className="footer-col">
           <h4>Our Institutions</h4>
           <ul>
-            <li>
-              <Link to="/little-birds-school">Little Birds School</Link>
-            </li>
-            <li>
-              <Link to="/shivaji-junior-college">
-                Shri Chhatrapati Shivaji Maharaj Junior College
-              </Link>
-            </li>
-            <li>
-              <Link to="/defence-academy">
-                Academy of Defence & Non-Defence Studies
-              </Link>
-            </li>
+            <li><Link to="/little-birds-school">Little Birds School</Link></li>
+            <li><Link to="/shivaji-junior-college">Shri Chatrapati Shivaji Maharaj Junior College</Link></li>
+            <li><Link to="/defence-academy">Defence and non-defence Academy</Link></li>
           </ul>
         </div>
 
@@ -50,29 +55,41 @@ function Footer() {
 
         {/* Column 4 */}
         <div className="footer-col">
-          <h4>Contact Us</h4>
+          <h4>Contact</h4>
+
           <p>
-            <FaMapMarkerAlt className="footer-icon" />
-            Pune, Maharashtra
-          </p>
-          <p>
-            <FaPhoneAlt className="footer-icon" />
-            <a href="tel:+919876543210">+91 98765 43210</a>
-          </p>
-          <p>
-            <FaEnvelope className="footer-icon" />
-            <a href="mailto:info@dwarkapratishthan.edu">
-              info@dwarkapratishthan.edu
+            <FaMapMarkerAlt />{" "}
+            <a
+              href="https://www.google.com/maps/place/Dwarka+Pratishtan,Kada/@18.8975115,75.0822684,21z"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Kada, Maharashtra
             </a>
           </p>
+
+          <p>
+            <FaPhoneAlt /> Not available
+          </p>
+
+          <p>
+            <FaEnvelope />{" "}
+            <a href="mailto:dwarkapratishthan02@gmail.com">
+              dwarkapratishthan02@gmail.com
+            </a>
+          </p>
+
+          <p>
+            <FaClock /> Mon - Fri: 9 AM - 3 PM
+          </p>
+
         </div>
 
       </div>
 
+      {/* Bottom */}
       <div className="footer-bottom">
-        <p>
-          © 2026 Dwarka Pratishthan. All Rights Reserved.
-        </p>
+        <p>© 2026 Dwarka Pratishthan • All Rights Reserved</p>
       </div>
     </footer>
   );

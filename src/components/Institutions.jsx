@@ -15,10 +15,16 @@ function Institutions() {
 
         <div className="institution-grid">
 
+          {/* CARD 1 */}
           <div className="institution-card">
-
             <div className="institution-image">
-              <img src="/images/littlebirds.jpg" alt="Little Birds School" />
+              <img
+                src="/images/school.jpg"
+                alt="Little Birds School"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/400x250?text=School";
+                }}
+              />
             </div>
 
             <h3>Little Birds School</h3>
@@ -31,15 +37,18 @@ function Institutions() {
               A nurturing environment focused on academic excellence,
               character building and holistic development.
             </p>
-
-
           </div>
 
-
+          {/* CARD 2 */}
           <div className="institution-card">
-
             <div className="institution-image">
-              <img src="/images/juniorcollege.jpg" alt="Junior College" />
+              <img
+                src="/images/college.jpg"
+                alt="Junior College"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/400x250?text=College";
+                }}
+              />
             </div>
 
             <h3>Shri Chhatrapati Shivaji Maharaj Junior College</h3>
@@ -52,15 +61,18 @@ function Institutions() {
               Providing strong academic foundation and career-oriented
               education for future professionals.
             </p>
-
-
           </div>
 
-
+          {/* CARD 3 */}
           <div className="institution-card">
-
             <div className="institution-image">
-              <img src="/images/defenceacademy.jpg" alt="Defence Academy" />
+              <img
+                src="/images/defence.jpg"
+                alt="Defence Academy"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/400x250?text=Defence";
+                }}
+              />
             </div>
 
             <h3>Academy of Defence & Non-Defence Studies</h3>
@@ -73,8 +85,6 @@ function Institutions() {
               Dedicated preparation for defence services and other
               competitive career paths with discipline and excellence.
             </p>
-
-
           </div>
 
         </div>

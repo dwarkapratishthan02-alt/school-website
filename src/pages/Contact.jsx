@@ -4,6 +4,7 @@ import "../styles/contact.css";
 
 function Contact() {
   const [settings, setSettings] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -12,15 +13,17 @@ function Contact() {
     message: "",
   });
 
-  // ✅ LOAD SETTINGS (wrapped for ESLint safety)
+  // =============================
+  // LOAD SETTINGS
+  // =============================
   const loadContactSettings = useCallback(async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("contact_settings")
       .select("*")
       .limit(1)
       .single();
 
-    if (data) {
+    if (!error && data) {
       setSettings(data);
     }
   }, []);
@@ -29,6 +32,9 @@ function Contact() {
     loadContactSettings();
   }, [loadContactSettings]);
 
+  // =============================
+  // HANDLE INPUT
+  // =============================
   function handleChange(e) {
     setFormData({
       ...formData,
@@ -36,8 +42,13 @@ function Contact() {
     });
   }
 
+  // =============================
+  // SUBMIT FORM
+  // =============================
   async function handleSubmit(e) {
     e.preventDefault();
+
+    setLoading(true);
 
     const { error } = await supabase
       .from("contact_messages")
@@ -52,6 +63,7 @@ function Contact() {
 
     if (error) {
       alert(error.message);
+      setLoading(false);
       return;
     }
 
@@ -63,13 +75,15 @@ function Contact() {
       phone: "",
       message: "",
     });
+
+    setLoading(false);
   }
 
   return (
     <section className="contact-page">
       <div className="container">
 
-        {/* HEADER */}
+        {/* ================= HEADER ================= */}
         <div className="page-header">
           <h1>Contact Us</h1>
           <p>
@@ -78,39 +92,58 @@ function Contact() {
           </p>
         </div>
 
-        {/* GRID */}
+        {/* ================= GRID ================= */}
         <div className="contact-grid">
 
-          {/* CONTACT INFO */}
+          {/* LEFT: CONTACT INFO */}
           <div className="contact-info">
-            <h3>Contact Information</h3>
 
-            <p>
-              <strong>Address:</strong>{" "}
-              {settings?.address || "Address not available"}
-            </p>
+            <div className="info-card">
+              <h3>📍 Address</h3>
+              <p>
+                {settings?.address || "Dwarka Pratishthan, Kada, Maharashtra"}
+              </p>
+              <a
+                href="https://www.google.com/maps/place/Dwarka+Pratishtan,Kada/@18.8975115,75.0822684,21z"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on Map →
+              </a>
+            </div>
 
-            <p>
-              <strong>Phone:</strong>{" "}
-              {settings?.phone || "Phone not available"}
-            </p>
+            <div className="info-card">
+              <h3>📧 Email</h3>
+              <p>
+                {settings?.email || "dwarkapratishthan02@gmail.com"}
+              </p>
+            </div>
 
-            <p>
-              <strong>Email:</strong>{" "}
-              {settings?.email || "Email not available"}
-            </p>
+            <div className="info-card">
+              <h3>📞 Phone</h3>
+              <p>
+                {settings?.phone || "Not available"}
+              </p>
+            </div>
 
-            <p>
-              <strong>Office Hours:</strong>{" "}
-              {settings?.office_hours || "Not available"}
-            </p>
+            <div className="info-card">
+              <h3>🕒 Working Hours</h3>
+              <p>
+                {settings?.office_hours ||
+                  "Monday - Friday: 9:00 AM - 3:00 PM"}
+              </p>
+              <p>Closed on Public Holidays</p>
+            </div>
+
           </div>
 
-          {/* CONTACT FORM */}
+          {/* RIGHT: FORM */}
           <div className="contact-form">
-            <h3>Send an Inquiry</h3>
+
+            <h2>Send an Inquiry</h2>
 
             <form onSubmit={handleSubmit}>
+
               <input
                 type="text"
                 name="name"
@@ -147,33 +180,41 @@ function Contact() {
                 required
               />
 
-              <button type="submit">
-                Submit Inquiry
+              <button type="submit" disabled={loading}>
+                {loading ? "Sending..." : "Submit Inquiry"}
               </button>
+
             </form>
+
           </div>
 
         </div>
 
-        {/* MAP */}
+        {/* ================= MAP ================= */}
         <div className="map-section">
+
           <h3>Campus Location</h3>
 
           {settings?.map_embed ? (
             <iframe
               src={settings.map_embed}
-              title="Campus Location Map"  // ✅ FIXED ESLINT ERROR
+              title="Campus Location Map"
               width="100%"
               height="350"
               style={{ border: 0, borderRadius: "12px" }}
-              allowFullScreen=""
               loading="lazy"
             />
           ) : (
-            <div className="map-placeholder">
-              Map location not added yet.
-            </div>
+            <iframe
+              src="https://www.google.com/maps?q=18.8974443,75.0823108&z=17&output=embed"
+              title="Default Map"
+              width="100%"
+              height="350"
+              style={{ border: 0, borderRadius: "12px" }}
+              loading="lazy"
+            />
           )}
+
         </div>
 
       </div>

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/hero.css";
 
 function Hero() {
-
   const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
 
@@ -14,22 +13,35 @@ function Hero() {
     loadSlides();
   }, []);
 
+  // 🔥 LOAD SLIDES (SAFE VERSION)
   async function loadSlides() {
+    try {
+      const { data, error } = await supabase
+        .from("sliders")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    const { data, error } = await supabase
-      .from("sliders")
-      .select("*")
-      .eq("active", true)
-      .order("created_at", { ascending: false });
+      if (error) {
+        console.error("Fetch Error:", error);
+        return;
+      }
 
-    if (!error && data) {
-      setSlides(data);
+      console.log("Slides Data:", data); // 🔍 DEBUG
+
+      // ✅ Extra safety filter (in case active column exists)
+      const activeSlides = data?.filter(
+        (slide) => slide.active !== false
+      );
+
+      setSlides(activeSlides || []);
+
+    } catch (err) {
+      console.error("Slider Error:", err);
     }
   }
 
-  // Auto slider
+  // 🔥 AUTO SLIDER
   useEffect(() => {
-
     if (slides.length <= 1) return;
 
     const interval = setInterval(() => {
@@ -37,7 +49,6 @@ function Hero() {
     }, 4000);
 
     return () => clearInterval(interval);
-
   }, [slides]);
 
   const goToContact = () => {
@@ -45,13 +56,10 @@ function Hero() {
   };
 
   return (
-
     <section className="hero">
-
       <div className="container hero-grid">
 
         {/* LEFT CONTENT */}
-
         <div className="hero-left">
 
           <h1 className="hero-title">
@@ -63,37 +71,29 @@ function Hero() {
           </p>
 
           <ul className="hero-institutions">
-
             <li>
               <strong>Little Birds School</strong> – Pre-Primary, Primary & Secondary
             </li>
-
             <li>
               <strong>Shri Chhatrapati Shivaji Maharaj Junior College</strong>
             </li>
-
             <li>
               <strong>Academy of Defence & Non-Defence Studies</strong>
             </li>
-
           </ul>
 
           <div className="hero-buttons">
-
             <button
               className="btn-primary hero-btn"
               onClick={goToContact}
             >
               Contact Now
             </button>
-
           </div>
 
         </div>
 
-
         {/* RIGHT SLIDER */}
-
         <div className="hero-slider">
 
           {slides.length > 0 ? (
@@ -103,8 +103,10 @@ function Hero() {
               <img
                 key={slide.id}
                 src={slide.image_url}
-                alt="School Slide"
-                className={`slide-image ${index === current ? "active" : ""}`}
+                alt="Slide"
+                className={`slide-image ${
+                  index === current ? "active" : ""
+                }`}
               />
 
             ))
@@ -120,11 +122,8 @@ function Hero() {
         </div>
 
       </div>
-
     </section>
-
   );
-
 }
 
 export default Hero;

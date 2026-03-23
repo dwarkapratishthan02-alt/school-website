@@ -3,7 +3,6 @@ import { supabase } from "../config/supabase";
 import "../styles/gallery.css";
 
 function Gallery() {
-
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("all");
 
@@ -11,34 +10,41 @@ function Gallery() {
     loadImages();
   }, []);
 
+  // 🔥 LOAD IMAGES
   const loadImages = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("gallery")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    const { data, error } = await supabase
-      .from("gallery")
-      .select("*")
-      .order("created_at", { ascending: false });
+      if (error) throw error;
 
-    if (!error) {
-      setImages(data);
+      console.log("Gallery Data:", data); // 🔍 DEBUG
+
+      setImages(data || []);
+
+    } catch (err) {
+      console.error("Gallery Error:", err);
     }
-
   };
 
-  /* Filter images */
-
+  // ✅ FIXED FILTER (case insensitive)
   const filteredImages =
     category === "all"
       ? images
-      : images.filter((img) => img.category === category);
+      : images.filter(
+          (img) =>
+            img.category &&
+            img.category.toLowerCase() === category.toLowerCase()
+        );
 
   return (
     <section className="gallery-page">
       <div className="container">
 
         {/* HEADER */}
-
         <div className="page-header">
-
           <span className="page-tag">Campus Moments</span>
 
           <h1>Gallery</h1>
@@ -49,12 +55,9 @@ function Gallery() {
           </p>
 
           <div className="header-divider"></div>
-
         </div>
 
-
         {/* FILTER BUTTONS */}
-
         <div className="gallery-filters">
 
           <button
@@ -65,31 +68,36 @@ function Gallery() {
           </button>
 
           <button
-            className={category === "academics" ? "active" : ""}
-            onClick={() => setCategory("academics")}
+            className={category === "Academics" ? "active" : ""}
+            onClick={() => setCategory("Academics")}
           >
             Academics
           </button>
 
           <button
-            className={category === "sports" ? "active" : ""}
-            onClick={() => setCategory("sports")}
+            className={category === "Sports" ? "active" : ""}
+            onClick={() => setCategory("Sports")}
           >
             Sports
           </button>
 
           <button
-            className={category === "events" ? "active" : ""}
-            onClick={() => setCategory("events")}
+            className={category === "Events" ? "active" : ""}
+            onClick={() => setCategory("Events")}
           >
             Events
           </button>
 
+          <button
+            className={category === "Campus" ? "active" : ""}
+            onClick={() => setCategory("Campus")}
+          >
+            Campus
+          </button>
+
         </div>
 
-
         {/* IMAGE GRID */}
-
         <div className="gallery-grid">
 
           {filteredImages.length === 0 ? (
