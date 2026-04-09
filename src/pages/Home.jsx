@@ -1,5 +1,6 @@
 import Hero from "../components/Hero";
 import Institutions from "../components/Institutions";
+import Facilities from "../components/Facilities"; // 🔥 ADD THIS
 import AboutSection from "../components/AboutSection";
 import Excellence from "../components/Excellence";
 import AdmissionCTA from "../components/AdmissionCTA";
@@ -11,7 +12,12 @@ function Home() {
   return (
     <>
       <Hero />
+
       <Institutions />
+
+      {/* 🔥 ADD FACILITIES HERE */}
+      <Facilities />
+
       <AboutSection />
       <Excellence />
       <AdmissionCTA />

@@ -1,241 +1,167 @@
-/* ============================= */
-/* HERO SECTION */
-/* ============================= */
-
-.hero{
-padding:90px 0;
-position:relative;
-overflow:hidden;
-
-/* new yellow themed gradient */
-
-background:linear-gradient(
-135deg,
-#fff9e6 0%,
-#fff3cd 40%,
-#fde68a 100%
-);
+/* 🔥 FORCE HERO TEXT (FIX GLOBAL CSS CONFLICT) */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p {
+  color: #ffffff !important;
 }
 
-
-/* ============================= */
-/* BACKGROUND GLOW */
-/* ============================= */
-
-.hero::before{
-content:"";
-position:absolute;
-width:600px;
-height:600px;
-
-background:radial-gradient(
-circle,
-rgba(255,193,7,0.18) 0%,
-transparent 70%
-);
-
-top:-200px;
-left:-200px;
-z-index:0;
+.hero span {
+  color: #facc15 !important;
 }
 
-.hero::after{
-content:"";
-position:absolute;
-width:500px;
-height:500px;
+/* ================= HERO ================= */
 
-background:radial-gradient(
-circle,
-rgba(255,193,7,0.12) 0%,
-transparent 70%
-);
-
-bottom:-200px;
-right:-200px;
-z-index:0;
-}
-
-
-/* ============================= */
-/* GRID */
-/* ============================= */
-
-.hero-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:60px;
-align-items:center;
-position:relative;
-z-index:1;
-}
-
-
-/* ============================= */
-/* LEFT CONTENT */
-/* ============================= */
-
-.hero-title{
-font-size:54px;
-font-weight:700;
-color:var(--text-dark);
-margin-bottom:15px;
-}
-
-.hero-sub{
-font-size:20px;
-color:var(--primary-dark);
-margin-bottom:20px;
-font-weight:500;
-}
-
-.hero-left p{
-color:var(--text-medium);
-margin:6px 0;
-font-size:16px;
-}
-
-
-/* ============================= */
-/* INSTITUTION LIST */
-/* ============================= */
-
-.hero-institutions{
-margin:22px 0;
-padding-left:20px;
-}
-
-.hero-institutions li{
-margin-bottom:8px;
-color:var(--text-medium);
-font-size:16px;
-}
-
-
-/* ============================= */
-/* BUTTONS */
-/* ============================= */
-
-.hero-buttons{
-margin-top:30px;
-}
-
-.hero-btn{
-padding:14px 28px;
-font-size:15px;
-border-radius:10px;
-}
-
-
-/* ============================= */
-/* SLIDER */
-/* ============================= */
-
-.hero-slider{
-height:440px;
-border-radius:18px;
-overflow:hidden;
-background:#f3f4f6;
-
-box-shadow:0 25px 45px rgba(0,0,0,0.12);
-position:relative;
-}
-
-.slider-wrapper{
-height:100%;
-transition:transform 0.6s ease;
-}
-
-.slide{
-height:440px;
-}
-
-.slide-image{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-
-/* ============================= */
-/* EMPTY STATE */
-/* ============================= */
-
-.no-slide{
-display:flex;
-align-items:center;
-justify-content:center;
-height:100%;
-color:var(--text-light);
-}
-
-
-/* ============================= */
-/* SLIDER DOTS */
-/* ============================= */
-
-.slider-dots{
-position:absolute;
-bottom:12px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:8px;
-}
-
-.dot{
-width:8px;
-height:8px;
-background:#e5e7eb;
-border-radius:50%;
-cursor:pointer;
-}
-
-.dot.active{
-background:var(--primary);
-}
-
-
-/* ============================= */
-/* MOBILE */
-/* ============================= */
-
-@media(max-width:900px){
-
-.hero-grid{
-grid-template-columns:1fr;
-gap:40px;
-}
-
-.hero-title{
-font-size:40px;
-}
-
-.hero-slider{
-height:320px;
-}
-
-.slide{
-height:320px;
-}
-
-}
-.hero-slider {
+.hero {
   position: relative;
   width: 100%;
-  height: 420px;
+  height: 100vh;
   overflow: hidden;
 }
 
-.slide-image {
+/* ================= BACKGROUND ================= */
+
+.hero-bg {
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transition: opacity 1s ease;
+  filter: brightness(0.7) contrast(1.1);
 }
 
-.slide-image.active {
+.hero-bg.active {
   opacity: 1;
+}
+
+/* ================= OVERLAY ================= */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ================= CONTENT (MAIN CHANGE) ================= */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  justify-content: space-between; /* 🔥 LEFT + RIGHT */
+  align-items: center;
+  padding: 0 6%;
+}
+
+/* ================= LEFT SIDE ================= */
+
+.hero-left {
+  max-width: 600px;
+}
+
+/* TITLE */
+.hero-left h1 {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+/* SUBTEXT */
+.hero-left p {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #e5e7eb !important;
+}
+
+/* ================= BUTTONS ================= */
+
+.hero-buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+/* PRIMARY BUTTON */
+.btn-primary {
+  background: #facc15;
+  color: #000;
+  padding: 14px 36px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* SECONDARY BUTTON */
+.btn-secondary {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #fff;
+  padding: 14px 36px;
+  border-radius: 999px;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ================= RIGHT SIDE (LOGO) ================= */
+
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-right img {
+  width: 550px;
+  height: auto;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  transition: 0.3s;
+}
+
+.hero-right img:hover {
+  transform: scale(1.05);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-left h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-right {
+    margin-top: 25px;
+  }
+
+  .hero-right img {
+    width: 160px;
+  }
 }

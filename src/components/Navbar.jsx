@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import "../styles/navbar.css";
 
 function Navbar() {
-  const [open, setOpen] = useState(false);        // login dropdown
-  const [menuOpen, setMenuOpen] = useState(false); // mobile menu
+  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef();
 
   // Close dropdown when clicking outside
@@ -25,13 +25,19 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="container nav-content">
+      <div className="nav-content">
 
-        {/* Logo */}
-        <div className="logo">
-          <img src="/logo.jpg" alt="Dwarka Pratishthan Logo" className="logo-img" />
+        {/* 🔥 LOGO (FIXED ALIGNMENT + CLICKABLE) */}
+        <Link to="/" className="logo">
+  <img
+    src="/logo.jpg"
+    alt="Dwarka Pratishthan Logo"
+    className="logo-img"
+  />
+ 
+
           <span>Dwarka Pratishthan</span>
-        </div>
+        </Link>
 
         {/* MOBILE MENU BUTTON */}
         <div
@@ -41,7 +47,7 @@ function Navbar() {
           ☰
         </div>
 
-        {/* Navigation Links */}
+        {/* NAV LINKS */}
         <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
 
           <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
@@ -51,7 +57,7 @@ function Navbar() {
           <li><Link to="/gallery" onClick={() => setMenuOpen(false)}>Gallery</Link></li>
           <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
 
-          {/* Login Dropdown */}
+          {/* LOGIN DROPDOWN */}
           <li className="login-dropdown" ref={dropdownRef}>
             <button
               className="login-btn"

@@ -1,174 +1,255 @@
+/* ================= SECTION ================= */
+
 .institutions {
-  padding: 100px 0;
-  position: relative;
-
-  /* updated theme gradient */
-
-  background: linear-gradient(
-    180deg,
-    #fff9e6 0%,
-    #fff3cd 100%
-  );
+  padding: 120px 0;
+  background: linear-gradient(180deg, #ffffff, #f9fafb);
 }
 
-
-/* HEADER */
+/* ================= HEADER ================= */
 
 .section-header {
   text-align: center;
-  max-width: 700px;
+  max-width: 720px;
   margin: auto;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 .section-header h2 {
-  font-size: 42px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 14px;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
 .section-header p {
   color: #6b7280;
   font-size: 17px;
-  line-height: 1.6;
 }
 
-
-/* GRID */
+/* ================= GRID ================= */
 
 .institution-grid {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 35px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  align-items: stretch;
 }
 
-
-/* CARD */
+/* ================= CARD (PREMIUM UPGRADE) ================= */
 
 .institution-card {
-  background: white;
+  background: #ffffff;
 
-  padding: 35px;
-  border-radius: 16px;
+  border-radius: 18px;
 
-  border: 1px solid #e5e7eb;
+  /* 🔥 SOFT PREMIUM BORDER */
+  border: 1px solid rgba(0,0,0,0.06);
 
-  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+  /* 🔥 DEPTH */
+  box-shadow: 
+    0 8px 20px rgba(0,0,0,0.05),
+    0 2px 6px rgba(0,0,0,0.04);
 
-  transition: all 0.3s ease;
+  transition: all 0.35s ease;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   position: relative;
-
   overflow: hidden;
 }
 
-
-/* TOP ACCENT */
-
+/* 🔥 TOP ACCENT LINE (PREMIUM TOUCH) */
 .institution-card::before {
   content: "";
   position: absolute;
-
   top: 0;
   left: 0;
-
-  height: 4px;
   width: 100%;
+  height: 3px;
 
-  background: #FFC107;
-
-  border-radius: 16px 16px 0 0;
+  background: linear-gradient(
+    90deg,
+    #facc15,
+    #fde68a
+  );
 }
 
-
+/* 🔥 HOVER EFFECT */
 .institution-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  transform: translateY(-10px);
+
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.12),
+    0 10px 20px rgba(250,204,21,0.15); /* subtle yellow glow */
 }
-
-
-/* IMAGE SECTION */
+/* ================= IMAGE ================= */
 
 .institution-image {
   width: 100%;
-  height: 180px;
+  height: 220px;
   overflow: hidden;
-  border-radius: 12px;
-  margin-bottom: 18px;
 }
 
 .institution-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: 0.3s;
+  transition: 0.4s ease;
 }
 
-.institution-card:hover .institution-image img {
-  transform: scale(1.05);
+.institution-card:hover img {
+  transform: scale(1.08);
 }
 
-
-/* TITLES */
+/* ================= CONTENT ================= */
 
 .institution-card h3 {
-  font-size: 22px;
-  color: #111827;
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 20px 20px 8px;
+
+  letter-spacing: -0.3px;
 }
 
 .institution-level {
-  color: #FFC107;
+  margin: 0 20px 10px;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 12px;
+  color: #facc15;
 }
 
+.institution-card p {
+  margin: 0 20px 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ================= NOTE ================= */
+
+.institution-note {
+  margin-top: 60px;
+  text-align: center;
+  font-size: 16px;
+  color: #475569;
+}
+
+.institution-note strong {
+  color: #111827;
+}
+
+/* ================= MODAL (FIXED 🔥) ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* MAIN MODAL BOX */
+
+.modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 600px; /* 🔥 FIX WIDTH */
+
+  border-radius: 16px;
+  overflow: hidden;
+
+  animation: fadeIn 0.3s ease;
+}
+
+/* IMAGE */
+
+.modal-content img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
 
 /* TEXT */
 
-.institution-card p {
+.modal-text {
+  padding: 20px;
+  text-align: left;
+  position: relative;
+}
+
+.modal-text h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.modal-text .institution-level {
+  color: #facc15;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.modal-text p {
+  font-size: 14px;
   color: #475569;
-  font-size: 15px;
   line-height: 1.6;
 }
 
+/* CLOSE BUTTON */
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
 /* BUTTON */
 
-.outline-btn {
-
-  margin-top: 22px;
-
-  border: 2px solid #FFC107;
-  color: #111827;
-  background: transparent;
-
-  padding: 10px 20px;
-
+.modal-text button {
+  margin-top: 15px;
+  padding: 10px 18px;
+  background: #facc15;
+  border: none;
   border-radius: 8px;
-
-  font-weight: 600;
-
   cursor: pointer;
-
-  transition: all 0.25s ease;
-
 }
 
-.outline-btn:hover {
-  background: #FFC107;
-  color: #111827;
+/* ================= ANIMATION ================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
+/* ================= RESPONSIVE ================= */
 
-/* MOBILE */
+/* Tablet */
+@media (max-width: 1200px) {
+  .institution-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-@media (max-width: 900px) {
-
+/* Mobile */
+@media (max-width: 700px) {
   .institution-grid {
     grid-template-columns: 1fr;
   }
 
+  .section-header h2 {
+    font-size: 32px;
+  }
 }

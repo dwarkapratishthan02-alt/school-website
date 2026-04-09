@@ -29,15 +29,15 @@ function StudentSignup() {
     setLoading(true);
 
     try {
-      // 🔥 1. Create auth user (FIXED: removed unused 'data')
-      const { error } = await supabase.auth.signUp({
-        email: formData.email,
+      // 🔥 1. Create auth user
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: formData.email.trim(),
         password: formData.password,
       });
 
       if (error) throw error;
 
-      // 🔥 2. Insert into students table
+      // 🔥 2. Insert into students table (WITH STATUS = PENDING)
       const { error: insertError } = await supabase
         .from("students")
         .insert([
@@ -46,12 +46,15 @@ function StudentSignup() {
             roll_no: formData.roll.trim(),
             class: formData.class,
             email: formData.email.trim(),
+            status: "pending", // ✅ IMPORTANT CHANGE
           },
         ]);
 
       if (insertError) throw insertError;
 
-      alert("Signup successful! Please login.");
+      // ✅ Updated message
+      alert("Signup successful! Your account is pending admin approval.");
+
       navigate("/student/login");
 
     } catch (err) {

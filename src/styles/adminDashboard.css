@@ -8,7 +8,7 @@
 
 /* DESKTOP */
 .admin-dashboard {
-  margin-left: 240px; /* sidebar width */
+  margin-left: 240px;
   padding: 40px;
   width: 100%;
   background: #f8f9fb;
@@ -19,7 +19,7 @@
 @media (max-width: 768px) {
   .admin-dashboard {
     margin-left: 0;
-    margin-top: 60px; /* 🔥 space for topbar */
+    margin-top: 60px;
     padding: 20px;
   }
 }
@@ -31,6 +31,7 @@
 .dashboard-header h1 {
   font-size: 28px;
   font-weight: 700;
+  color: #111;
 }
 
 .dashboard-header p {
@@ -38,7 +39,6 @@
   margin-top: 4px;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .dashboard-header h1 {
     font-size: 22px;
@@ -56,7 +56,6 @@
   margin-top: 30px;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .dashboard-cards {
     grid-template-columns: 1fr;
@@ -68,12 +67,18 @@
   justify-content: space-between;
   align-items: center;
   padding: 25px;
-  border-radius: 12px;
+  border-radius: 16px;
   color: white;
   font-weight: 600;
-  width: 100%; /* 🔥 fix cut issue */
+  width: 100%;
+  transition: 0.3s;
 }
 
+.dashboard-card:hover {
+  transform: translateY(-4px);
+}
+
+/* COLORS */
 .dashboard-card.students {
   background: linear-gradient(135deg, #FFD54F, #FFC107);
 }
@@ -103,14 +108,12 @@
   gap: 20px;
 }
 
-/* TABLET */
 @media (max-width: 900px) {
   .dashboard-actions {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .dashboard-actions {
     grid-template-columns: 1fr;
@@ -123,15 +126,15 @@
   gap: 10px;
   padding: 20px;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   text-decoration: none;
   color: #333;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: 0.2s;
+  transition: 0.25s;
 }
 
 .action-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
 /* ============================= */
@@ -145,7 +148,6 @@
   margin-top: 40px;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -159,17 +161,18 @@
 .dashboard-box {
   background: white;
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
 .dashboard-box h3 {
   margin-bottom: 15px;
   font-size: 18px;
+  font-weight: 600;
 }
 
 /* ============================= */
-/* LIST */
+/* RECENT LIST */
 /* ============================= */
 
 .recent-list {
@@ -182,4 +185,116 @@
   padding: 10px 0;
   border-bottom: 1px solid #eee;
   font-size: 14px;
+}
+
+/* ============================= */
+/* 🔥 PENDING STUDENTS (NEW) */
+/* ============================= */
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* CARD */
+.pending-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  transition: 0.25s;
+}
+
+.pending-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+/* STUDENT INFO */
+.pending-item strong {
+  font-size: 15px;
+  color: #111;
+}
+
+.pending-item p {
+  font-size: 13px;
+  color: #555;
+  margin: 3px 0;
+}
+
+.pending-item small {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ACTION BUTTONS */
+.pending-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* APPROVE */
+.approve-btn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.approve-btn:hover {
+  background: #16a34a;
+  transform: scale(1.05);
+}
+
+/* REJECT */
+.reject-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reject-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* EMPTY STATE */
+.pending-empty {
+  padding: 20px;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 10px;
+  color: #666;
+}
+
+/* ============================= */
+/* MOBILE FIX */
+/* ============================= */
+
+@media (max-width: 768px) {
+  .pending-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pending-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

@@ -18,6 +18,9 @@ function AdminDashboard() {
 
   const [recentNotices, setRecentNotices] = useState([]);
 
+  // 🔥 NEW STATE (Pending Students)
+  const [pendingStudents, setPendingStudents] = useState([]);
+
   useEffect(() => {
 
     const checkAdmin = async () => {
@@ -57,18 +60,51 @@ function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(5);
 
+      // 🔥 FETCH PENDING STUDENTS
+      const { data: pending } = await supabase
+        .from("students")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+
       setStats({
         students: studentCount || 0,
         notices: noticeCount || 0,
       });
 
       setRecentNotices(notices || []);
+      setPendingStudents(pending || []);
     };
 
     checkAdmin();
     loadData();
 
   }, [navigate]);
+
+  // 🔥 APPROVE FUNCTION
+  const approveStudent = async (id) => {
+    await supabase
+      .from("students")
+      .update({ status: "approved" })
+      .eq("id", id);
+
+    alert("Student Approved ✅");
+
+    // refresh list
+    setPendingStudents(prev => prev.filter(s => s.id !== id));
+  };
+
+  // 🔥 REJECT FUNCTION
+  const rejectStudent = async (id) => {
+    await supabase
+      .from("students")
+      .update({ status: "rejected" })
+      .eq("id", id);
+
+    alert("Student Rejected ❌");
+
+    setPendingStudents(prev => prev.filter(s => s.id !== id));
+  };
 
   return (
 
@@ -106,6 +142,46 @@ function AdminDashboard() {
             <FaNewspaper className="card-icon" />
           </div>
 
+        </div>
+
+
+        {/* 🔥 NEW SECTION: Pending Students */}
+        <div className="dashboard-box" style={{ marginTop: "30px" }}>
+          <h3>Pending Student Approvals</h3>
+
+          {pendingStudents.length === 0 ? (
+            <p>No pending requests 🎉</p>
+          ) : (
+            <div className="pending-list">
+              {pendingStudents.map((student) => (
+                <div key={student.id} className="pending-item">
+
+                  <div>
+                    <strong>{student.name}</strong>
+                    <p>{student.email}</p>
+                    <small>Class: {student.class}</small>
+                  </div>
+
+                  <div className="pending-actions">
+                    <button
+                      className="approve-btn"
+                      onClick={() => approveStudent(student.id)}
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      className="reject-btn"
+                      onClick={() => rejectStudent(student.id)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
 

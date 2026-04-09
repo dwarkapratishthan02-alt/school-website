@@ -8,21 +8,51 @@ function StudentLogin() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (loading) return;
+    setLoading(true);
 
-    if (error) {
-      alert(error.message);
-      return;
+    try {
+      // 🔥 1. Login with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) throw error;
+
+      // 🔥 2. Fetch student from DB
+      const { data: student, error: fetchError } = await supabase
+        .from("students")
+        .select("*")
+        .eq("email", email.trim())
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // 🚫 3. BLOCK if not approved
+      if (student.status !== "approved") {
+        alert("Your account is pending admin approval.");
+
+        // 🔥 IMPORTANT: logout immediately
+        await supabase.auth.signOut();
+
+        return;
+      }
+
+      // ✅ 4. Allow login
+      navigate("/student/dashboard");
+
+    } catch (err) {
+      console.error("Login Error:", err);
+      alert(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
-
-    navigate("/student/dashboard");
   }
 
   return (
@@ -46,7 +76,9 @@ function StudentLogin() {
           required
         />
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
         <p style={{ textAlign: "center", marginTop: "15px" }}>
           Don’t have an account?{" "}

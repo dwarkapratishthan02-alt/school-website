@@ -14,6 +14,8 @@ import Admissions from "./pages/Admissions";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import News from "./pages/News";
+import FacilitiesPage from "./pages/FacilitiesPage";
+
 
 /* Admin Pages */
 import AdminLogin from "./pages/AdminLogin";
@@ -98,6 +100,7 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/news" element={<News />} />
+        <Route path="/facilities" element={<FacilitiesPage />} />
 
         {/* ================= ADMIN ================= */}
         <Route path="/admin/login" element={<AdminLogin />} />
