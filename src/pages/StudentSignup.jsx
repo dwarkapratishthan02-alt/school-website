@@ -30,7 +30,7 @@ function StudentSignup() {
 
     try {
       // 🔥 1. Create auth user
-      const { data: authData, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: formData.email.trim(),
         password: formData.password,
       });
@@ -46,13 +46,13 @@ function StudentSignup() {
             roll_no: formData.roll.trim(),
             class: formData.class,
             email: formData.email.trim(),
-            status: "pending", // ✅ IMPORTANT CHANGE
+            status: "pending", // ✅ IMPORTANT
           },
         ]);
 
       if (insertError) throw insertError;
 
-      // ✅ Updated message
+      // ✅ Success message
       alert("Signup successful! Your account is pending admin approval.");
 
       navigate("/student/login");
