@@ -1,214 +1,489 @@
-/* ============================= */
-/* PAGE */
-/* ============================= */
+/* ===================================== */
+/* MAIN PAGE */
+/* ===================================== */
 
-.study-material-page {
-  padding: 40px;
+.student-page{
+  flex:1;
+  min-height:100vh;
+  padding:40px;
 
-  background: linear-gradient(
+  background:
+  radial-gradient(circle at top right,#fde68a 0%,transparent 18%),
+  radial-gradient(circle at bottom left,#fcd34d 0%,transparent 20%),
+  linear-gradient(to bottom,#f8fafc,#eef2ff);
+}
+
+/* ===================================== */
+/* HERO */
+/* ===================================== */
+
+.materials-hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+
+  padding:35px;
+
+  border-radius:32px;
+
+  background:rgba(255,255,255,0.65);
+  backdrop-filter:blur(18px);
+
+  border:1px solid rgba(255,255,255,0.45);
+
+  box-shadow:
+  0 20px 60px rgba(0,0,0,0.08);
+
+  margin-bottom:35px;
+}
+
+.materials-hero h1{
+  font-size:58px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:10px;
+}
+
+.materials-hero p{
+  font-size:18px;
+  color:#64748b;
+  line-height:1.6;
+}
+
+/* ===================================== */
+/* CLASS BADGE */
+/* ===================================== */
+
+.class-badge{
+  background:
+  linear-gradient(
     135deg,
-    #fefce8 0%,
-    #fef3c7 40%,
-    #fde68a 100%
+    #ffb300,
+    #ffd54f
   );
 
-  min-height: 100vh;
+  color:#111827;
+
+  padding:18px 28px;
+
+  border-radius:22px;
+
+  font-size:24px;
+  font-weight:800;
+
+  box-shadow:
+  0 12px 35px rgba(255,179,0,0.35);
 }
 
-/* ============================= */
-/* HEADER */
-/* ============================= */
+/* ===================================== */
+/* SEARCH BAR */
+/* ===================================== */
 
-.page-header {
-  margin-bottom: 40px;
+.search-bar{
+
+  display:flex;
+  align-items:center;
+  gap:16px;
+
+  background:rgba(255,255,255,0.75);
+
+  backdrop-filter:blur(14px);
+
+  padding:18px 24px;
+
+  border-radius:22px;
+
+  box-shadow:
+  0 15px 45px rgba(0,0,0,0.06);
+
+  margin-bottom:45px;
+
+  border:1px solid rgba(255,255,255,0.5);
 }
 
-.page-header h1 {
-  font-size: 34px;
-  font-weight: 700;
-  color: #1f2937;
+.search-bar svg{
+  color:#94a3b8;
+  font-size:20px;
 }
 
-.page-header p {
-  color: #6b7280;
-  margin-top: 6px;
-  font-size: 15px;
+.search-bar input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+
+  font-size:17px;
+  color:#111827;
 }
 
-/* ============================= */
+.search-bar input::placeholder{
+  color:#94a3b8;
+}
+
+/* ===================================== */
+/* SECTION */
+/* ===================================== */
+
+.material-section{
+  margin-bottom:65px;
+}
+
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:18px;
+
+  margin-bottom:28px;
+}
+
+.section-icon{
+  width:68px;
+  height:68px;
+
+  border-radius:22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+  linear-gradient(
+    135deg,
+    #7c3aed,
+    #a855f7
+  );
+
+  color:white;
+  font-size:26px;
+
+  box-shadow:
+  0 14px 28px rgba(124,58,237,0.35);
+}
+
+.section-icon.pdf{
+  background:
+  linear-gradient(
+    135deg,
+    #ef4444,
+    #f97316
+  );
+
+  box-shadow:
+  0 14px 28px rgba(239,68,68,0.35);
+}
+
+.section-header h2{
+  font-size:34px;
+  color:#0f172a;
+  margin-bottom:4px;
+}
+
+.section-header p{
+  color:#64748b;
+  font-size:15px;
+}
+
+/* ===================================== */
 /* GRID */
-/* ============================= */
+/* ===================================== */
 
-.materials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+.materials-grid{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(340px,1fr));
+
+  gap:30px;
 }
 
-/* ============================= */
-/* CARD (PREMIUM) */
-/* ============================= */
+/* ===================================== */
+/* CARD */
+/* ===================================== */
 
-.material-card {
+.premium-card{
 
-  padding: 22px;
-  border-radius: 18px;
+  position:relative;
 
-  /* 🔥 GLASS EFFECT */
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
+  padding:26px;
 
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius:30px;
+
+  background:
+  rgba(255,255,255,0.68);
+
+  backdrop-filter:blur(16px);
+
+  border:1px solid rgba(255,255,255,0.45);
 
   box-shadow:
-    0 12px 30px rgba(0,0,0,0.08);
+  0 18px 50px rgba(0,0,0,0.08);
 
-  transition: all 0.35s ease;
+  overflow:hidden;
 
-  position: relative;
-  overflow: hidden;
+  transition:0.35s ease;
 }
 
-/* 🔥 GRADIENT TOP BORDER */
-.material-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
+/* TOP GOLD LINE */
 
-  width: 100%;
-  height: 4px;
+.premium-card::before{
+  content:"";
 
-  background: linear-gradient(
+  position:absolute;
+  top:0;
+  left:0;
+
+  width:100%;
+  height:5px;
+
+  background:
+  linear-gradient(
     90deg,
-    #facc15,
-    #f59e0b,
-    #d97706
-  );
-}
-
-/* 🔥 HOVER */
-.material-card:hover {
-  transform: translateY(-8px) scale(1.02);
-
-  box-shadow:
-    0 25px 60px rgba(0,0,0,0.18);
-}
-
-/* ============================= */
-/* TEXT */
-/* ============================= */
-
-.material-card h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 6px;
-}
-
-.material-card p {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-/* ============================= */
-/* META INFO */
-/* ============================= */
-
-.material-class,
-.material-date {
-  display: block;
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 8px;
-}
-
-/* ============================= */
-/* DOWNLOAD BUTTON */
-/* ============================= */
-
-.download-btn {
-
-  display: inline-block;
-
-  padding: 10px 16px;
-  border-radius: 8px;
-
-  background: linear-gradient(
-    135deg,
-    #facc15,
+    #ffb300,
+    #ffd54f,
     #f59e0b
   );
+}
 
-  color: #111827;
-  font-weight: 600;
-  font-size: 14px;
-
-  text-decoration: none;
-
-  transition: all 0.25s ease;
+.premium-card:hover{
+  transform:
+  translateY(-8px)
+  scale(1.015);
 
   box-shadow:
-    0 8px 18px rgba(0,0,0,0.12);
+  0 28px 65px rgba(0,0,0,0.14);
 }
 
-.download-btn:hover {
-  transform: translateY(-3px);
+/* ===================================== */
+/* CARD TOP */
+/* ===================================== */
+
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+
+  margin-bottom:20px;
+}
+
+.subject-badge{
+
+  background:
+  rgba(255,179,0,0.15);
+
+  color:#d97706;
+
+  padding:8px 16px;
+
+  border-radius:40px;
+
+  font-size:13px;
+  font-weight:700;
+}
+
+.date-badge{
+  color:#94a3b8;
+  font-size:13px;
+}
+
+/* ===================================== */
+/* VIDEO */
+/* ===================================== */
+
+.video-wrapper{
+  overflow:hidden;
+  border-radius:24px;
+
+  margin-bottom:22px;
+}
+
+.video-wrapper iframe{
+  width:100%;
+  height:230px;
+  border:none;
+}
+
+/* ===================================== */
+/* PDF ICON */
+/* ===================================== */
+
+.pdf-icon{
+  width:95px;
+  height:95px;
+
+  border-radius:28px;
+
+  background:
+  rgba(239,68,68,0.1);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin-bottom:25px;
+}
+
+.pdf-icon svg{
+  font-size:48px;
+  color:#ef4444;
+}
+
+/* ===================================== */
+/* TEXT */
+/* ===================================== */
+
+.premium-card h3{
+  font-size:28px;
+  color:#0f172a;
+
+  margin-bottom:12px;
+}
+
+.premium-card p{
+  color:#64748b;
+
+  line-height:1.7;
+
+  margin-bottom:25px;
+}
+
+/* ===================================== */
+/* BUTTONS */
+/* ===================================== */
+
+.premium-btn{
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  width:100%;
+
+  padding:15px;
+
+  border-radius:18px;
+
+  text-decoration:none;
+
+  background:
+  linear-gradient(
+    135deg,
+    #ffb300,
+    #ffd54f
+  );
+
+  color:#111827;
+
+  font-weight:700;
+
+  transition:0.3s;
+}
+
+.premium-btn:hover{
+  transform:scale(1.02);
+}
+
+.pdf-buttons{
+  display:flex;
+  gap:15px;
+}
+
+.download-btn{
+
+  width:60px;
+
+  border-radius:18px;
+
+  background:#0f172a;
+
+  color:white;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-decoration:none;
+
+  transition:0.3s;
+}
+
+.download-btn:hover{
+  background:black;
+}
+
+/* ===================================== */
+/* EMPTY / LOADING */
+/* ===================================== */
+
+.premium-box{
+
+  background:
+  rgba(255,255,255,0.75);
+
+  backdrop-filter:blur(14px);
+
+  padding:40px;
+
+  border-radius:28px;
+
+  text-align:center;
+
+  color:#64748b;
 
   box-shadow:
-    0 12px 25px rgba(0,0,0,0.2);
+  0 15px 45px rgba(0,0,0,0.06);
+
+  border:1px solid rgba(255,255,255,0.45);
 }
 
-/* ============================= */
-/* EMPTY STATE (UPGRADED) */
-/* ============================= */
+/* ===================================== */
+/* MOBILE */
+/* ===================================== */
 
-.empty-box {
+@media(max-width:768px){
 
-  grid-column: 1 / -1;
-
-  padding: 50px;
-  border-radius: 18px;
-
-  text-align: center;
-
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(10px);
-
-  border: 1px solid rgba(255,255,255,0.4);
-
-  color: #6b7280;
-
-  font-size: 15px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.08);
-}
-
-/* ============================= */
-/* RESPONSIVE */
-/* ============================= */
-
-@media (max-width: 1024px) {
-  .materials-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-
-  .materials-grid {
-    grid-template-columns: 1fr;
+  .student-page{
+    padding:20px;
   }
 
-  .study-material-page {
-    padding: 20px;
+  .materials-hero{
+    flex-direction:column;
+    align-items:flex-start;
   }
 
-  .page-header h1 {
-    font-size: 26px;
+  .materials-hero h1{
+    font-size:38px;
+  }
+
+  .materials-hero p{
+    font-size:15px;
+  }
+
+  .class-badge{
+    font-size:18px;
+    padding:14px 20px;
+  }
+
+  .section-header h2{
+    font-size:28px;
+  }
+
+  .materials-grid{
+    grid-template-columns:1fr;
+  }
+
+  .video-wrapper iframe{
+    height:200px;
+  }
+
+  .premium-card{
+    padding:22px;
+  }
+
+  .premium-card h3{
+    font-size:24px;
   }
 
 }

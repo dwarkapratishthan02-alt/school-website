@@ -1,179 +1,376 @@
-/* ============================= */
-/* LAYOUT FIX */
-/* ============================= */
+/* ========================================= */
+/* ADMIN LAYOUT */
+/* ========================================= */
 
 .admin-layout {
   display: flex;
+  background: #f5f7fb;
 }
 
-/* DESKTOP */
+/* ========================================= */
+/* MAIN DASHBOARD */
+/* ========================================= */
+
 .admin-dashboard {
   margin-left: 240px;
-  padding: 40px;
-  width: 100%;
-  background: #f8f9fb;
+  width: calc(100% - 240px);
+
   min-height: 100vh;
+
+  padding: 38px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #fefce8 100%
+    );
+
+  position: relative;
+  overflow: hidden;
 }
 
+/* GOLD GLOW */
+
+.admin-dashboard::before {
+  content: "";
+
+  position: absolute;
+
+  top: -220px;
+  right: -180px;
+
+  width: 500px;
+  height: 500px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,193,7,0.15) 0%,
+      transparent 70%
+    );
+
+  pointer-events: none;
+}
+
+/* ========================================= */
 /* MOBILE */
+/* ========================================= */
+
 @media (max-width: 768px) {
+
   .admin-dashboard {
     margin-left: 0;
-    margin-top: 60px;
-    padding: 20px;
+    width: 100%;
+
+    margin-top: 70px;
+
+    padding: 22px;
   }
+
 }
 
-/* ============================= */
+/* ========================================= */
 /* HEADER */
-/* ============================= */
+/* ========================================= */
+
+.dashboard-header {
+  position: relative;
+  z-index: 2;
+}
 
 .dashboard-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111;
+  font-size: 2.2rem;
+  font-weight: 800;
+
+  color: #0f172a;
+
+  margin-bottom: 8px;
+
+  letter-spacing: -1px;
 }
 
 .dashboard-header p {
-  color: #777;
-  margin-top: 4px;
+  color: #64748b;
+  font-size: 1rem;
 }
+
+/* MOBILE */
 
 @media (max-width: 768px) {
+
   .dashboard-header h1 {
-    font-size: 22px;
+    font-size: 1.8rem;
   }
+
 }
 
-/* ============================= */
-/* CARDS */
-/* ============================= */
+/* ========================================= */
+/* STATS CARDS */
+/* ========================================= */
 
 .dashboard-cards {
   display: grid;
+
   grid-template-columns: repeat(2, 1fr);
-  gap: 25px;
-  margin-top: 30px;
+
+  gap: 28px;
+
+  margin-top: 34px;
+
+  position: relative;
+  z-index: 2;
 }
 
+/* MOBILE */
+
 @media (max-width: 768px) {
+
   .dashboard-cards {
     grid-template-columns: 1fr;
   }
+
 }
 
+/* ========================================= */
+/* CARD */
+/* ========================================= */
+
 .dashboard-card {
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px;
-  border-radius: 16px;
-  color: white;
-  font-weight: 600;
-  width: 100%;
-  transition: 0.3s;
+
+  padding: 32px;
+
+  border-radius: 28px;
+
+  backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.6);
+
+  box-shadow:
+    0 10px 35px rgba(15,23,42,0.08);
+
+  transition: all .35s ease;
 }
+
+/* HOVER */
 
 .dashboard-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 25px 50px rgba(15,23,42,0.12);
 }
 
-/* COLORS */
+/* GOLD CARD */
+
 .dashboard-card.students {
-  background: linear-gradient(135deg, #FFD54F, #FFC107);
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #f59e0b
+    );
+
+  color: white;
 }
+
+/* LIGHT GOLD CARD */
 
 .dashboard-card.notices {
-  background: linear-gradient(135deg, #FFF176, #FFD54F);
-  color: #333;
+  background:
+    linear-gradient(
+      135deg,
+      #fff7cc,
+      #ffe082
+    );
+
+  color: #111827;
 }
+
+/* CARD INFO */
 
 .card-info h3 {
-  font-size: 32px;
+  font-size: 2.5rem;
+  font-weight: 800;
+
+  margin-bottom: 6px;
 }
+
+.card-info p {
+  font-size: 1rem;
+  opacity: .9;
+}
+
+/* ICON */
 
 .card-icon {
-  font-size: 28px;
-  opacity: 0.9;
+  font-size: 3rem;
+  opacity: 0.95;
 }
 
-/* ============================= */
-/* ACTION CARDS */
-/* ============================= */
+/* ========================================= */
+/* ACTION SECTION */
+/* ========================================= */
 
 .dashboard-actions {
-  margin-top: 40px;
   display: grid;
+
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+
+  gap: 22px;
+
+  margin-top: 42px;
+
+  position: relative;
+  z-index: 2;
 }
 
-@media (max-width: 900px) {
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
   .dashboard-actions {
     grid-template-columns: repeat(2, 1fr);
   }
+
 }
 
 @media (max-width: 768px) {
+
   .dashboard-actions {
     grid-template-columns: 1fr;
   }
+
 }
+
+/* ========================================= */
+/* ACTION CARD */
+/* ========================================= */
 
 .action-card {
+  position: relative;
+  overflow: hidden;
+
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
+  gap: 14px;
+
+  padding: 24px;
+
+  border-radius: 22px;
+
+  background: rgba(255,255,255,0.75);
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,0.6);
+
   text-decoration: none;
-  color: #333;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: 0.25s;
+
+  color: #111827;
+
+  box-shadow:
+    0 10px 30px rgba(15,23,42,0.06);
+
+  transition: all .3s ease;
 }
+
+/* GOLD ACCENT */
+
+.action-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 4px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #facc15,
+      #f59e0b
+    );
+}
+
+/* HOVER */
 
 .action-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 40px rgba(15,23,42,0.12);
 }
 
-/* ============================= */
+/* ========================================= */
 /* LOWER GRID */
-/* ============================= */
+/* ========================================= */
 
 .dashboard-grid {
   display: grid;
+
   grid-template-columns: 2fr 1fr;
-  gap: 25px;
-  margin-top: 40px;
+
+  gap: 28px;
+
+  margin-top: 42px;
+
+  position: relative;
+  z-index: 2;
 }
 
-@media (max-width: 768px) {
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+
 }
 
-/* ============================= */
-/* BOXES */
-/* ============================= */
+/* ========================================= */
+/* BOX */
+/* ========================================= */
 
 .dashboard-box {
-  background: white;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.82);
+
+  backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.6);
+
+  border-radius: 28px;
+
+  padding: 30px;
+
+  box-shadow:
+    0 10px 35px rgba(15,23,42,0.06);
 }
 
 .dashboard-box h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  color: #0f172a;
+
+  margin-bottom: 22px;
 }
 
-/* ============================= */
+/* ========================================= */
 /* RECENT LIST */
-/* ============================= */
+/* ========================================= */
 
 .recent-list {
   list-style: none;
@@ -182,119 +379,166 @@
 }
 
 .recent-list li {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
+  padding: 14px 0;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  color: #475569;
+
+  font-size: 0.95rem;
 }
 
-/* ============================= */
-/* 🔥 PENDING STUDENTS (NEW) */
-/* ============================= */
+.recent-list li:last-child {
+  border-bottom: none;
+}
+
+/* ========================================= */
+/* PENDING STUDENTS */
+/* ========================================= */
 
 .pending-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
 }
 
 /* CARD */
+
 .pending-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 20px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  transition: 0.25s;
+
+  gap: 18px;
+
+  padding: 22px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  border: 1px solid #f1f5f9;
+
+  box-shadow:
+    0 8px 24px rgba(15,23,42,0.05);
+
+  transition: all .3s ease;
 }
 
 .pending-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 18px 40px rgba(15,23,42,0.10);
 }
 
 /* STUDENT INFO */
+
 .pending-item strong {
-  font-size: 15px;
-  color: #111;
+  display: block;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  color: #0f172a;
+
+  margin-bottom: 4px;
 }
 
 .pending-item p {
-  font-size: 13px;
-  color: #555;
-  margin: 3px 0;
+  margin: 2px 0;
+
+  font-size: 0.92rem;
+
+  color: #64748b;
 }
 
 .pending-item small {
-  font-size: 12px;
-  color: #888;
+  color: #94a3b8;
 }
 
+/* ========================================= */
 /* ACTION BUTTONS */
+/* ========================================= */
+
 .pending-actions {
   display: flex;
   gap: 10px;
 }
 
+/* BUTTON BASE */
+
+.pending-actions button {
+  border: none;
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .25s;
+}
+
 /* APPROVE */
+
 .approve-btn {
   background: #22c55e;
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .approve-btn:hover {
   background: #16a34a;
+
   transform: scale(1.05);
 }
 
 /* REJECT */
+
 .reject-btn {
   background: #ef4444;
   color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
 .reject-btn:hover {
   background: #dc2626;
+
   transform: scale(1.05);
 }
 
-/* EMPTY STATE */
+/* ========================================= */
+/* EMPTY */
+/* ========================================= */
+
 .pending-empty {
-  padding: 20px;
+  padding: 30px;
+
   text-align: center;
-  background: #f9fafb;
-  border-radius: 10px;
-  color: #666;
+
+  background: #f8fafc;
+
+  border-radius: 18px;
+
+  color: #64748b;
 }
 
-/* ============================= */
-/* MOBILE FIX */
-/* ============================= */
+/* ========================================= */
+/* MOBILE PENDING */
+/* ========================================= */
 
 @media (max-width: 768px) {
+
   .pending-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
   }
 
   .pending-actions {
     width: 100%;
     justify-content: flex-end;
   }
+
 }

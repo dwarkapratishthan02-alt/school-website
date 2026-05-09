@@ -3,6 +3,7 @@ import { supabase } from "../config/supabase";
 import "../styles/campus.css";
 
 function CampusLife() {
+
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,70 +11,133 @@ function CampusLife() {
     fetchCampusImages();
   }, []);
 
-  // 🔥 FETCH FROM GALLERY TABLE (FILTER BY CATEGORY)
+  // =========================================
+  // FETCH IMAGES
+  // =========================================
+
   async function fetchCampusImages() {
+
     try {
+
       const { data, error } = await supabase
-        .from("gallery") // ✅ FIXED TABLE
+        .from("gallery")
         .select("*")
-        .eq("category", "Campus") // ✅ FILTER
+        .eq("category", "Campus")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      console.log("Campus Images:", data); // debug
+      console.log("Campus Images:", data);
 
       setImages(data || []);
 
     } catch (err) {
+
       console.error("Campus Error:", err);
+
     } finally {
+
       setLoading(false);
+
     }
   }
 
   return (
+
     <section className="campus-life">
-      <div className="container">
 
-        {/* HEADER */}
-        <div className="section-header">
-          <h2>Campus Life</h2>
-          <p>
-            Experience a vibrant learning environment enriched with academics,
-            sports, cultural activities and disciplined growth.
-          </p>
+      {/* ========================================= */}
+      {/* TOP HEADER */}
+      {/* ========================================= */}
+
+      <div className="campus-top">
+
+        <div className="campus-badge">
+          Student Experience
         </div>
 
-        {/* GRID */}
-        <div className="campus-grid">
+        <h2>
+          Life At Our Campus
+        </h2>
 
-          {loading ? (
-            <p className="no-images">Loading images...</p>
-
-          ) : images.length === 0 ? (
-            <p className="no-images">No campus images available</p>
-
-          ) : (
-            images.map((img) => (
-              <div className="campus-card" key={img.id}>
-
-                <img
-                  src={img.image_url}
-                  alt={img.category || "Campus"}
-                  onError={(e) => {
-                    e.target.src = "/images/fallback.jpg"; // ✅ local fallback
-                  }}
-                />
-
-              </div>
-            ))
-          )}
-
-        </div>
+        <p>
+          Discover a vibrant campus environment where academics,
+          sports, creativity, leadership, and holistic development
+          come together to shape future-ready students.
+        </p>
 
       </div>
+
+      {/* ========================================= */}
+      {/* IMAGE GRID */}
+      {/* ========================================= */}
+
+      <div className="campus-grid">
+
+        {loading ? (
+
+          <div className="campus-empty">
+            <h3>Loading Campus Images...</h3>
+          </div>
+
+        ) : images.length === 0 ? (
+
+          <div className="campus-empty">
+            <h3>No Campus Images Available</h3>
+            <p>
+              Campus memories and highlights will appear here soon.
+            </p>
+          </div>
+
+        ) : (
+
+          images.map((img, index) => (
+
+            <div
+              className={`campus-card ${
+                index === 0 ? "large" : ""
+              }`}
+              key={img.id}
+            >
+
+              {/* IMAGE */}
+
+              <img
+                src={img.image_url}
+                alt={img.category || "Campus"}
+                onError={(e) => {
+                  e.target.src = "/images/fallback.jpg";
+                }}
+              />
+
+              {/* OVERLAY */}
+
+              <div className="campus-overlay">
+
+                <div className="overlay-content">
+
+                  <span className="overlay-tag">
+                    Campus Life
+                  </span>
+
+                  <h3>
+                    Dwarka Pratishthan
+                  </h3>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
     </section>
+
   );
 }
 

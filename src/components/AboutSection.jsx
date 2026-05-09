@@ -1,62 +1,138 @@
 import "../styles/about.css";
 
 function AboutSection() {
+
   return (
+
     <section className="about-section">
 
       <div className="container about-content">
 
-        {/* LEFT IMAGE */}
+        {/* ========================================= */}
+        {/* LEFT IMAGE SIDE */}
+        {/* ========================================= */}
 
         <div className="about-image">
 
+          {/* MAIN IMAGE */}
+
           <img
-            src="https://images.unsplash.com/photo-1577896851231-70ef18881754"
+            src="/images/school5.jpeg"
             alt="Dwarka Pratishthan Campus"
           />
 
+          {/* FLOATING CARD */}
+
+          <div className="experience-card">
+
+            <h3>15+</h3>
+
+            <p>
+              Years of Educational Excellence
+            </p>
+
+          </div>
+
         </div>
 
-
-        {/* RIGHT TEXT */}
+        {/* ========================================= */}
+        {/* RIGHT CONTENT */}
+        {/* ========================================= */}
 
         <div className="about-text">
 
+          {/* BADGE */}
+
+          <span className="about-badge">
+            About Our Institution
+          </span>
+
+          {/* TITLE */}
+
           <h2 className="about-title">
-            About Dwarka Pratishthan
+
+            Building Future Leaders
+            Through Values & Excellence
+
           </h2>
 
+          {/* DESCRIPTION */}
+
           <p className="about-description">
-            Dwarka Pratishthan is a distinguished educational group committed
-            to providing quality education across all levels of learning.
-            Through its institutions, the Pratishthan nurtures young minds,
-            builds strong academic foundations, and prepares students for
-            future success.
+
+            Dwarka Pratishthan is a distinguished educational group
+            committed to nurturing young minds through quality education,
+            discipline, innovation, and strong moral values.
+
+            Our institutions focus on holistic student development by
+            combining academics, leadership, creativity, sports,
+            and modern learning methods to prepare students for
+            a successful future.
+
           </p>
 
+          {/* HIGHLIGHTS */}
+
+          <div className="about-highlights">
+
+            <div className="highlight-item">
+              ✓ Modern Learning Environment
+            </div>
+
+            <div className="highlight-item">
+              ✓ Experienced Faculty
+            </div>
+
+            <div className="highlight-item">
+              ✓ CBSE & State Board Curriculum
+            </div>
+
+            <div className="highlight-item">
+              ✓ Activity-Based Learning
+            </div>
+
+          </div>
+
+          {/* VISION + MISSION */}
 
           <div className="vision-mission">
 
+            {/* VISION */}
+
             <div className="vision-box">
 
-              <h4>Our Vision</h4>
+              <div className="box-icon">
+                👁️
+              </div>
+
+              <h4>
+                Our Vision
+              </h4>
 
               <p>
-                To create responsible, knowledgeable and disciplined citizens
-                who contribute positively to society and the nation.
+                To create responsible, disciplined,
+                and knowledgeable citizens who contribute
+                positively to society and the nation.
               </p>
 
             </div>
 
+            {/* MISSION */}
 
             <div className="mission-box">
 
-              <h4>Our Mission</h4>
+              <div className="box-icon">
+                🎯
+              </div>
+
+              <h4>
+                Our Mission
+              </h4>
 
               <p>
-                To provide holistic education that combines academic
-                excellence, moral values, leadership skills and character
-                development.
+                To provide holistic education that combines
+                academic excellence, leadership skills,
+                innovation, moral values, and character development.
               </p>
 
             </div>

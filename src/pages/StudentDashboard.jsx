@@ -1,221 +1,417 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+
 import { supabase } from "../config/supabase";
+
 import "../styles/studentDashboard.css";
 
-import { FaUser, FaBook } from "react-icons/fa";
+import {
+  FaUser,
+  FaBook,
+  FaPhoneAlt,
+} from "react-icons/fa";
+
 import { HiDocumentReport } from "react-icons/hi";
 
+import { MdEmail } from "react-icons/md";
+
 function StudentDashboard() {
+
   const navigate = useNavigate();
 
-  const [student, setStudent] = useState(null);
-  const [notices, setNotices] = useState([]);
+  const [student, setStudent] =
+    useState(null);
 
-  const [attendancePercent, setAttendancePercent] = useState(0);
-  const [latestResult, setLatestResult] = useState(null);
-  const [materialsCount, setMaterialsCount] = useState(0);
+  const [latestResult, setLatestResult] =
+    useState(null);
 
-  const [loading, setLoading] = useState(true);
+  const [materialsCount, setMaterialsCount] =
+    useState(0);
 
-  // 🔥 FETCH ATTENDANCE
-  const fetchAttendance = useCallback(async (studentId) => {
-    const { data } = await supabase
-      .from("attendance")
-      .select("status")
-      .eq("student_id", studentId);
+  const [loading, setLoading] =
+    useState(true);
 
-    if (data && data.length > 0) {
-      const present = data.filter(
-        (r) => r.status?.toLowerCase() === "present"
-      ).length;
+  /* ===================================== */
+  /* FETCH RESULTS */
+  /* ===================================== */
+  const fetchResults = useCallback(
+    async (studentId) => {
 
-      const percent = Math.round((present / data.length) * 100);
-      setAttendancePercent(percent);
-    } else {
-      setAttendancePercent(0);
-    }
-  }, []);
+      try {
 
-  // 🔥 FETCH RESULTS
-  const fetchResults = useCallback(async (studentId) => {
-    const { data } = await supabase
-      .from("results")
-      .select("*")
-      .eq("student_id", studentId)
-      .order("created_at", { ascending: false })
-      .limit(1);
+        const { data, error } =
+          await supabase
+            .from("results")
+            .select("*")
+            .eq("student_id", studentId)
+            .order("created_at", {
+              ascending: false,
+            })
+            .limit(1);
 
-    setLatestResult(data?.[0] || null);
-  }, []);
+        if (error) {
+          console.log(error);
+          return;
+        }
 
-  // 🔥 FETCH MATERIALS
-  const fetchMaterials = useCallback(async (studentClass) => {
-    const { data } = await supabase
-      .from("study_materials")
-      .select("id")
-      .eq("class", studentClass);
+        setLatestResult(data?.[0] || null);
 
-    setMaterialsCount(data?.length || 0);
-  }, []);
+      } catch (err) {
 
-  // 🔥 FETCH NOTICES
-  const fetchNotices = useCallback(async () => {
-    const { data } = await supabase
-      .from("notices")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(3);
+        console.log(err);
+      }
+    },
+    []
+  );
 
-    setNotices(data || []);
-  }, []);
+  /* ===================================== */
+  /* FETCH MATERIALS */
+  /* ===================================== */
+  const fetchMaterials = useCallback(
+    async (studentClass) => {
 
-  // 🔥 INIT
-  const initDashboard = useCallback(async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      try {
 
-    if (!session) {
-      navigate("/student/login");
-      return;
-    }
+        const normalizedClass =
+          String(Number(studentClass));
 
-    const email = session.user.email;
+        const { data, error } =
+          await supabase
+            .from("study_materials")
+            .select("id")
+            .eq("class", normalizedClass);
 
-    const { data: studentData } = await supabase
-      .from("students")
-      .select("*")
-      .eq("email", email)
-      .single();
+        if (error) {
+          console.log(error);
+          return;
+        }
 
-    if (!studentData) {
-      setLoading(false);
-      return;
-    }
+        setMaterialsCount(
+          data?.length || 0
+        );
 
-    setStudent(studentData);
+      } catch (err) {
 
-    await Promise.all([
-      fetchAttendance(studentData.id),
-      fetchResults(studentData.id),
-      fetchMaterials(studentData.class),
-      fetchNotices(),
-    ]);
+        console.log(err);
+      }
+    },
+    []
+  );
 
-    setLoading(false);
-  }, [fetchAttendance, fetchResults, fetchMaterials, fetchNotices, navigate]);
+  /* ===================================== */
+  /* INIT DASHBOARD */
+  /* ===================================== */
+  const initDashboard = useCallback(
+    async () => {
 
+      try {
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+
+          navigate("/student/login");
+
+          return;
+        }
+
+        console.log(
+          "Logged In User:",
+          user.email
+        );
+
+        /* ============================= */
+        /* GET STUDENT */
+        /* ============================= */
+        const { data, error } =
+          await supabase
+            .from("students")
+            .select("*")
+            .eq("email", user.email);
+
+        if (error) {
+
+          console.log(error);
+
+          setLoading(false);
+
+          return;
+        }
+
+        if (
+          !data ||
+          data.length === 0
+        ) {
+
+          console.log(
+            "No student found"
+          );
+
+          setLoading(false);
+
+          return;
+        }
+
+        const studentData = data[0];
+
+        console.log(
+          "Student Data:",
+          studentData
+        );
+
+        setStudent(studentData);
+
+        /* ============================= */
+        /* LOAD DASHBOARD DATA */
+        /* ============================= */
+        await Promise.all([
+          fetchResults(studentData.id),
+
+          fetchMaterials(
+            studentData.class
+          ),
+        ]);
+
+      } catch (err) {
+
+        console.log(err);
+
+      } finally {
+
+        setLoading(false);
+      }
+    },
+    [
+      fetchResults,
+      fetchMaterials,
+      navigate,
+    ]
+  );
+
+  /* ===================================== */
+  /* USE EFFECT */
+  /* ===================================== */
   useEffect(() => {
+
     initDashboard();
+
   }, [initDashboard]);
 
+  /* ===================================== */
+  /* LOADING */
+  /* ===================================== */
   if (loading) {
+
     return (
       <section className="student-dashboard">
+
         <div className="container">
-          <p>Loading dashboard...</p>
+
+          <p>
+            Loading dashboard...
+          </p>
+
         </div>
+
       </section>
     );
   }
 
+  /* ===================================== */
+  /* NO STUDENT */
+  /* ===================================== */
   if (!student) {
+
     return (
       <section className="student-dashboard">
+
         <div className="container">
-          <p>No student data found.</p>
+
+          <p>
+            No student data found.
+          </p>
+
         </div>
+
       </section>
     );
   }
 
   return (
     <section className="student-dashboard">
+
       <div className="container">
 
+        {/* ===================================== */}
         {/* HEADER */}
+        {/* ===================================== */}
         <div className="dashboard-header">
-          <h1>Student Dashboard</h1>
-          <p>Welcome back {student.name} 👋</p>
+
+          <h1>
+            Student Dashboard
+          </h1>
+
+          <p>
+            Welcome back{" "}
+            {student.name} 👋
+          </p>
+
         </div>
 
-        {/* 🔥 HERO CARD */}
-        <div className="dashboard-hero">
-          <h2>{attendancePercent}%</h2>
-          <p>Attendance</p>
+        {/* ===================================== */}
+        {/* PROFILE HERO */}
+        {/* ===================================== */}
+        <div className="dashboard-profile-hero">
+
+          <div className="profile-left">
+
+            <img
+              src={
+                student.profile_image ||
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              }
+              alt="Student"
+              className="student-profile-img"
+            />
+
+            <div className="profile-info">
+
+              <h2>
+                {student.name}
+              </h2>
+
+              <div className="profile-detail">
+
+                <MdEmail />
+
+                <span>
+                  {student.email}
+                </span>
+
+              </div>
+
+              <div className="profile-detail">
+
+                <FaPhoneAlt />
+
+                <span>
+                  {student.mobile ||
+                    "No mobile number"}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
-        {/* 🔥 MAIN CARDS */}
+        {/* ===================================== */}
+        {/* DASHBOARD CARDS */}
+        {/* ===================================== */}
         <div className="dashboard-grid">
 
+          {/* MATERIALS */}
           <div
             className="dashboard-card"
-            onClick={() => navigate("/student/study-material")}
+            onClick={() =>
+              navigate(
+                "/student/study-material"
+              )
+            }
           >
+
             <div className="card-icon blue">
+
               <FaBook />
+
             </div>
+
             <div>
-              <h3>{materialsCount}</h3>
-              <p>Study Materials</p>
+
+              <h3>
+                {materialsCount}
+              </h3>
+
+              <p>
+                Study Materials
+              </p>
+
             </div>
+
           </div>
 
+          {/* RESULTS */}
           <div
             className="dashboard-card"
-            onClick={() => navigate("/student/results")}
+            onClick={() =>
+              navigate(
+                "/student/results"
+              )
+            }
           >
+
             <div className="card-icon purple">
+
               <HiDocumentReport />
+
             </div>
+
             <div>
-              <h3>{latestResult ? "Available" : "--"}</h3>
-              <p>Latest Result</p>
+
+              <h3>
+                {latestResult
+                  ? "Available"
+                  : "--"}
+              </h3>
+
+              <p>
+                Latest Result
+              </p>
+
             </div>
+
           </div>
 
+          {/* CLASS */}
           <div
             className="dashboard-card"
-            onClick={() => navigate("/student/profile")}
           >
+
             <div className="card-icon green">
+
               <FaUser />
+
             </div>
+
             <div>
-              <h3>{student.name}</h3>
-              <p>Profile</p>
+
+              <h3>
+                Class{" "}
+                {String(
+                  Number(student.class)
+                )}
+              </h3>
+
+              <p>
+                Student Class
+              </p>
+
             </div>
+
           </div>
 
-        </div>
-
-        {/* 🔥 NOTICES */}
-        <div className="dashboard-notices">
-          <h2>Latest Notices</h2>
-
-          {notices.length === 0 ? (
-            <div className="notice-card">
-              No notices available
-            </div>
-          ) : (
-            notices.map((notice) => (
-              <div key={notice.id} className="notice-card">
-                <strong>{notice.title}</strong>
-                <p>{notice.description}</p>
-              </div>
-            ))
-          )}
-
-          <div
-            className="notice-card view-all"
-            onClick={() => navigate("/student/notices")}
-          >
-            View all notices →
-          </div>
         </div>
 
       </div>
+
     </section>
   );
 }

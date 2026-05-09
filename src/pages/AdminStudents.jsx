@@ -17,82 +17,107 @@ function AdminStudents() {
   const [studentClass, setStudentClass] = useState("");
   const [email, setEmail] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   // ✅ LOAD STUDENTS
   const loadStudents = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("students")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("students")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error loading students:", error.message);
-      return;
+      if (error) throw error;
+
+      setStudents(data || []);
+
+      const uniqueClasses = [
+        ...new Set((data || []).map((s) => s.class).filter(Boolean)),
+      ];
+      setClasses(uniqueClasses);
+
+    } catch (err) {
+      console.error("Load error:", err.message);
+      alert("Failed to load students");
     }
-
-    setStudents(data || []);
-
-    const uniqueClasses = [
-      ...new Set(data.map((s) => s.class).filter(Boolean)),
-    ];
-    setClasses(uniqueClasses);
-
   }, []);
 
   useEffect(() => {
     loadStudents();
   }, [loadStudents]);
 
-  // ✅ ADD STUDENT (FIXED)
+  // ✅ ADD STUDENT
   async function addStudent(e) {
     e.preventDefault();
 
-    const { error } = await supabase.from("students").insert([
-      {
-        name,
-        roll_no: roll,   // 🔥 FIXED
-        class: studentClass,
-        email,
-      },
-    ]);
+    if (loading) return;
+    setLoading(true);
 
-    if (error) {
-      alert("Error adding student: " + error.message);
-      return;
+    try {
+      const { error } = await supabase.from("students").insert([
+        {
+          name,
+          roll_no: roll,
+          class: studentClass,
+          email,
+        },
+      ]);
+
+      if (error) throw error;
+
+      alert("Student added successfully!");
+
+      setName("");
+      setRoll("");
+      setStudentClass("");
+      setEmail("");
+      setShowModal(false);
+
+      loadStudents();
+
+    } catch (err) {
+      console.error("Add error:", err.message);
+      alert("Error adding student: " + err.message);
+    } finally {
+      setLoading(false);
     }
-
-    alert("Student added successfully!");
-
-    setName("");
-    setRoll("");
-    setStudentClass("");
-    setEmail("");
-    setShowModal(false);
-
-    loadStudents();
   }
 
-  // ✅ DELETE
+  // ✅ DELETE STUDENT (FULLY FIXED)
   async function deleteStudent(id) {
+
     if (!window.confirm("Delete this student?")) return;
 
-    const { error } = await supabase
-      .from("students")
-      .delete()
-      .eq("id", id);
+    try {
+      console.log("Deleting ID:", id); // 🔥 DEBUG
 
-    if (error) {
-      alert("Error deleting student");
-      return;
+      const { error } = await supabase
+        .from("students")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        console.error("Delete error:", error);
+        alert("Delete failed: " + error.message);
+        return;
+      }
+
+      // 🔥 INSTANT UI UPDATE (no reload needed)
+      setStudents((prev) => prev.filter((s) => s.id !== id));
+
+      alert("Student deleted successfully");
+
+    } catch (err) {
+      console.error("Delete exception:", err);
+      alert("Something went wrong");
     }
-
-    loadStudents();
   }
 
-  // ✅ FILTER (FIXED)
+  // ✅ FILTER
   const filteredStudents = students.filter((s) => {
     const matchesSearch =
       s.name?.toLowerCase().includes(search.toLowerCase()) ||
-      s.roll_no?.toLowerCase().includes(search.toLowerCase()) || // 🔥 FIXED
+      s.roll_no?.toLowerCase().includes(search.toLowerCase()) ||
       s.email?.toLowerCase().includes(search.toLowerCase());
 
     const matchesClass =
@@ -108,7 +133,6 @@ function AdminStudents() {
 
       <div className="admin-page">
 
-        {/* HEADER */}
         <div className="page-header">
           <h1>Manage Students</h1>
 
@@ -120,7 +144,7 @@ function AdminStudents() {
           </button>
         </div>
 
-        {/* SEARCH + FILTER */}
+        {/* SEARCH */}
         <div className="search-container">
 
           <input
@@ -180,10 +204,8 @@ function AdminStudents() {
                       {student.name}
                     </td>
 
-                    <td>{student.roll_no}</td> {/* 🔥 FIXED */}
-
+                    <td>{student.roll_no}</td>
                     <td>{student.class}</td>
-
                     <td>{student.email}</td>
 
                     <td>
@@ -252,8 +274,8 @@ function AdminStudents() {
                 required
               />
 
-              <button type="submit" className="save-btn">
-                Save Student
+              <button type="submit" className="save-btn" disabled={loading}>
+                {loading ? "Saving..." : "Save Student"}
               </button>
 
               <button

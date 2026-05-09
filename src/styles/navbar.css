@@ -1,189 +1,333 @@
-/* ============================= */
-/* NAVBAR */
-/* ============================= */
+/* =========================================
+   NAVBAR
+========================================= */
 
 .navbar {
-  width: 100%;
-  height: 80px;
-  background: #ffffff;
-  border-bottom: 1px solid #eee;
+
   position: fixed;
+
   top: 0;
   left: 0;
+
+  width: 100%;
+  height: 82px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+
   z-index: 9999;
+
   display: flex;
-  justify-content: center; /* 🔥 center content */
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  justify-content: center;
 }
 
-/* ============================= */
-/* CONTAINER (IMPORTANT FIX) */
-/* ============================= */
+/* =========================================
+   CONTAINER
+========================================= */
 
-.nav-content {
+.navbar-container {
+
   width: 100%;
-  max-width: 1200px; /* 🔥 FIXED WIDTH */
+  max-width: 1250px;
+
+  height: 100%;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
+
+  padding: 0 24px;
 }
 
-/* ============================= */
-/* LOGO */
-/* ============================= */
+/* =========================================
+   LOGO
+========================================= */
 
-.logo {
+.navbar-logo {
+
   display: flex;
   align-items: center;
-  gap: 10px;
-}
 
-.logo-img {
-  height: 50px; /* 🔥 slightly bigger */
-  width: auto;
-}
+  gap: 14px;
 
-.logo span {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111;
-  letter-spacing: 0.3px;
-}
-
-/* ============================= */
-/* NAV LINKS */
-/* ============================= */
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 30px;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-links a {
   text-decoration: none;
-  color: #333;
+
+  flex-shrink: 0;
+}
+
+/* IMAGE */
+
+.navbar-logo-img {
+
+  width: 56px;
+  height: 56px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+/* TEXT */
+
+.navbar-logo-text {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.navbar-logo-text h2 {
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: #111827;
+
+  line-height: 1.1;
+}
+
+.navbar-logo-text p {
+
+  font-size: 11px;
+
+  color: #6b7280;
+
+  margin-top: 3px;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   NAV LINKS
+========================================= */
+
+.navbar-links {
+
+  display: flex;
+  align-items: center;
+
+  gap: 34px;
+}
+
+.navbar-links a {
+
+  text-decoration: none;
+
+  color: #374151;
+
   font-size: 15px;
-  font-weight: 500;
-  transition: 0.25s;
-  position: relative;
+
+  font-weight: 600;
+
+  transition: 0.2s;
 }
 
-/* underline animation */
+.navbar-links a:hover {
 
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  left: 0;
-  bottom: -6px;
-  background: #facc15;
-  transition: 0.25s;
+  color: #f59e0b;
 }
 
-.nav-links a:hover {
-  color: #000;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-/* ============================= */
-/* LOGIN BUTTON */
-/* ============================= */
+/* =========================================
+   LOGIN BUTTON
+========================================= */
 
 .login-dropdown {
+
   position: relative;
 }
 
 .login-btn {
-  background: #facc15;
-  color: #000;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   border: none;
-  padding: 10px 18px;
+
+  background: #facc15;
+
+  color: #111827;
+
+  padding: 11px 20px;
+
   border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 700;
+
   cursor: pointer;
-  font-weight: 600;
-  transition: 0.25s;
+
+  transition: 0.2s;
 }
 
 .login-btn:hover {
+
   background: #eab308;
-  transform: translateY(-1px);
 }
 
-/* ============================= */
-/* DROPDOWN */
-/* ============================= */
+/* ICON */
+
+.dropdown-icon {
+
+  transition: 0.2s;
+}
+
+.dropdown-icon.rotate {
+
+  transform: rotate(180deg);
+}
+
+/* =========================================
+   DROPDOWN
+========================================= */
 
 .dropdown-menu {
+
   position: absolute;
-  top: 48px;
+
+  top: 54px;
   right: 0;
-  background: white;
+
+  width: 190px;
+
+  background: #ffffff;
+
   border-radius: 12px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  min-width: 180px;
-  z-index: 1000;
+
   overflow: hidden;
+
+  border: 1px solid #eeeeee;
+
+  box-shadow:
+  0 12px 30px rgba(0,0,0,0.08);
 }
 
 .dropdown-menu a {
-  padding: 12px 16px;
-  text-decoration: none;
-  color: #333;
+
+  display: block;
+
+  padding: 14px 16px;
+
+  color: #374151;
+
   font-size: 14px;
+
   transition: 0.2s;
 }
 
 .dropdown-menu a:hover {
-  background: #fef9c3;
+
+  background: #f9fafb;
+
+  color: #f59e0b;
 }
 
-/* ============================= */
-/* MOBILE MENU BUTTON */
-/* ============================= */
+/* =========================================
+   MOBILE MENU BUTTON
+========================================= */
 
-.menu-toggle {
+.mobile-menu-btn {
+
   display: none;
-  font-size: 26px;
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 24px;
+
   cursor: pointer;
-  color: #111;
+
+  color: #111827;
 }
 
-/* ============================= */
-/* MOBILE RESPONSIVE */
-/* ============================= */
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 768px) {
 
-  .menu-toggle {
+  .navbar {
+
+    height: 74px;
+  }
+
+  .navbar-container {
+
+    padding: 0 18px;
+  }
+
+  .mobile-menu-btn {
+
     display: block;
   }
 
-  .nav-links {
+  .navbar-links {
+
     position: absolute;
-    top: 80px;
+
+    top: 74px;
     left: 0;
+
     width: 100%;
+
     background: white;
+
     flex-direction: column;
-    padding: 20px;
+
+    align-items: flex-start;
+
+    gap: 22px;
+
+    padding: 24px;
+
     display: none;
-    gap: 18px;
-    border-top: 1px solid #eee;
+
+    border-top: 1px solid #eeeeee;
   }
 
-  .nav-links.active {
+  .navbar-links.active {
+
     display: flex;
+  }
+
+  .navbar-logo-img {
+
+    width: 46px;
+    height: 46px;
+  }
+
+  .navbar-logo-text h2 {
+
+    font-size: 17px;
+  }
+
+  .navbar-logo-text p {
+
+    font-size: 10px;
+  }
+
+  .dropdown-menu {
+
+    position: static;
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    box-shadow: none;
+  }
+
+  .login-btn {
+
+    width: 100%;
+    justify-content: center;
   }
 
 }

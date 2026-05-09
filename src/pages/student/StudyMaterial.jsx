@@ -1,171 +1,397 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../config/supabase";
+import StudentSidebar from "../../components/StudentSidebar";
 import "../../styles/studyMaterial.css";
+
+import {
+  FaFilePdf,
+  FaVideo,
+  FaExternalLinkAlt,
+  FaDownload,
+  FaSearch,
+} from "react-icons/fa";
 
 function StudyMaterial() {
 
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [studentClass, setStudentClass] = useState(null);
-  const [error, setError] = useState(null);
+  const [studentClass, setStudentClass] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    loadMaterials();
+    fetchStudentData();
   }, []);
 
-  async function loadMaterials() {
+  /* ============================= */
+  /* GET LOGGED IN STUDENT */
+  /* ============================= */
+  async function fetchStudentData() {
+
     try {
-      setLoading(true);
-      setError(null);
 
-      // 🔥 Get logged in user
-      const { data: { user }, error: userError } =
-        await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-      if (userError || !user) {
-        setError("User not logged in");
+      if (!user) {
+        setLoading(false);
         return;
       }
 
-      let studentClassValue = null;
+      const { data, error } = await supabase
+        .from("students")
+        .select("*")
+        .eq("email", user.email);
 
-      // 🔥 Try profiles table
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("class")
-        .eq("id", user.id)
-        .single();
-
-      if (profile && profile.class) {
-        studentClassValue = profile.class;
-      } else {
-
-        // 🔥 Fallback: students table (IMPORTANT for your setup)
-        const { data: student } = await supabase
-          .from("students")
-          .select("class")
-          .eq("email", user.email)
-          .single();
-
-        if (student && student.class) {
-          studentClassValue = student.class;
-        }
-      }
-
-      if (!studentClassValue) {
-        setError("Your class is not assigned yet.");
+      if (error) {
+        console.log(error);
+        setLoading(false);
         return;
       }
 
-      setStudentClass(studentClassValue);
+      if (!data || data.length === 0) {
+        setLoading(false);
+        return;
+      }
 
-      // 🔥 Fetch materials for class
-      const { data, error: materialError } = await supabase
+      const student = data[0];
+
+      const studentCls = String(
+        Number(student.class)
+      );
+
+      setStudentClass(studentCls);
+
+      fetchMaterials(studentCls);
+
+    } catch (err) {
+
+      console.log(err);
+
+      setLoading(false);
+    }
+  }
+
+  /* ============================= */
+  /* FETCH MATERIALS */
+  /* ============================= */
+  async function fetchMaterials(studentCls) {
+
+    try {
+
+      const { data, error } = await supabase
         .from("study_materials")
         .select("*")
-        .eq("class", studentClassValue)
-        .order("created_at", { ascending: false });
+        .eq(
+          "class",
+          String(Number(studentCls))
+        )
+        .order("created_at", {
+          ascending: false,
+        });
 
-      if (materialError) {
-        setError("Failed to load materials");
+      if (error) {
+        console.log(error);
         return;
       }
 
       setMaterials(data || []);
 
     } catch (err) {
-      console.error(err);
-      setError("Something went wrong");
+
+      console.log(err);
+
     } finally {
+
       setLoading(false);
     }
   }
 
-  function formatDate(date) {
-    if (!date) return "";
-    return new Date(date).toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric"
-    });
+  /* ============================= */
+  /* SEARCH FILTER */
+  /* ============================= */
+  const filteredMaterials = materials.filter(
+    (item) =>
+      item.title
+        ?.toLowerCase()
+        .includes(search.toLowerCase()) ||
+      item.subject
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
+  );
+
+  /* ============================= */
+  /* FILTERS */
+  /* ============================= */
+  const videos = filteredMaterials.filter(
+    (m) => m.type?.toLowerCase() === "video"
+  );
+
+  const pdfs = filteredMaterials.filter(
+    (m) =>
+      m.type?.toLowerCase() === "book" ||
+      m.type?.toLowerCase() === "pdf"
+  );
+
+  /* ============================= */
+  /* YOUTUBE EMBED */
+  /* ============================= */
+  function getYouTubeEmbed(url) {
+
+    try {
+
+      if (!url) return "";
+
+      const regExp =
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+
+      const match = url.match(regExp);
+
+      return match
+        ? `https://www.youtube.com/embed/${match[1]}`
+        : "";
+
+    } catch {
+
+      return "";
+    }
   }
 
   return (
-    <section className="study-material-page">
+    <div className="student-layout">
 
-      <div className="container">
+      <StudentSidebar />
 
-        <div className="page-header">
-          <h1>Study Materials</h1>
-          <p>
-            {studentClass
-              ? `Resources for Class ${studentClass}`
-              : "Loading your class data..."}
-          </p>
-        </div>
+      <div className="student-page">
 
-        <div className="materials-grid">
+        {/* HERO */}
+        <div className="materials-hero">
 
-          {/* 🔥 Loading */}
-          {loading && (
-            <div className="empty-box">
-              Loading study materials...
-            </div>
-          )}
+          <div>
 
-          {/* 🔥 Error */}
-          {!loading && error && (
-            <div className="empty-box">
-              {error}
-            </div>
-          )}
+            <h1>📚 Study Materials</h1>
 
-          {/* 🔥 No Data */}
-          {!loading && !error && materials.length === 0 && (
-            <div className="empty-box">
-              No study materials available for your class.
-            </div>
-          )}
+            <p>
+              Access premium resources uploaded
+              for Class {studentClass}
+            </p>
 
-          {/* 🔥 Data */}
-          {!loading && !error && materials.map((item) => (
+          </div>
 
-            <div key={item.id} className="material-card">
-
-              <h3>{item.title}</h3>
-
-              <p>
-                {item.description || "No description available"}
-              </p>
-
-              <span className="material-class">
-                Class: {item.class}
-              </span>
-
-              <span className="material-date">
-                Uploaded: {formatDate(item.created_at)}
-              </span>
-
-              {item.file_url && (
-                <a
-                  href={item.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="download-btn"
-                >
-                  Download
-                </a>
-              )}
-
-            </div>
-
-          ))}
+          <div className="class-badge">
+            Class {studentClass}
+          </div>
 
         </div>
+
+        {/* SEARCH */}
+        <div className="search-bar">
+
+          <FaSearch />
+
+          <input
+            type="text"
+            placeholder="Search by title or subject..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+
+        </div>
+
+        {/* LOADING */}
+        {loading ? (
+
+          <div className="premium-box">
+            Loading materials...
+          </div>
+
+        ) : filteredMaterials.length === 0 ? (
+
+          <div className="premium-box">
+            No materials found.
+          </div>
+
+        ) : (
+
+          <>
+            {/* VIDEO SECTION */}
+            <div className="material-section">
+
+              <div className="section-header">
+
+                <div className="section-icon">
+                  <FaVideo />
+                </div>
+
+                <div>
+                  <h2>Video Lectures</h2>
+                  <p>Watch uploaded learning videos</p>
+                </div>
+
+              </div>
+
+              <div className="materials-grid">
+
+                {videos.length === 0 ? (
+
+                  <div className="premium-box">
+                    No videos available
+                  </div>
+
+                ) : (
+
+                  videos.map((item) => (
+
+                    <div
+                      key={item.id}
+                      className="premium-card"
+                    >
+
+                      <div className="card-top">
+
+                        <span className="subject-badge">
+                          {item.subject || "Subject"}
+                        </span>
+
+                        <span className="date-badge">
+                          {new Date(
+                            item.created_at
+                          ).toLocaleDateString()}
+                        </span>
+
+                      </div>
+
+                      <div className="video-wrapper">
+
+                        <iframe
+                          src={getYouTubeEmbed(
+                            item.file_url
+                          )}
+                          title={item.title}
+                          allowFullScreen
+                        />
+
+                      </div>
+
+                      <h3>{item.title}</h3>
+
+                      <p>{item.description}</p>
+
+                      <a
+                        href={item.file_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="premium-btn"
+                      >
+
+                        <FaExternalLinkAlt />
+
+                        Watch Video
+
+                      </a>
+
+                    </div>
+                  ))
+                )}
+
+              </div>
+
+            </div>
+
+            {/* PDF SECTION */}
+            <div className="material-section">
+
+              <div className="section-header">
+
+                <div className="section-icon pdf">
+                  <FaFilePdf />
+                </div>
+
+                <div>
+                  <h2>PDF Notes & Books</h2>
+                  <p>Download notes and study PDFs</p>
+                </div>
+
+              </div>
+
+              <div className="materials-grid">
+
+                {pdfs.length === 0 ? (
+
+                  <div className="premium-box">
+                    No PDFs available
+                  </div>
+
+                ) : (
+
+                  pdfs.map((item) => (
+
+                    <div
+                      key={item.id}
+                      className="premium-card pdf-card"
+                    >
+
+                      <div className="card-top">
+
+                        <span className="subject-badge">
+                          {item.subject || "Subject"}
+                        </span>
+
+                        <span className="date-badge">
+                          {new Date(
+                            item.created_at
+                          ).toLocaleDateString()}
+                        </span>
+
+                      </div>
+
+                      <div className="pdf-icon">
+
+                        <FaFilePdf />
+
+                      </div>
+
+                      <h3>{item.title}</h3>
+
+                      <p>{item.description}</p>
+
+                      <div className="pdf-buttons">
+
+                        <a
+                          href={item.file_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="premium-btn"
+                        >
+                          Open PDF
+                        </a>
+
+                        <a
+                          href={item.file_url}
+                          download
+                          className="download-btn"
+                        >
+
+                          <FaDownload />
+
+                        </a>
+
+                      </div>
+
+                    </div>
+                  ))
+                )}
+
+              </div>
+
+            </div>
+          </>
+        )}
 
       </div>
-
-    </section>
+    </div>
   );
 }
 

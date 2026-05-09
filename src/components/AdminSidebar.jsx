@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { supabase } from "../config/supabase";
 import "../styles/adminSidebar.css";
@@ -12,7 +12,7 @@ import {
   FaClipboardCheck,
   FaBars,
   FaSignOutAlt,
-  FaEnvelope // 🔥 NEW ICON
+  FaEnvelope,
 } from "react-icons/fa";
 
 import { MdSlideshow } from "react-icons/md";
@@ -21,44 +21,126 @@ import { HiDocumentReport } from "react-icons/hi";
 function AdminSidebar() {
 
   const location = useLocation();
-  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const isActive = (path) => location.pathname === path;
+  /* ===================================== */
+  /* ACTIVE LINK */
+  /* ===================================== */
 
-  // 🔥 LOGOUT FUNCTION
+  const isActive = (path) =>
+    location.pathname === path;
+
+  /* ===================================== */
+  /* LOGOUT */
+  /* ===================================== */
+
   async function handleLogout() {
-    await supabase.auth.signOut();
-    navigate("/login");
+
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+
+      // 🔥 SIGN OUT
+      await supabase.auth.signOut();
+
+      // 🔥 CLEAR STORAGE
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // 🔥 REMOVE SUPABASE KEYS
+      Object.keys(localStorage).forEach((key) => {
+
+        if (key.includes("supabase")) {
+          localStorage.removeItem(key);
+        }
+
+      });
+
+      // 🔥 FORCE REDIRECT TO HOME
+      window.location.href = "/";
+
+    } catch (err) {
+
+      console.log(
+        "Logout Error:",
+        err
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
   }
 
   return (
     <>
-      {/* 🔥 MOBILE TOP BAR */}
+      {/* ===================================== */}
+      {/* MOBILE TOPBAR */}
+      {/* ===================================== */}
+
       <div className="admin-topbar">
-        <button className="menu-btn" onClick={() => setOpen(true)}>
+
+        <button
+          className="menu-btn"
+          onClick={() => setOpen(true)}
+        >
           <FaBars />
         </button>
+
         <h2>Admin Panel</h2>
+
       </div>
 
-      {/* 🔥 OVERLAY */}
+      {/* ===================================== */}
+      {/* OVERLAY */}
+      {/* ===================================== */}
+
       {open && (
-        <div className="sidebar-overlay" onClick={() => setOpen(false)} />
+        <div
+          className="sidebar-overlay"
+          onClick={() => setOpen(false)}
+        />
       )}
 
-      {/* 🔥 SIDEBAR */}
-      <div className={`admin-sidebar ${open ? "open" : ""}`}>
+      {/* ===================================== */}
+      {/* SIDEBAR */}
+      {/* ===================================== */}
+
+      <div
+        className={`admin-sidebar ${
+          open ? "open" : ""
+        }`}
+      >
+
+        {/* ===================================== */}
+        {/* LOGO */}
+        {/* ===================================== */}
 
         <div className="sidebar-logo">
-          <h2>School Admin</h2>
+
+          <h2>
+            School Admin
+          </h2>
+
         </div>
+
+        {/* ===================================== */}
+        {/* MENU */}
+        {/* ===================================== */}
 
         <nav className="sidebar-menu">
 
           <Link
             to="/admin/dashboard"
-            className={isActive("/admin/dashboard") ? "active" : ""}
+            className={
+              isActive("/admin/dashboard")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaTachometerAlt />
@@ -67,7 +149,11 @@ function AdminSidebar() {
 
           <Link
             to="/admin/students"
-            className={isActive("/admin/students") ? "active" : ""}
+            className={
+              isActive("/admin/students")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaUserGraduate />
@@ -76,7 +162,11 @@ function AdminSidebar() {
 
           <Link
             to="/admin/news"
-            className={isActive("/admin/news") ? "active" : ""}
+            className={
+              isActive("/admin/news")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaNewspaper />
@@ -85,16 +175,26 @@ function AdminSidebar() {
 
           <Link
             to="/admin/materials"
-            className={isActive("/admin/materials") ? "active" : ""}
+            className={
+              isActive("/admin/materials")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaBook />
-            <span>Study Materials</span>
+            <span>
+              Study Materials
+            </span>
           </Link>
 
           <Link
             to="/admin/attendance"
-            className={isActive("/admin/attendance") ? "active" : ""}
+            className={
+              isActive("/admin/attendance")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaClipboardCheck />
@@ -103,7 +203,11 @@ function AdminSidebar() {
 
           <Link
             to="/admin/results"
-            className={isActive("/admin/results") ? "active" : ""}
+            className={
+              isActive("/admin/results")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <HiDocumentReport />
@@ -112,7 +216,11 @@ function AdminSidebar() {
 
           <Link
             to="/admin/sliders"
-            className={isActive("/admin/sliders") ? "active" : ""}
+            className={
+              isActive("/admin/sliders")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <MdSlideshow />
@@ -121,17 +229,24 @@ function AdminSidebar() {
 
           <Link
             to="/admin/gallery"
-            className={isActive("/admin/gallery") ? "active" : ""}
+            className={
+              isActive("/admin/gallery")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaImages />
             <span>Gallery</span>
           </Link>
 
-          {/* 🔥 NEW: INQUIRIES PAGE */}
           <Link
             to="/admin/messages"
-            className={isActive("/admin/messages") ? "active" : ""}
+            className={
+              isActive("/admin/messages")
+                ? "active"
+                : ""
+            }
             onClick={() => setOpen(false)}
           >
             <FaEnvelope />
@@ -140,12 +255,27 @@ function AdminSidebar() {
 
         </nav>
 
-        {/* 🔥 LOGOUT */}
+        {/* ===================================== */}
+        {/* LOGOUT */}
+        {/* ===================================== */}
+
         <div className="sidebar-logout">
-          <button onClick={handleLogout}>
+
+          <button
+            onClick={handleLogout}
+            disabled={loading}
+          >
+
             <FaSignOutAlt />
-            <span>Logout</span>
+
+            <span>
+              {loading
+                ? "Logging out..."
+                : "Logout"}
+            </span>
+
           </button>
+
         </div>
 
       </div>

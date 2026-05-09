@@ -1,16 +1,6 @@
-/* 🔥 FORCE HERO TEXT (FIX GLOBAL CSS CONFLICT) */
-.hero h1,
-.hero h2,
-.hero h3,
-.hero p {
-  color: #ffffff !important;
-}
-
-.hero span {
-  color: #facc15 !important;
-}
-
-/* ================= HERO ================= */
+/* =========================================
+   HERO SECTION
+========================================= */
 
 .hero {
   position: relative;
@@ -19,149 +9,483 @@
   overflow: hidden;
 }
 
-/* ================= BACKGROUND ================= */
+/* =========================================
+   BACKGROUND
+========================================= */
 
 .hero-bg {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+
   background-size: cover;
   background-position: center;
+
   opacity: 0;
+
   transition: opacity 1s ease;
-  filter: brightness(0.7) contrast(1.1);
+
+  filter:
+    brightness(0.45)
+    contrast(1.05);
 }
 
 .hero-bg.active {
   opacity: 1;
 }
 
-/* ================= OVERLAY ================= */
+/* =========================================
+   OVERLAY
+========================================= */
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,0.75),
+      rgba(0,0,0,0.45)
+    );
+
+  z-index: 1;
 }
 
-/* ================= CONTENT (MAIN CHANGE) ================= */
+/* =========================================
+   MAIN CONTAINER
+========================================= */
 
-.hero-content {
+.hero-container {
+
   position: relative;
+
   z-index: 2;
+
+  width: 100%;
+  max-width: 1280px;
+
   height: 100%;
+
+  margin: auto;
+
+  padding: 110px 50px 40px;
+
   display: flex;
-  justify-content: space-between; /* 🔥 LEFT + RIGHT */
+
   align-items: center;
-  padding: 0 6%;
+  justify-content: space-between;
+
+  gap: 50px;
 }
 
-/* ================= LEFT SIDE ================= */
+/* =========================================
+   LEFT SIDE
+========================================= */
 
 .hero-left {
-  max-width: 600px;
+  flex: 1;
+  max-width: 560px;
+}
+
+/* BADGE */
+
+.hero-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 9px 18px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    1px solid rgba(255,255,255,0.12);
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-bottom: 22px;
+
+  backdrop-filter: blur(8px);
 }
 
 /* TITLE */
+
 .hero-left h1 {
-  font-size: 4rem;
-  font-weight: 900;
-  line-height: 1.2;
-  letter-spacing: -1px;
+
+  font-size: 64px;
+
+  line-height: 1.05;
+
+  font-weight: 800;
+
+  letter-spacing: -2px;
+
+  color: #ffffff;
+
+  margin-bottom: 20px;
 }
 
-/* SUBTEXT */
+.hero-left h1 span {
+  color: #facc15;
+}
+
+/* DESCRIPTION */
+
 .hero-left p {
-  margin-top: 10px;
-  font-size: 1.1rem;
-  color: #e5e7eb !important;
+
+  font-size: 17px;
+
+  line-height: 1.8;
+
+  color:
+    rgba(255,255,255,0.82);
+
+  max-width: 520px;
 }
 
-/* ================= BUTTONS ================= */
+/* =========================================
+   BUTTONS
+========================================= */
 
 .hero-buttons {
-  margin-top: 25px;
+
   display: flex;
-  gap: 15px;
+
+  gap: 16px;
+
+  margin-top: 30px;
 }
 
-/* PRIMARY BUTTON */
-.btn-primary {
-  background: #facc15;
-  color: #000;
-  padding: 14px 36px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.3s;
+.hero-btn {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 14px 26px;
+
+  border-radius: 14px;
+
   border: none;
-}
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-/* SECONDARY BUTTON */
-.btn-secondary {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid #fff;
-  padding: 14px 36px;
-  border-radius: 999px;
-  color: #fff;
-  backdrop-filter: blur(6px);
   cursor: pointer;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  transition: 0.3s;
 }
 
-.btn-secondary:hover {
-  background: #fff;
-  color: #000;
+/* PRIMARY */
+
+.primary-btn {
+
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #fde047
+    );
+
+  color: #111827;
 }
 
-/* ================= RIGHT SIDE (LOGO) ================= */
+.primary-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* SECONDARY */
+
+.secondary-btn {
+
+  background:
+    rgba(255,255,255,0.08);
+
+  color: #ffffff;
+
+  border:
+    1px solid rgba(255,255,255,0.15);
+
+  backdrop-filter: blur(8px);
+}
+
+.secondary-btn:hover {
+
+  background:
+    rgba(255,255,255,0.15);
+}
+
+/* =========================================
+   STATS
+========================================= */
+
+.hero-stats {
+
+  display: flex;
+
+  gap: 38px;
+
+  margin-top: 40px;
+}
+
+.hero-stats h3 {
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  font-weight: 800;
+
+  margin-bottom: 4px;
+}
+
+.hero-stats p {
+
+  color:
+    rgba(255,255,255,0.7);
+
+  font-size: 13px;
+}
+
+/* =========================================
+   RIGHT SIDE
+========================================= */
 
 .hero-right {
+
+  flex: 1;
+
   display: flex;
+
   justify-content: center;
   align-items: center;
 }
 
-.hero-right img {
-  width: 550px;
+/* =========================================
+   LOGO CARD
+========================================= */
+
+.hero-logo-card {
+
+  width: 100%;
+  max-width: 400px;
+
+  background:
+    rgba(255,255,255,0.10);
+
+  border:
+    1px solid rgba(255,255,255,0.14);
+
+  backdrop-filter: blur(14px);
+
+  border-radius: 28px;
+
+  padding: 38px 28px;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.3);
+}
+
+/* LOGO */
+
+.hero-school-logo {
+
+  width: 220px;
+
+  max-width: 100%;
+
   height: auto;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-  transition: 0.3s;
+
+  object-fit: contain;
+
+  margin-bottom: 24px;
+
+  filter:
+    drop-shadow(
+      0 10px 25px rgba(0,0,0,0.18)
+    );
+
+  transition: 0.3s ease;
 }
 
-.hero-right img:hover {
-  transform: scale(1.05);
+.hero-school-logo:hover {
+
+  transform: scale(1.03);
+}
+/* TITLE */
+
+.hero-logo-text h2 {
+
+  color: #ffffff;
+
+  font-size: 24px;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
 }
 
-/* ================= MOBILE ================= */
+/* TAGLINE */
 
-@media (max-width: 768px) {
-  .hero-content {
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+.hero-logo-text p {
+
+  color:
+    rgba(255,255,255,0.78);
+
+  font-size: 12px;
+
+  letter-spacing: 3px;
+
+  text-transform: uppercase;
+
+  font-weight: 600;
+}
+
+/* LINE */
+
+.hero-logo-line {
+
+  width: 70px;
+
+  height: 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #facc15,
+      #fde68a
+    );
+
+  border-radius: 999px;
+
+  margin: 20px auto 16px;
+}
+
+/* SLOGAN */
+
+.hero-slogan {
+
+  color: #facc15;
+
+  font-size: 16px;
+
+  font-weight: 600;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+
+  .hero {
+    height: auto;
+    min-height: 100vh;
   }
 
-  .hero-left h1 {
-    font-size: 2.3rem;
+  .hero-container {
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding:
+      130px 30px 60px;
+  }
+
+  .hero-left {
+    max-width: 100%;
+  }
+
+  .hero-left p {
+    margin: auto;
   }
 
   .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .hero-container {
+
+    padding:
+      120px 20px 50px;
+  }
+
+  .hero-left h1 {
+
+    font-size: 44px;
+
+    line-height: 1.08;
+  }
+
+  .hero-left p {
+
+    font-size: 15px;
+  }
+
+  .hero-buttons {
+
     flex-direction: column;
   }
 
-  .hero-right {
-    margin-top: 25px;
+  .hero-btn {
+
+    width: 100%;
   }
 
-  .hero-right img {
-    width: 160px;
+  .hero-stats {
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+  }
+
+  .hero-logo-card {
+
+    max-width: 100%;
+
+    padding: 30px 20px;
+  }
+
+  .hero-school-logo {
+
+     width: 170px;
+  }
+
+  .hero-logo-text h2 {
+
+    font-size: 22px;
+  }
+
+  .hero-slogan {
+
+    font-size: 14px;
   }
 }

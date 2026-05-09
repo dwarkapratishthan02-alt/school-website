@@ -23,7 +23,7 @@ function NewsSection() {
       return;
     }
 
-    console.log("News data:", data); // debugging
+    console.log("News data:", data);
 
     setNews(data || []);
   }
@@ -32,46 +32,92 @@ function NewsSection() {
 
     <section className="news-section">
 
-      <div className="news-header">
-        <h2>News & Announcements</h2>
-        <p>Stay updated with the latest events and announcements.</p>
+      {/* TOP HEADER */}
+
+      <div className="news-top">
+
+        <div className="news-badge">
+          Latest Updates
+        </div>
+
+        <h2>
+          News & Announcements
+        </h2>
+
+        <p>
+          Stay updated with important notices, events,
+          achievements, and latest announcements from
+          Dwarka Pratishthan.
+        </p>
+
       </div>
 
-      <div className="news-container">
+      {/* NEWS GRID */}
+
+      <div className="news-grid">
 
         {news.length === 0 ? (
 
-          <p className="no-news">No announcements available.</p>
+          <div className="no-news-card">
+            <h3>No Announcements Yet</h3>
+            <p>
+              Latest school updates and notices will
+              appear here soon.
+            </p>
+          </div>
 
         ) : (
 
-          news.map((item) => (
+          news.map((item, index) => (
 
-            <div className="news-item" key={item.id}>
+            <div className="news-card" key={item.id}>
 
-              {/* PDF PREVIEW */}
+              {/* TOP */}
 
-              <div className="pdf-preview">
-                {item.pdf_url ? (
-                  <a href={item.pdf_url} target="_blank" rel="noreferrer">
-                    📄 View PDF
-                  </a>
-                ) : (
-                  <span>No PDF</span>
-                )}
+              <div className="news-card-top">
+
+                <div className="news-number">
+                  0{index + 1}
+                </div>
+
+                <div className="news-date">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </div>
+
               </div>
 
-              {/* TEXT */}
+              {/* TITLE */}
 
-              <div className="news-text">
+              <h3>{item.title}</h3>
 
-                <h3>{item.title}</h3>
+              {/* CONTENT */}
 
-                <p>{item.content}</p>
+              <p>
+                {item.content}
+              </p>
 
-                <span className="news-date">
-                  {new Date(item.created_at).toLocaleDateString()}
-                </span>
+              {/* FOOTER */}
+
+              <div className="news-footer">
+
+                {item.pdf_url ? (
+
+                  <a
+                    href={item.pdf_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="pdf-btn"
+                  >
+                    📄 View Notice
+                  </a>
+
+                ) : (
+
+                  <span className="no-pdf">
+                    No Attachment
+                  </span>
+
+                )}
 
               </div>
 
