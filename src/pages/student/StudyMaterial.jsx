@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+
 import { supabase } from "../../config/supabase";
 import StudentSidebar from "../../components/StudentSidebar";
 import "../../styles/studyMaterial.css";
@@ -18,98 +23,111 @@ function StudyMaterial() {
   const [studentClass, setStudentClass] = useState("");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
+  /* ============================= */
+  /* FETCH MATERIALS */
+  /* ============================= */
+
+  const fetchMaterials = useCallback(
+    async (studentCls) => {
+
+      try {
+
+        const { data, error } = await supabase
+          .from("study_materials")
+          .select("*")
+          .eq(
+            "class",
+            String(Number(studentCls))
+          )
+          .order("created_at", {
+            ascending: false,
+          });
+
+        if (error) {
+          console.log(error);
+          return;
+        }
+
+        setMaterials(data || []);
+
+      } catch (err) {
+
+        console.log(err);
+
+      } finally {
+
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   /* ============================= */
   /* GET LOGGED IN STUDENT */
   /* ============================= */
-  async function fetchStudentData() {
 
-    try {
+  const fetchStudentData = useCallback(
+    async () => {
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
 
-      if (!user) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("students")
+          .select("*")
+          .eq("email", user.email);
+
+        if (error) {
+          console.log(error);
+          setLoading(false);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        const student = data[0];
+
+        const studentCls = String(
+          Number(student.class)
+        );
+
+        setStudentClass(studentCls);
+
+        fetchMaterials(studentCls);
+
+      } catch (err) {
+
+        console.log(err);
+
         setLoading(false);
-        return;
       }
-
-      const { data, error } = await supabase
-        .from("students")
-        .select("*")
-        .eq("email", user.email);
-
-      if (error) {
-        console.log(error);
-        setLoading(false);
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        setLoading(false);
-        return;
-      }
-
-      const student = data[0];
-
-      const studentCls = String(
-        Number(student.class)
-      );
-
-      setStudentClass(studentCls);
-
-      fetchMaterials(studentCls);
-
-    } catch (err) {
-
-      console.log(err);
-
-      setLoading(false);
-    }
-  }
+    },
+    [fetchMaterials]
+  );
 
   /* ============================= */
-  /* FETCH MATERIALS */
+  /* USE EFFECT */
   /* ============================= */
-  async function fetchMaterials(studentCls) {
 
-    try {
-
-      const { data, error } = await supabase
-        .from("study_materials")
-        .select("*")
-        .eq(
-          "class",
-          String(Number(studentCls))
-        )
-        .order("created_at", {
-          ascending: false,
-        });
-
-      if (error) {
-        console.log(error);
-        return;
-      }
-
-      setMaterials(data || []);
-
-    } catch (err) {
-
-      console.log(err);
-
-    } finally {
-
-      setLoading(false);
-    }
-  }
+  useEffect(() => {
+    fetchStudentData();
+  }, [fetchStudentData]);
 
   /* ============================= */
   /* SEARCH FILTER */
   /* ============================= */
+
   const filteredMaterials = materials.filter(
     (item) =>
       item.title
@@ -123,6 +141,7 @@ function StudyMaterial() {
   /* ============================= */
   /* FILTERS */
   /* ============================= */
+
   const videos = filteredMaterials.filter(
     (m) => m.type?.toLowerCase() === "video"
   );
@@ -136,6 +155,7 @@ function StudyMaterial() {
   /* ============================= */
   /* YOUTUBE EMBED */
   /* ============================= */
+
   function getYouTubeEmbed(url) {
 
     try {
@@ -158,6 +178,7 @@ function StudyMaterial() {
   }
 
   return (
+
     <div className="student-layout">
 
       <StudentSidebar />
@@ -165,6 +186,7 @@ function StudyMaterial() {
       <div className="student-page">
 
         {/* HERO */}
+
         <div className="materials-hero">
 
           <div>
@@ -185,6 +207,7 @@ function StudyMaterial() {
         </div>
 
         {/* SEARCH */}
+
         <div className="search-bar">
 
           <FaSearch />
@@ -201,6 +224,7 @@ function StudyMaterial() {
         </div>
 
         {/* LOADING */}
+
         {loading ? (
 
           <div className="premium-box">
@@ -217,6 +241,7 @@ function StudyMaterial() {
 
           <>
             {/* VIDEO SECTION */}
+
             <div className="material-section">
 
               <div className="section-header">
@@ -301,6 +326,7 @@ function StudyMaterial() {
             </div>
 
             {/* PDF SECTION */}
+
             <div className="material-section">
 
               <div className="section-header">
@@ -391,6 +417,7 @@ function StudyMaterial() {
         )}
 
       </div>
+
     </div>
   );
 }
